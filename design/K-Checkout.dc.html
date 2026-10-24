@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Checkout</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;800;900&family=Archivo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Archivo',system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.85}
+.st{font-family:'Big Shoulders Stencil Display',system-ui,sans-serif;text-transform:uppercase}
+input[type=text],input[type=tel],input[type=email],select{height:48px;border:3px solid #10202B;padding:0 12px;font:inherit;font-size:16px;box-sizing:border-box;width:100%;background:#FFFFFF;color:#10202B}
+</style>
+</helmet>
+<div style="width:100%;background:#FFFFFF;color:#10202B">
+
+<div style="height:12px;background:#D7342A"></div>
+<div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 32px">
+<a href="G-BoatPaint2.dc.html" class="st" style="font-size:40px;font-weight:900;letter-spacing:.02em;flex-grow:1;line-height:1">Raju Fishes</a>
+<a href="J-Cart.dc.html" class="st" style="font-size:22px;font-weight:800;letter-spacing:.04em;border-bottom:3px solid #10202B">← Back to cart</a>
+</div>
+
+<div style="background:#0A5C8F;color:#FFFFFF">
+<div style="max-width:1280px;margin:0 auto;padding:28px 32px 0">
+<h1 class="st" style="margin:0;font-size:96px;line-height:.9;font-weight:900">Checkout</h1>
+<div class="st" style="display:flex;flex-wrap:wrap;gap:8px 28px;font-size:24px;font-weight:800;letter-spacing:.06em;margin:14px 0 24px">
+<span style="color:#F4B400">1 Your details</span><span>2 Delivery</span><span>3 Payment</span>
+</div>
+</div>
+<div style="height:14px;background:#FFFFFF"></div>
+<div style="height:14px;background:#D7342A"></div>
+</div>
+
+<div style="max-width:1280px;margin:0 auto;padding:40px 32px 56px;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+
+<div style="flex:2 1 600px;min-width:0;display:flex;flex-direction:column;gap:32px">
+
+<div style="border:3px solid #10202B">
+<div class="st" style="background:#10202B;color:#FFFFFF;font-size:30px;font-weight:900;padding:8px 20px;letter-spacing:.04em">1 · Your details</div>
+<div style="padding:20px;display:flex;flex-wrap:wrap;gap:16px">
+<div style="flex:1 1 240px"><label for="name" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">Full name</label><input id="name" type="text"></div>
+<div style="flex:1 1 240px"><label for="phone" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">Mobile number</label><input id="phone" type="tel" placeholder="+91"></div>
+<div style="flex:1 1 100%"><label for="email" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">Email (optional)</label><input id="email" type="email"></div>
+</div>
+</div>
+
+<div style="border:3px solid #10202B">
+<div class="st" style="background:#10202B;color:#FFFFFF;font-size:30px;font-weight:900;padding:8px 20px;letter-spacing:.04em">2 · Delivery address</div>
+<div style="padding:20px;display:flex;flex-wrap:wrap;gap:16px">
+<div style="flex:1 1 100%"><label for="a1" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">House number and street</label><input id="a1" type="text"></div>
+<div style="flex:1 1 100%"><label for="a2" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">Area and landmark</label><input id="a2" type="text"></div>
+<div style="flex:1 1 200px"><label for="city" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">City</label><input id="city" type="text"></div>
+<div style="flex:1 1 200px"><label for="state" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">State</label><select id="state"><option>Select state</option><option>Andhra Pradesh</option><option>Telangana</option><option>Tamil Nadu</option><option>Kerala</option><option>Karnataka</option></select></div>
+<div style="flex:1 1 160px"><label for="pin" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">Pincode</label><input id="pin" type="text" placeholder="6 digits"></div>
+</div>
+<div style="padding:0 20px 20px">
+<div style="font-size:14px;font-weight:700;margin-bottom:8px">Delivery time</div>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<label style="flex:1 1 220px;border:3px solid #10202B;background:#F4B400;padding:12px 14px;display:flex;gap:10px;align-items:center;min-height:48px;box-sizing:border-box"><input type="radio" name="slot" checked style="width:20px;height:20px;accent-color:#10202B"> Tomorrow morning</label>
+<label style="flex:1 1 220px;border:3px solid #10202B;padding:12px 14px;display:flex;gap:10px;align-items:center;min-height:48px;box-sizing:border-box"><input type="radio" name="slot" style="width:20px;height:20px;accent-color:#10202B"> Tomorrow evening</label>
+</div>
+</div>
+</div>
+
+<div style="border:3px solid #10202B">
+<div class="st" style="background:#10202B;color:#FFFFFF;font-size:30px;font-weight:900;padding:8px 20px;letter-spacing:.04em">3 · Payment</div>
+<div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+<label style="border:3px solid #10202B;background:#F4B400;padding:16px;display:flex;gap:12px;align-items:flex-start"><input type="radio" name="pay" checked style="width:20px;height:20px;accent-color:#10202B;margin-top:2px"><span><span class="st" style="font-size:26px;font-weight:900;display:block">Pay online</span><span style="font-size:14px">UPI, cards and net banking.</span></span></label>
+<label style="border:3px solid #10202B;padding:16px;display:flex;gap:12px;align-items:flex-start"><input type="radio" name="pay" style="width:20px;height:20px;accent-color:#10202B;margin-top:2px"><span><span class="st" style="font-size:26px;font-weight:900;display:block">Cash on delivery</span><span style="font-size:14px">Pay when your order arrives.</span></span></label>
+</div>
+</div>
+
+</div>
+
+<div style="flex:1 1 340px;max-width:440px;border:4px solid #10202B;box-shadow:10px 10px 0 #10202B;background:#F4B400">
+<div class="st" style="background:#10202B;color:#FFFFFF;font-size:40px;font-weight:900;padding:12px 22px;line-height:1">Your order</div>
+<div style="padding:22px;display:flex;flex-direction:column;gap:12px;font-size:16px">
+<div style="display:flex;justify-content:space-between;gap:12px"><span>Seer fish steaks · 1 kg</span><span style="font-weight:700">₹899</span></div>
+<div style="display:flex;justify-content:space-between;gap:12px"><span>Dry anchovies × 2</span><span style="font-weight:700">₹398</span></div>
+<div style="display:flex;justify-content:space-between;border-top:2px solid #10202B;padding-top:12px"><span>Delivery</span><span style="font-weight:700">Free</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-top:3px solid #10202B;padding-top:14px">
+<span class="st" style="font-size:30px;font-weight:900">Total</span>
+<span class="st" style="font-size:52px;font-weight:900;line-height:1">₹1,297</span>
+</div>
+<a href="#" class="st" style="background:#D7342A;color:#FFFFFF;border:3px solid #10202B;height:60px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;letter-spacing:.06em;box-sizing:border-box">Place order</a>
+<div style="font-size:13px;line-height:1.5">By placing the order you agree to our delivery terms. Sample design: nothing is charged.</div>
+</div>
+</div>
+
+</div>
+
+<div style="background:#10202B;color:#FFFFFF;padding:44px 32px">
+<div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px">
+<span class="st" style="font-size:64px;font-weight:900;line-height:.9">Raju Fishes</span>
+<span style="font-size:14px">Concept design. Photos and prices are placeholders.</span>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;800;900&family=Archivo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Archivo',system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.85}
+.st{font-family:'Big Shoulders Stencil Display',system-ui,sans-serif;text-transform:uppercase}
+input[type=text],input[type=tel]{height:56px;border:3px solid #10202B;padding:0 14px;font:inherit;font-size:18px;box-sizing:border-box;background:#FFFFFF;color:#10202B}
+</style>
+</helmet>
+<div style="width:100%;background:#FFFFFF;color:#10202B">
+
+<div style="height:12px;background:#D7342A"></div>
+<div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 32px">
+<a href="G-BoatPaint2.dc.html" class="st" style="font-size:40px;font-weight:900;letter-spacing:.02em;flex-grow:1;line-height:1">Raju Fishes</a>
+<a href="G-BoatPaint2.dc.html" class="st" style="font-size:22px;font-weight:800;letter-spacing:.04em;border-bottom:3px solid #10202B">← Back to the shop</a>
+</div>
+
+<div style="max-width:1280px;margin:0 auto;padding:0 32px 64px;display:flex;flex-wrap:wrap">
+
+<div style="flex:1 1 480px;background:#0A5C8F;color:#FFFFFF;padding:48px 48px 0;display:flex;flex-direction:column;min-height:640px;box-sizing:border-box">
+<span class="st" style="font-size:24px;font-weight:800;letter-spacing:.12em;color:#F4B400">Welcome back</span>
+<h1 class="st" style="margin:12px 0 0;font-size:112px;line-height:.88;font-weight:900">Sign in<br>to order.</h1>
+<p style="margin:24px 0 0;font-size:18px;line-height:1.55;max-width:380px">No password to remember. We send a code to your mobile number.</p>
+<div style="flex-grow:1"></div>
+<div style="margin:36px -48px 0;height:22px;background:#FFFFFF"></div>
+<div style="margin:0 -48px 0;height:22px;background:#D7342A"></div>
+</div>
+
+<div style="flex:1 1 440px;background:#F4B400;padding:40px;box-sizing:border-box;display:flex;align-items:center">
+<div style="width:100%;border:4px solid #10202B;background:#FFFFFF;box-shadow:10px 10px 0 #10202B">
+<div class="st" style="background:#10202B;color:#FFFFFF;font-size:36px;font-weight:900;padding:12px 24px;line-height:1">Sign in with your phone</div>
+<div style="padding:24px;display:flex;flex-direction:column;gap:20px">
+<div>
+<label for="mob" style="font-size:14px;font-weight:700;display:block;margin-bottom:6px">Mobile number</label>
+<div style="display:flex">
+<span style="width:64px;height:56px;border:3px solid #10202B;border-right:0;background:#F4B400;display:flex;align-items:center;justify-content:center;font-weight:700;box-sizing:border-box">+91</span>
+<input id="mob" type="tel" placeholder="10 digits" style="flex:1;min-width:0">
+</div>
+</div>
+<a href="#" class="st" style="background:#10202B;color:#FFFFFF;height:56px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;letter-spacing:.06em">Send code</a>
+
+<div style="border-top:3px solid #10202B;padding-top:20px">
+<div style="font-size:14px;font-weight:700;margin-bottom:8px">Enter the 6-digit code</div>
+<div style="display:flex;gap:8px">
+<input type="text" aria-label="Digit 1" maxlength="1" style="flex:1;min-width:0;text-align:center;padding:0">
+<input type="text" aria-label="Digit 2" maxlength="1" style="flex:1;min-width:0;text-align:center;padding:0">
+<input type="text" aria-label="Digit 3" maxlength="1" style="flex:1;min-width:0;text-align:center;padding:0">
+<input type="text" aria-label="Digit 4" maxlength="1" style="flex:1;min-width:0;text-align:center;padding:0">
+<input type="text" aria-label="Digit 5" maxlength="1" style="flex:1;min-width:0;text-align:center;padding:0">
+<input type="text" aria-label="Digit 6" maxlength="1" style="flex:1;min-width:0;text-align:center;padding:0">
+</div>
+<div style="font-size:13px;margin-top:8px">Did not get it? <a href="#" style="font-weight:700;text-decoration:underline">Send again</a></div>
+</div>
+<a href="L-Account.dc.html" class="st" style="background:#D7342A;color:#FFFFFF;border:3px solid #10202B;height:60px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;letter-spacing:.06em;box-sizing:border-box">Verify and continue</a>
+<div style="font-size:13px;line-height:1.5">Continue without an account? <a href="K-Checkout.dc.html" style="font-weight:700;text-decoration:underline">Check out as a guest</a></div>
+</div>
+</div>
+</div>
+
+</div>
+
+<div style="background:#10202B;color:#FFFFFF;padding:36px 32px">
+<div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px">
+<span class="st" style="font-size:48px;font-weight:900;line-height:.9">Raju Fishes</span>
+<span style="font-size:14px">Concept design. Nothing is sent or stored.</span>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

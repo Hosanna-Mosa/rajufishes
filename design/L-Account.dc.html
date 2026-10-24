@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Account</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;800;900&family=Archivo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Archivo',system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.85}
+.st{font-family:'Big Shoulders Stencil Display',system-ui,sans-serif;text-transform:uppercase}
+</style>
+</helmet>
+<div style="width:100%;background:#FFFFFF;color:#10202B">
+
+<div style="height:12px;background:#D7342A"></div>
+<div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 32px">
+<a href="G-BoatPaint2.dc.html" class="st" style="font-size:40px;font-weight:900;letter-spacing:.02em;flex-grow:1;line-height:1">Raju Fishes</a>
+<div class="st" style="display:flex;flex-wrap:wrap;gap:8px 28px;font-size:22px;font-weight:800;letter-spacing:.04em">
+<a href="H-AllProducts.dc.html">Fresh</a><a href="H-AllProducts.dc.html">Dry</a><a href="H-AllProducts.dc.html">Frozen</a><a href="L-Account.dc.html" style="border-bottom:3px solid #D7342A">Account</a>
+</div>
+<a href="J-Cart.dc.html" class="st" style="border:3px solid #10202B;padding:0 20px;height:44px;display:flex;align-items:center;font-size:22px;font-weight:800;letter-spacing:.04em;box-sizing:border-box">Cart 2</a>
+</div>
+
+<div style="background:#0A5C8F;color:#FFFFFF">
+<div style="max-width:1280px;margin:0 auto;padding:32px 32px 0">
+<h1 class="st" style="margin:0;font-size:96px;line-height:.9;font-weight:900">My account</h1>
+<div style="font-size:16px;margin:10px 0 24px">Signed in as +91 98XXXXXX10 (sample)</div>
+</div>
+<div style="height:14px;background:#FFFFFF"></div>
+<div style="height:14px;background:#D7342A"></div>
+</div>
+
+<div style="max-width:1280px;margin:0 auto;padding:40px 32px 56px;display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+
+<div style="flex:0 1 250px;min-width:220px;border:3px solid #10202B;box-shadow:6px 6px 0 #10202B">
+<a href="#" class="st" style="display:block;background:#F4B400;border-bottom:3px solid #10202B;padding:14px 18px;font-size:28px;font-weight:900;letter-spacing:.04em">Orders</a>
+<a href="#" class="st" style="display:block;border-bottom:3px solid #10202B;padding:14px 18px;font-size:28px;font-weight:900;letter-spacing:.04em">Saved addresses</a>
+<a href="#" class="st" style="display:block;border-bottom:3px solid #10202B;padding:14px 18px;font-size:28px;font-weight:900;letter-spacing:.04em">Profile</a>
+<a href="M-SignIn.dc.html" class="st" style="display:block;padding:14px 18px;font-size:28px;font-weight:900;letter-spacing:.04em;color:#D7342A">Sign out</a>
+</div>
+
+<div style="flex:3 1 640px;min-width:0;display:flex;flex-direction:column;gap:40px">
+
+<div>
+<h2 class="st" style="margin:0 0 20px;font-size:56px;font-weight:900;line-height:1">Your orders</h2>
+<div style="display:flex;flex-direction:column;gap:24px">
+<sc-for list="{{orders}}" as="o" hint-placeholder-count="2">
+<div style="border:3px solid #10202B;box-shadow:7px 7px 0 #10202B">
+<div style="background:#10202B;color:#FFFFFF;padding:12px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 20px">
+<span class="st" style="font-size:28px;font-weight:900">Order {{o.no}}</span>
+<span style="font-size:14px;align-self:center">{{o.date}} · {{o.pay}}</span>
+</div>
+<div style="padding:20px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-wrap:wrap;gap:0;height:44px">
+<div class="st" style="flex:1 1 100px;background:{{o.s1}};border:3px solid #10202B;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;box-sizing:border-box">Packed</div>
+<div class="st" style="flex:1 1 100px;background:{{o.s2}};border:3px solid #10202B;border-left:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;box-sizing:border-box">Shipped</div>
+<div class="st" style="flex:1 1 100px;background:{{o.s3}};border:3px solid #10202B;border-left:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;box-sizing:border-box">Delivered</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px">
+<span style="font-size:16px;line-height:1.5;flex:1 1 260px">{{o.items}}</span>
+<span class="st" style="font-size:40px;font-weight:900">{{o.total}}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="#" class="st" style="background:#F4B400;border:3px solid #10202B;height:44px;padding:0 24px;display:flex;align-items:center;font-size:22px;font-weight:900;letter-spacing:.06em;box-sizing:border-box">Track order</a>
+<a href="J-Cart.dc.html" class="st" style="border:3px solid #10202B;height:44px;padding:0 24px;display:flex;align-items:center;font-size:22px;font-weight:900;letter-spacing:.06em;box-sizing:border-box">Order again</a>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div>
+<h2 class="st" style="margin:0 0 20px;font-size:56px;font-weight:900;line-height:1">Saved addresses</h2>
+<div style="display:flex;flex-wrap:wrap;gap:24px">
+<div style="flex:1 1 280px;border:3px solid #10202B;padding:18px 20px;display:flex;flex-direction:column;gap:6px">
+<span class="st" style="font-size:24px;font-weight:900;background:#F4B400;align-self:flex-start;padding:2px 10px">Home · default</span>
+<span style="font-size:16px;line-height:1.55">Sample Name<br>12-3-45, Sample Street<br>Sample Area, Sample City 500001<br>+91 98XXXXXX10</span>
+<div style="display:flex;gap:18px;margin-top:6px"><a href="#" style="font-size:14px;font-weight:700;text-decoration:underline;padding:8px 0">Edit</a><a href="#" style="font-size:14px;font-weight:700;text-decoration:underline;padding:8px 0">Remove</a></div>
+</div>
+<a href="#" class="st" style="flex:1 1 280px;border:3px dashed #10202B;min-height:150px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;letter-spacing:.04em">+ Add new address</a>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div style="background:#10202B;color:#FFFFFF;padding:44px 32px">
+<div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px">
+<span class="st" style="font-size:64px;font-weight:900;line-height:.9">Raju Fishes</span>
+<span style="font-size:14px">Concept design. Photos and prices are placeholders.</span>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+orders: [
+{ no: '#0421', date: '21 Oct', pay: 'Paid online', s1: '#F4B400', s2: '#F4B400', s3: '#FFFFFF', items: 'Seer fish steaks (1 kg), Dry anchovies × 2', total: '₹1,297' },
+{ no: '#0398', date: '14 Oct', pay: 'Cash on delivery', s1: '#F4B400', s2: '#F4B400', s3: '#F4B400', items: 'Tiger prawns (1 kg), Mud crab (1 kg)', total: '₹1,298' }
+]
+};
+}
+}
+</script>
+</body>
+</html>
