@@ -33,7 +33,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 
 ---
 
-## Round 2: Customer site: home, all products, product
+## Round 2: Customer site: home, all products, product (DONE)
 - Boat Paint look from designs G, H, I, built as proper components (header, footer, stripe band, price tag, product card, market panel). Fully responsive, since the designs are desktop only: check at 390 px and 1440 px, big headings scaled down on phones.
 - Home with live "Today's market" panel and product grid from the API.
 - All products: category filter with counts, sort, paging, pincode check.

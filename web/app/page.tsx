@@ -1,61 +1,47 @@
-import { getProducts, rupees, type Product } from '@/lib/api'
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import { getProducts } from '@/lib/api'
+import { MarketPanel } from '@/components/MarketPanel'
+import { ProductCard } from '@/components/ProductCard'
 
-const GROUPS = ['Fresh fish', 'Prawns and crab', 'Dry fish', 'Frozen packs']
-
-function Card({ p }: { p: Product }) {
-  const img = p.images?.[0]
-  const sold = p.stock <= 0
-  return (
-    <article className={`card ${p.category}`}>
-      <div className="pic">{img ? <img src={img.url} alt={img.alt ?? p.name} /> : <span>{p.name.split(' ')[0]}</span>}</div>
-      <div className="info">
-        <h3>{p.name}</h3>
-        {p.note && <div className="note">{p.note}</div>}
-        <div className="price">
-          {rupees(p.price)} <small>{p.unit === 'kg' ? 'per kg' : p.packWeightG ? `per ${p.packWeightG} g pack` : 'per pack'}</small>
-        </div>
-        {sold && <div className="sold">Sold out today</div>}
-      </div>
-    </article>
-  )
+export const metadata: Metadata = {
+  title: { absolute: 'Raju Fishes: fresh off the boat' },
+  description: "Fresh fish landed by our own boats this morning, plus dry and frozen packs. Today's market prices, delivered all over India.",
 }
 
 export default async function Home() {
-  const products = await getProducts()
+  const data = await getProducts({ limit: 8 })
   return (
-    <>
-      <header className="top">
-        <span className="logo">Raju Fishes</span>
-        <span className="pennant">Landed today</span>
-      </header>
+    <main>
       <section className="hero">
-        <h1>From our boats to your door</h1>
-        <p>Fresh, dry and frozen fish from our own family boats.</p>
+        <div className="hero-l">
+          <span className="kick st">Boat 02 · Family fleet</span>
+          <h1 className="st">Fresh<br />off the<br />boat.</h1>
+          <p>We land it, clean it, ice it and send it. Dry and frozen packs go all over India.</p>
+          <Link href="/products" className="cta st">Shop today&apos;s catch</Link>
+          <div className="grow" />
+          <div className="sw" />
+          <div className="sr" />
+        </div>
+        <div className="hero-r">
+          <MarketPanel />
+        </div>
       </section>
-      <main>
-        {products === null ? (
-          <div className="empty">
-            <h3>Shop not reachable</h3>
-            <p>The shop could not load the fish list. Start the API with <code>npm run dev</code> and refresh.</p>
-          </div>
-        ) : products.length === 0 ? (
-          <div className="empty">
-            <h3>No fish yet</h3>
-            <p>Run <code>npm run seed</code> to add the sample fish.</p>
-          </div>
+
+      <section className="wrap sec" id="catch">
+        <div className="sec-h">
+          <h2 className="st">Everything we sell</h2>
+          <Link href="/products" className="st" style={{ fontSize: 22, fontWeight: 800, letterSpacing: '.06em' }}>See all products →</Link>
+        </div>
+        {data ? (
+          <div className="grid">{data.items.map((p) => <ProductCard key={p._id} product={p} imgHeight={140} />)}</div>
         ) : (
-          GROUPS.map((g) => {
-            const items = products.filter((p) => p.group === g)
-            return items.length ? (
-              <section className="section" key={g}>
-                <h2>{g}</h2>
-                <div className="grid">{items.map((p) => <Card key={p._id} p={p} />)}</div>
-              </section>
-            ) : null
-          })
+          <p className="empty">We cannot load the catalogue right now. Please refresh in a minute.</p>
         )}
-      </main>
-      <footer>Raju Fishes. Sample prices for now.</footer>
-    </>
+        {data && data.total > 8 && (
+          <div className="more"><Link href="/products" className="btn yellow big st" style={{ padding: '0 32px' }}>See all {data.total} products</Link></div>
+        )}
+      </section>
+    </main>
   )
 }

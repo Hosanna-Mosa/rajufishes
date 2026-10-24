@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+export const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
 
 export type Product = {
   _id: string
@@ -7,23 +7,47 @@ export type Product = {
   category: 'fresh' | 'dry' | 'frozen'
   group: string
   note?: string
+  description?: string
   unit: 'kg' | 'pack'
-  price: number // paise
+  price: number // paise: per kg when unit is kg, per pack when unit is pack
   packWeightG?: number
-  stock: number
-  images?: { url: string; alt?: string }[]
+  cuts: { name: string; priceDeltaPerKg: number }[]
+  weights: number[]
+  images: { url: string; alt?: string }[]
+  landedAt?: string | null
+  available: boolean
 }
 
-/** Returns null when the API cannot be reached, so the page can say so instead of crashing. */
-export async function getProducts(): Promise<Product[] | null> {
+export const GROUPS = ['Fresh fish', 'Prawns and crab', 'Dry fish', 'Frozen packs'] as const
+export const SORTS = [
+  { value: 'landed', label: 'Landed today first' },
+  { value: 'price_asc', label: 'Price: low to high' },
+  { value: 'price_desc', label: 'Price: high to low' },
+  { value: 'name', label: 'Name A to Z' },
+] as const
+
+async function get<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${API}/api/products?limit=60`, { cache: 'no-store' })
+    const res = await fetch(`${API}/api${path}`, { cache: 'no-store' })
     if (!res.ok) return null
-    const data = await res.json()
-    return data.items ?? []
+    return (await res.json()) as T
   } catch {
-    return null
+    return null // API not reachable: pages show a friendly message
   }
 }
 
-export const rupees = (paise: number) => `₹${(paise / 100).toLocaleString('en-IN')}`
+export type ProductList = {
+  items: Product[]
+  total: number
+  page: number
+  pages: number
+  counts: { group: string; category: string; count: number }[]
+}
+
+export const getProducts = (query: Record<string, string | number | undefined>) => {
+  const q = new URLSearchParams()
+  for (const [k, v] of Object.entries(query)) if (v !== undefined && v !== '') q.set(k, String(v))
+  return get<ProductList>(`/products?${q}`)
+}
+export const getProduct = (slug: string) => get<{ product: Product; related: Product[] }>(`/products/${encodeURIComponent(slug)}`)
+export const getMarket = () => get<{ items: Product[]; updatedAt: string | null }>('/market')

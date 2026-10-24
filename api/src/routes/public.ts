@@ -16,16 +16,16 @@ const publicProduct = (p: any) => ({ ...p, available: p.active && (p.trackStock 
 
 publicRouter.get('/products', validate({ query: z.object({
   category: z.enum(['fresh', 'dry', 'frozen']).optional(),
-  group: z.string().max(40).optional(),
+  group: z.string().max(200).optional(), // one group, or several separated by commas
   q: z.string().trim().max(60).optional(),
   sort: z.enum(['landed', 'price_asc', 'price_desc', 'name']).default('landed'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(60).default(12),
 }).strict() }), async (req, res) => {
-  const { category, group, q, sort, page, limit } = req.valid.query
+  const { category, group, q, sort, page, limit } = req.valid.query as { category?: string; group?: string; q?: string; sort: string; page: number; limit: number }
   const filter: Record<string, unknown> = { active: true }
   if (category) filter.category = category
-  if (group) filter.group = group
+  if (group) filter.group = { $in: group.split(',').map((g) => g.trim()).filter(Boolean).slice(0, 8) }
   if (q) filter.name = { $regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' }
   const order: Record<string, 1 | -1> = sort === 'price_asc' ? { price: 1 } : sort === 'price_desc' ? { price: -1 } : sort === 'name' ? { name: 1 } : { landedAt: -1, name: 1 }
   const [items, total, groups] = await Promise.all([
