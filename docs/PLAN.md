@@ -1,6 +1,6 @@
 # rajufishes: Plan
 
-Round 0 planning document. Nothing here is built yet. Where a detail is a guess, it is marked **default** and listed in `DECISIONS.md`.
+Planning document, updated in Round 1 (decisions accepted, API built). The web pages are built from Round 2. Where a detail is a guess, it is marked **default** and listed in `DECISIONS.md`.
 
 ## 1. Pages and routes
 
@@ -20,8 +20,10 @@ Round 0 planning document. Nothing here is built yet. Where a detail is a guess,
 | `/account/addresses` | Saved addresses | L | Add, edit, remove, set default. |
 | `/account/profile` | Profile | L has the tab, no content | Name, email, phone (read only). |
 | `/sign-in` | Sign in | M | Phone, send code, 6 digit code, verify. "Check out as a guest" link. |
-| `/the-boats` | The boats | G nav link, no design | Recommend dropping or turning into a small About page. See DECISIONS. |
+| `/about` | About | G nav link "boats" now points here, no design | Small About page: the boats, the family, the stall. Built in Round 5. |
 | `/terms`, `/delivery-terms` | Text pages | not designed | Linked from checkout text. Plain text in the same layout. |
+
+**Responsive (overrides the desktop-only designs):** the customer site must work at 390 px wide and at 1440 px. The admin panel must also work on a phone, because the owner updates prices from the market stall. Keep the Boat Paint look, scale the big headings down on phones, and use the full state list (36 states and UTs) at checkout.
 
 Shared layout parts, all from the designs: red top bar (12px), header (logo, Fresh / Dry / Frozen / Account, Cart count), blue page banner with white and red stripe bands, red "All-India delivery" band, ink footer.
 
@@ -61,6 +63,7 @@ All money is stored as whole **paise** (integer), never decimals. Razorpay also 
 - `landedAt` date, optional: when today's catch arrived. Drives "Landed today first" sort and "landed 5:40 AM".
 - `marketListed` boolean, `marketOrder` int: shows in the home "Today's market" panel
 - `active` boolean (hidden from shop when false)
+- "Prawns and crab" is only a display `group` on top of `category` (fresh, dry, frozen); it has no rules of its own.
 - `isFreshFish` derived from `category === "fresh"`; used by the fresh-city delivery rule.
 
 ### Customer
@@ -78,7 +81,8 @@ All money is stored as whole **paise** (integer), never decimals. Razorpay also 
 - `isDefault`
 
 ### Order
-- `orderNo` string, human number like `0421` (from a counter), unique
+- `orderNo` string, human number like `0421` (counter starts at 421, padded to 4 digits), unique
+- `stockState` enum: `held` | `committed` | `released`; `holdExpiresAt` date (30 minutes after an online order starts). Stock is taken when the order is created; COD is `committed` at once, online is `held` until paid. Cancel or expiry flips it to `released` and puts the stock back, once.
 - `customerId` (null for guests), `guestPhone`
 - `contact` `{ name, phone, email }`
 - `shippingAddress` snapshot (same fields as Address, copied so later edits do not change old orders)
@@ -182,6 +186,7 @@ Base path `/api`. JSON. Customer auth = httpOnly cookie with a customer JWT. Adm
 
 ### Misc
 - `GET /health`
+- `GET /api/meta/states` the full list of states and UTs for checkout
 
 ## 4. Order flow and statuses
 

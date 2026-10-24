@@ -1,4 +1,16 @@
-# Open decisions
+# Decisions
+
+## Accepted in Round 1
+- **Delivery:** one "All India" zone, flat ₹60 (sample), free over ₹999 (sample), counted on the subtotal before any coupon. The fresh-fish city limit is a setting, off by default.
+- **SMS:** MSG91 (stub until Round 3; development uses the fixed test code).
+- **Payment fees:** Razorpay fee absorbed by the business. COD everywhere.
+- **Guest checkout:** allowed; guests track an order by a private link.
+- **Stock:** a number per product, held 30 minutes during online payment, put back on cancel or expiry.
+- **Pricing:** each product is per kg or per pack. "Prawns and crab" is a display group on top of fresh, dry and frozen.
+- **"Boats" nav link** becomes an About page.
+- **Responsive (overrides the desktop-only designs):** customer site works at 390 px and 1440 px; the admin panel also works on a phone. Boat Paint look kept, big headings scaled down on phones, full state list at checkout.
+
+## Still open
 
 Each item has a recommended default. If the family says nothing, the default is used.
 

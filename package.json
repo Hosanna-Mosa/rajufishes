@@ -1,0 +1,14 @@
+{
+  "name": "rajufishes",
+  "private": true,
+  "scripts": {
+    "setup": "npm install && npm install --prefix api && npm install --prefix web",
+    "dev": "concurrently -k -n api,web -c blue,yellow \"npm run dev --prefix api\" \"npm run dev --prefix web\"",
+    "seed": "npm run seed --prefix api",
+    "test": "npm test --prefix api",
+    "typecheck": "npm run typecheck --prefix api && cd web && npx tsc --noEmit"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

@@ -13,13 +13,15 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 
 ---
 
-## Round 1: Setup, API, database models, seed data
+## Round 1: Setup, API, database models, seed data (DONE)
 - Create `api/` (Express + TypeScript) and `web/` (Next.js + TypeScript, empty shell with design tokens).
 - Connect to MongoDB Atlas. Check env values at start.
 - All models from PLAN.md.
 - Catalogue endpoints (`/products`, `/products/:slug`, `/market`, `/delivery/check`) and `/health`.
 - Pricing and delivery-zone services with tests (pincode matching, free-over rule, fresh restriction).
-- Seed script: the 12 sample products from the designs (7 fresh, 3 dry, 2 frozen), 5 market-board items, the "All India" zone, settings, one admin user.
+- Seed script: the 12 sample products from the designs (7 fresh, 3 dry, 2 frozen), 5 market-board items, the "All India" zone, settings, a sample coupon (WELCOME10), one admin user from env. Works with the in-memory database and with Atlas.
+- Also built early: customer OTP sign in, orders with stock hold and release, Razorpay verify and webhook (mock ids in development), and the admin API (login, products, market, orders, zones, settings, coupons). Rounds 3 and 4 build the screens on top.
+- Tests: pricing, stock hold and release, OTP (`npm test`).
 - Rate limit, validation, helmet, CORS set up from day one.
 
 **What to check:**
@@ -32,7 +34,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 ---
 
 ## Round 2: Customer site: home, all products, product
-- Boat Paint look from designs G, H, I, built as proper components (header, footer, stripe band, price tag, product card, market panel). Fully responsive, since the designs are desktop only.
+- Boat Paint look from designs G, H, I, built as proper components (header, footer, stripe band, price tag, product card, market panel). Fully responsive, since the designs are desktop only: check at 390 px and 1440 px, big headings scaled down on phones.
 - Home with live "Today's market" panel and product grid from the API.
 - All products: category filter with counts, sort, paging, pincode check.
 - Product page: gallery, cut and weight choosers that change the price, quantity, pincode check, "You may also like".
@@ -71,6 +73,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 ---
 
 ## Round 4: Admin panel
+- Must work on a phone (the owner updates prices from the market stall). Check at 390 px as well as desktop.
 **Design first.** There is no admin design yet. Before any admin code, I design these admin pages in the same Boat Paint style (dashboard, market board, products list and form, orders list and detail, delivery zones, coupons, login) as static pages in `design/`, and show them to the family. Build starts only after a yes or changes.
 
 Then build:

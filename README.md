@@ -40,21 +40,15 @@ docs/     PLAN.md, ROUNDS.md, PHOTOS.md, DECISIONS.md
 
 ## How to run (from Round 1 onward)
 
-You need Node.js 20 or newer and a free MongoDB Atlas cluster.
+You need Node.js 20 or newer. In development no database account is needed: with `MONGODB_URI` empty, a temporary in-memory MongoDB is used (data resets on restart). To use MongoDB Atlas, put its connection string in `api/.env`.
 
-1. Copy `.env.example` into `api/.env` (API values) and `web/.env.local` (web values), then fill in the values. Never commit these files.
-2. API:
+1. Copy `.env.example` into `api/.env` (API section) and `web/.env.local` (web section). Never commit these files.
+2. From the project root:
    ```
-   cd api
-   npm install
-   npm run seed     # sample products, zones, one admin user
-   npm run dev      # http://localhost:4000
-   ```
-3. Web:
-   ```
-   cd web
-   npm install
-   npm run dev      # http://localhost:3000
+   npm run setup    # installs root, api and web
+   npm run dev      # API on http://localhost:4000, web on http://localhost:3000
+   npm run seed     # only needed with a real database (the in-memory one seeds itself)
+   npm test         # API tests
    ```
 4. In development the OTP code is always the fixed test code from `.env` (`OTP_TEST_CODE`). No SMS is sent. Razorpay runs in test mode with test keys.
 
