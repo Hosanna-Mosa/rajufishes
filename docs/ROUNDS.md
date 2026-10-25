@@ -72,7 +72,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 
 ---
 
-## Round 4: Admin panel
+## Round 4 (DONE): Admin panel
 - Must work on a phone (the owner updates prices from the market stall). Check at 390 px as well as desktop.
 **Design first.** There is no admin design yet. Before any admin code, I design these admin pages in the same Boat Paint style (dashboard, market board, products list and form, orders list and detail, delivery zones, coupons, login) as static pages in `design/`, and show them to the family. Build starts only after a yes or changes.
 

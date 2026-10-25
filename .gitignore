@@ -16,3 +16,6 @@ coverage/
 .vercel/
 *.tsbuildinfo
 next-env.d.ts
+
+# local photo uploads (development only)
+api/uploads/

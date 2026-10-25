@@ -30,6 +30,8 @@ const schema = z.object({
   MSG91_SENDER_ID: z.string().default(''),
   SEED_ADMIN_EMAIL: z.string().default(''),
   SEED_ADMIN_PASSWORD: z.string().default(''),
+  SEED_STAFF_EMAIL: z.string().default(''),
+  SEED_STAFF_PASSWORD: z.string().default(''),
 })
 
 export type Env = z.infer<typeof schema>

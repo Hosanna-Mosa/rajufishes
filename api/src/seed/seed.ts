@@ -78,6 +78,14 @@ export async function seed({ log = true }: { log?: boolean } = {}) {
       { upsert: true },
     )
     say(`Admin user: ${env.SEED_ADMIN_EMAIL}`)
+    if (env.SEED_STAFF_EMAIL && env.SEED_STAFF_PASSWORD) {
+      await AdminUser.updateOne(
+        { email: env.SEED_STAFF_EMAIL.toLowerCase() },
+        { $setOnInsert: { email: env.SEED_STAFF_EMAIL.toLowerCase(), name: 'Staff', role: 'staff', passwordHash: await bcrypt.hash(env.SEED_STAFF_PASSWORD, 10) } },
+        { upsert: true },
+      )
+      say(`Staff user: ${env.SEED_STAFF_EMAIL}`)
+    }
   } else {
     console.warn('SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD not set: no admin user created.')
   }

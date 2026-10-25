@@ -60,3 +60,10 @@ Until Round 1 is done these commands do not exist yet.
 - `docs/ROUNDS.md`: the build in rounds, with a "what to check" list for each.
 - `docs/PHOTOS.md`: how to photograph our own fish with a phone.
 - `docs/DECISIONS.md`: open questions with a recommended default for each.
+
+## Admin panel (Round 4)
+Open http://localhost:3000/admin after `npm run dev`. Test logins come from `.env.example` (development only):
+- Owner: `owner@rajufishes.test` / `dev-admin-pass-123`
+- Staff: `staff@rajufishes.test` / `dev-staff-pass-123`
+
+Restart the API to reset the test data. Photos are saved to `api/uploads/` (labelled test mode) until the three `CLOUDINARY_*` keys are set. Refunds are simulated until the Razorpay keys are set. Never commit real keys.

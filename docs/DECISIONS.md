@@ -68,3 +68,15 @@ Options (do not sign up yet):
 - **SMS:** small provider interface; MSG91 is used only when `SMS_PROVIDER=msg91` and its keys are set. Otherwise the test code (123456, `OTP_MODE=test`).
 - **Notifications:** `api/src/services/notify.ts` has empty "order placed" and "status changed" places for email or SMS later.
 - **Delivery slots** come from `GET /api/meta/slots`. A quote without a pincode is marked `estimated`.
+
+## 8. Choices made in Round 4
+- **Admin sign in:** email and password, JWT in an httpOnly cookie (8 hours). Wrong passwords are refused and repeated tries slowed (8 per 15 minutes). Roles are `owner` and `staff`.
+- **Roles are re-checked on every request**, so a removed or demoted staff member loses access at once. Staff cannot use Delivery, Coupons or Staff (the API refuses, and the menu hides them).
+- **Staff:** the owner adds and removes staff and changes their passwords; everyone can change their own password. An optional dev staff login is seeded from `SEED_STAFF_EMAIL` and `SEED_STAFF_PASSWORD`.
+- **Market board** lists every active product with a Shown/Hidden switch, price and stock, saved together with one Save button.
+- **Cancelling needs a reason.** Cancelling returns stock. A cash order is marked collected by hand.
+- **Refunds:** one refund per order, optional partial amount, reason required. Online refunds go through `refundPayment` in `api/src/services/razorpay.ts` (mock when keys are empty, real Razorpay call otherwise); cash refunds are recorded only.
+- **Photos:** `api/src/services/uploads.ts` uploads to Cloudinary when its three keys are set. Otherwise (never in production) files go to `api/uploads/` and the product form shows a "TEST MODE" label. Only real JPG, PNG or WebP files (checked by content) up to 6 MB are accepted.
+- **Status changes** call the notify stubs in `api/src/services/notify.ts`.
+- **Admin never returns secrets** (no password hashes, keys or tokens in any response).
+- **Printing:** packing slip per order and one pick list that adds up all new orders by product.

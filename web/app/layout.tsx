@@ -3,6 +3,7 @@ import { Archivo, Big_Shoulders_Stencil } from 'next/font/google'
 import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
 import { CartSync } from '@/components/CartSync'
+import { ShopChrome } from '@/components/ShopChrome'
 import './globals.css'
 
 // The design's "Big Shoulders Stencil Display" is published as "Big Shoulders Stencil" in Google Fonts.
@@ -21,10 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
-        <CartSync />
-        <SiteHeader />
+        <ShopChrome><CartSync /><SiteHeader /></ShopChrome>
         {children}
-        <SiteFooter />
+        <ShopChrome><SiteFooter /></ShopChrome>
       </body>
     </html>
   )

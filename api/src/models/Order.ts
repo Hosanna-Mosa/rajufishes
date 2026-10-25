@@ -47,6 +47,9 @@ const orderSchema = new Schema(
       razorpayPaymentId: String,
       paidAt: Date,
       refundId: String,
+      refundAmount: Number, // paise
+      refundedAt: Date,
+      refundNote: String,
     },
     // stock: held (online, waiting for payment) -> committed (paid / COD), or released (cancel / expiry)
     stockState: { type: String, enum: ['held', 'committed', 'released'], default: 'committed' },

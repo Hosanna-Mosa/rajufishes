@@ -40,3 +40,18 @@ export function verifyWebhookSignature(rawBody: Buffer, signature: string): bool
   if (!key) return false
   return eq(crypto.createHmac('sha256', key).update(rawBody).digest('hex'), signature)
 }
+
+/** Refunds a captured payment. With no keys (development) it only returns a fake id. */
+export async function refundPayment(paymentId: string, amountPaise: number) {
+  if (!live()) {
+    if (isProd) throw new HttpError(503, 'Refunds are not set up.')
+    return { id: `rfnd_dev_${crypto.randomBytes(6).toString('hex')}`, mock: true }
+  }
+  const res = await fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}/refund`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + Buffer.from(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`).toString('base64') },
+    body: JSON.stringify({ amount: amountPaise }),
+  })
+  if (!res.ok) throw new HttpError(502, 'Razorpay did not accept the refund. Check the payment in the Razorpay dashboard.')
+  return { id: ((await res.json()) as { id: string }).id, mock: false }
+}

@@ -8,6 +8,7 @@ import { publicRouter } from './routes/public.js'
 import { authRouter } from './routes/auth.js'
 import { ordersRouter, paymentsRouter, razorpayWebhook } from './routes/orders.js'
 import { adminRouter } from './routes/admin.js'
+import { UPLOAD_DIR } from './services/uploads.js'
 
 export function createApp() {
   const app = express()
@@ -22,6 +23,8 @@ export function createApp() {
   app.use(cookieParser())
   app.use(sanitize)
 
+  // development-only photo folder (used when Cloudinary keys are empty); the web site shows these images
+  app.use('/uploads', (_req, res, next) => { res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); next() }, express.static(UPLOAD_DIR, { fallthrough: false, index: false, dotfiles: 'deny' }))
   app.get('/health', (_req, res) => res.json({ status: 'ok' }))
   app.use('/api', publicRouter, authRouter, ordersRouter, paymentsRouter)
   app.use('/api/admin', adminRouter)
