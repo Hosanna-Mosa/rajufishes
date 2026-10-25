@@ -99,3 +99,6 @@ Product slugs must match the product list (see the seed data in Round 1).
 
 ## Delivery of photos
 Put photos in a shared folder named by product (`seer-fish-steaks/`). In Round 4 the family uploads them in the admin panel; in Round 5 we check each one on a phone. Re-shoot anything blurry, dark, or yellow.
+
+## Launch placeholder photos (Round 9)
+The photos in `web/public/images/` (products, categories, story) are AI-made launch placeholders, generated for the look of the shop. The product ones must be replaced with real photos of our own fish before or soon after launch. They are only the default: any photo uploaded in the admin panel is shown instead. Originals are kept in `docs/photos-ai/`. Products with no matching placeholder (Mackerel, White prawns, Dry mackerel, Dry shrimp) keep the tinted block until a real photo is uploaded.

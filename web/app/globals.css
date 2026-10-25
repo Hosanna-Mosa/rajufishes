@@ -284,7 +284,8 @@ select.field { appearance: auto; padding-right: 8px; }
 .prose-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
 .prose h2 { font-size: 44px; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 16px; }
 .prose p { margin: 0 0 14px; font-size: 17px; line-height: 1.7; color: var(--grey); max-width: 52ch; }
-.prose .frame { aspect-ratio: 4 / 3; background: var(--tint-1); overflow: hidden; }
+.prose .frame, .hero-photo .frame { position: relative; aspect-ratio: 16 / 9; background: var(--tint-1); overflow: hidden; }
+.hero-photo { margin-top: 40px; }
 .prose .frame .ph { width: 100%; height: 100%; display: flex; align-items: flex-end; }
 .lost { padding-top: 96px; padding-bottom: 72px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
 .lost h1 { font-size: 72px; font-weight: 300; letter-spacing: -0.035em; line-height: 1; }
@@ -450,3 +451,15 @@ img.fade.wait { opacity: 0; }
 /* dialogs */
 .modal { animation: fadein var(--motion-med) var(--ease-out) both; }
 .modal > * { animation: rise var(--motion-med) var(--ease-out) both; --rise: var(--shift); }
+
+/* launch photos */
+.ph.local { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.cats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.cat { display: flex; flex-direction: column; gap: 12px; color: var(--ink); }
+.cat-img { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--tint-2); overflow: hidden; }
+.cat-img img { transition: transform var(--motion-slow) var(--ease-out), opacity 250ms var(--ease-out); }
+.cat:hover .cat-img img { transform: scale(1.03); }
+.cat-name { font-family: var(--font-head); font-size: 21px; font-weight: 500; letter-spacing: -0.01em; }
+.banner.with-img { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; }
+.banner-img { position: relative; flex: 0 0 320px; aspect-ratio: 3 / 2; background: var(--tint-2); overflow: hidden; }
+@media (max-width: 1100px) { .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

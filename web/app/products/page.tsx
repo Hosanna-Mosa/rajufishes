@@ -4,6 +4,8 @@ import { GROUPS, SORTS, getProducts } from '@/lib/api'
 import { ProductCard } from '@/components/ProductCard'
 import { Tabs } from '@/components/Tabs'
 import { ProductFilters } from '@/components/ProductFilters'
+import { LocalImg } from '@/components/LocalImg'
+import { CATEGORY_PHOTO, type CategoryKey } from '@/lib/photos'
 
 export const metadata: Metadata = {
   title: 'All products',
@@ -41,12 +43,23 @@ export default async function Products({ searchParams }: { searchParams: SP }) {
     return `/products${q.size ? `?${q}` : ''}`
   }
 
+  const key: CategoryKey | null = selected.length === 0 ? null
+    : selected.every((g) => g === 'Fresh fish') ? 'fresh'
+    : selected.every((g) => g === 'Prawns and crab') ? 'prawns-crab'
+    : selected.every((g) => g === 'Fresh fish' || g === 'Prawns and crab') ? 'fresh'
+    : selected.every((g) => g === 'Dry fish') ? 'dry'
+    : selected.every((g) => g === 'Frozen packs') ? 'frozen' : null
+  const cat = key ? CATEGORY_PHOTO[key] : null
+
   return (
     <main>
       <div className="wrap">
-        <div className="banner">
-          <h1>All products</h1>
-          <p className="sub">{data ? `${data.total} product${data.total === 1 ? '' : 's'}` : ' '}</p>
+        <div className={`banner${cat ? ' with-img' : ''}`}>
+          <div>
+            <h1>{cat ? cat.label : 'All products'}</h1>
+            <p className="sub">{data ? `${data.total} product${data.total === 1 ? '' : 's'}` : ' '}</p>
+          </div>
+          {cat && <div className="banner-img"><LocalImg src={cat.src} alt={cat.alt} sizes="320px" priority /></div>}
         </div>
         <Tabs items={kinds.map(([label, g]) => ({ label, href: tab(g), on: same(g) }))} />
         <ProductFilters selected={selected} sort={sort} counts={counts} total={allTotal} />
@@ -56,7 +69,7 @@ export default async function Products({ searchParams }: { searchParams: SP }) {
         )}
         {data && data.items.length > 0 && (
           <>
-            <div className="grid">{data.items.map((p) => <ProductCard key={p._id} product={p} />)}</div>
+            <div className="grid">{data.items.map((p, i) => <ProductCard key={p._id} product={p} priority={i < 4} />)}</div>
             {data.pages > 1 && (
               <nav className="pager" aria-label="Pages">
                 {Array.from({ length: data.pages }, (_, i) => i + 1).map((n) => (

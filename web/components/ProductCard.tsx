@@ -4,11 +4,11 @@ import { CATEGORY_LABEL, priceText } from '@/lib/format'
 import { AddButton } from './AddButton'
 import { ProductImage } from './ProductImage'
 
-export function ProductCard({ product }: { product: Product; imgHeight?: number }) {
+export function ProductCard({ product, priority }: { product: Product; priority?: boolean }) {
   return (
     <article className="card">
       <Link href={`/products/${product.slug}`} className={`card-top ${product.category}`} aria-label={`${CATEGORY_LABEL[product.category]}: ${product.name}`}>
-        <ProductImage product={product} />
+        <ProductImage product={product} priority={priority} />
         <span className="kind">{CATEGORY_LABEL[product.category]}</span>
       </Link>
       <div className="card-body">

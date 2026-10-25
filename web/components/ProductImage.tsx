@@ -1,6 +1,8 @@
 import type { Product } from '@/lib/api'
 import { blurUrl, sized, srcSet } from '@/lib/img'
 import { FadeImg } from './FadeImg'
+import { LocalImg } from './LocalImg'
+import { photoFor } from '@/lib/photos'
 
 /** Same name, same tint. */
 const tint = (name: string) => ([...name].reduce((n, c) => n + c.charCodeAt(0), 0) % 8) + 1
@@ -32,6 +34,14 @@ export function ProductImage({ product, label, priority, sizes = '(max-width: 76
         height={600}
         style={style}
       />
+    )
+  }
+  const photo = photoFor(product.name)
+  if (photo) {
+    return (
+      <span className="ph local" style={{ background: `var(--tint-${tint(product.name)})` }}>
+        <LocalImg src={photo.src} alt={photo.alt} sizes={sizes} priority={priority} />
+      </span>
     )
   }
   return (

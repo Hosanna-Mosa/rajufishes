@@ -14,6 +14,7 @@ const headers = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: { qualities: [75, 85], formats: ['image/webp'] },
   // put the page title and description in <head> for every visitor, not streamed in later (better for search and link previews)
   htmlLimitedBots: /.*/,
   async headers() {

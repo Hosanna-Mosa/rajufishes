@@ -4,6 +4,8 @@ import { getProducts } from '@/lib/api'
 import { FishIcon } from '@/components/KindIcons'
 import { ProductCard } from '@/components/ProductCard'
 import { Tabs } from '@/components/Tabs'
+import { LocalImg } from '@/components/LocalImg'
+import { CATEGORY_PHOTO } from '@/lib/photos'
 
 export const metadata: Metadata = {
   title: { absolute: 'Raju Fishes: fresh off the boat' },
@@ -50,13 +52,25 @@ export default async function Home() {
             note={data ? `${data.total} products` : undefined}
           />
           {data ? (
-            <div className="grid">{data.items.map((p) => <ProductCard key={p._id} product={p} />)}</div>
+            <div className="grid">{data.items.map((p, i) => <ProductCard key={p._id} product={p} priority={i < 4} />)}</div>
           ) : (
             <p className="empty">We cannot load the catalogue right now. <Link href="/">Refresh</Link></p>
           )}
           {data && data.total > 8 && (
             <div className="more"><Link href="/products" className="textlink">See all {data.total} products</Link></div>
           )}
+        </section>
+
+        <section className="sec" aria-labelledby="cats">
+          <div className="sec-h"><h2 id="cats">Shop by category</h2><span>Four ways to shop</span></div>
+          <div className="cats">
+            {Object.values(CATEGORY_PHOTO).map((c) => (
+              <Link key={c.label} href={c.href} className="cat">
+                <span className="cat-img"><LocalImg src={c.src} alt={c.alt} sizes="(max-width: 1100px) 50vw, 300px" /></span>
+                <span className="cat-name">{c.label}</span>
+              </Link>
+            ))}
+          </div>
         </section>
 
         <section className="sec" aria-labelledby="kinds">
