@@ -5,6 +5,8 @@ import { HttpError } from '../lib/errors.js'
 // With no Razorpay keys, development uses a clearly fake order id and a fixed local secret.
 const DEV_SECRET = 'dev_only_razorpay_secret'
 const live = () => Boolean(env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET)
+export const razorpayIsMock = () => !live()
+export const razorpayKeyId = () => (live() ? env.RAZORPAY_KEY_ID : 'rzp_test_dev')
 const secret = () => (live() ? env.RAZORPAY_KEY_SECRET : DEV_SECRET)
 
 export async function createRazorpayOrder(amountPaise: number, receipt: string) {

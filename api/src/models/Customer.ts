@@ -6,6 +6,8 @@ const customerSchema = new Schema(
     name: { type: String, default: '', trim: true, maxlength: 80 },
     email: { type: String, default: '', trim: true, lowercase: true, maxlength: 120 },
     defaultAddressId: { type: Schema.Types.ObjectId },
+    // the saved cart: choices only, never prices
+    cart: { type: [{ _id: false, productId: String, slug: String, cut: { type: String, default: null }, weightG: { type: Number, default: null }, qty: Number }], default: [] },
     lastLoginAt: Date,
   },
   { timestamps: true },

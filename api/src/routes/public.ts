@@ -51,6 +51,7 @@ publicRouter.get('/market', async (_req, res) => {
   res.json({ items: items.map(publicProduct), updatedAt: items.reduce<Date | null>((m, p) => (p.landedAt && (!m || p.landedAt > m) ? p.landedAt : m), null) })
 })
 
+publicRouter.get('/meta/slots', async (_req, res) => res.json({ slots: (await getSettings()).deliverySlots }))
 publicRouter.get('/meta/states', (_req, res) => res.json({ states: INDIA_STATES }))
 
 publicRouter.get('/delivery/check', limiter(60_000, 60), validate({ query: z.object({ pincode, state: z.string().max(60).optional() }) }), async (req, res) => {

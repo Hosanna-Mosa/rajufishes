@@ -3,9 +3,11 @@ import { z } from 'zod'
 import { Order } from '../models/Order.js'
 import { limiter, optionalCustomer, requireCustomer, validate } from '../middleware/common.js'
 import { addressBody, cartItem, objectId, phoneField } from '../lib/schemas.js'
-import { changeStatus, createOrder, markPaid } from '../services/orders.js'
+import { changeStatus, createOrder, markPaid, paymentForOrder } from '../services/orders.js'
 import { signTrack, verifyTrack } from '../services/tokens.js'
-import { verifyPaymentSignature, verifyWebhookSignature } from '../services/razorpay.js'
+import { razorpayIsMock, signPayment, verifyPaymentSignature, verifyWebhookSignature } from '../services/razorpay.js'
+import crypto from 'node:crypto'
+import { env } from '../config/env.js'
 import { HttpError, notFound } from '../lib/errors.js'
 
 export const ordersRouter = Router()
@@ -58,6 +60,12 @@ ordersRouter.post('/orders/:orderNo/cancel', optionalCustomer, validate({ body: 
   res.json({ order: publicOrder(updated) })
 })
 
+/** A fresh payment window for an unpaid online order (the customer closed it, or it failed). */
+ordersRouter.post('/orders/:orderNo/pay', optionalCustomer, validate({ body: z.object({ token: z.string().max(1000).optional() }).strict() }), async (req, res) => {
+  const o = await findForViewer(String(req.params.orderNo), req.customerId, req.valid.body.token)
+  res.json({ razorpay: await paymentForOrder(o.orderNo) })
+})
+
 // ---- payments ----
 export const paymentsRouter = Router()
 
@@ -68,6 +76,19 @@ paymentsRouter.post('/payments/razorpay/verify', limiter(60_000, 30), validate({
   if (!verifyPaymentSignature(b.razorpay_order_id, b.razorpay_payment_id, b.razorpay_signature)) throw new HttpError(400, 'Payment could not be verified.')
   const o = await markPaid(b.razorpay_order_id, b.razorpay_payment_id)
   res.json({ order: publicOrder(o) })
+})
+
+/**
+ * Mock mode only (no Razorpay keys, never in production): stands in for the Razorpay window.
+ * "Pay" returns a valid signature for the browser to send to /verify, like the real window would.
+ */
+paymentsRouter.post('/payments/mock/pay', limiter(60_000, 30), validate({ body: z.object({ razorpay_order_id: z.string().max(60) }).strict() }), async (req, res) => {
+  if (!razorpayIsMock() || env.NODE_ENV === 'production') throw notFound()
+  const orderId = req.valid.body.razorpay_order_id
+  const o = await Order.findOne({ 'payment.razorpayOrderId': orderId })
+  if (!o) throw notFound('Order not found')
+  const paymentId = `pay_dev_${crypto.randomBytes(6).toString('hex')}`
+  res.json({ razorpay_order_id: orderId, razorpay_payment_id: paymentId, razorpay_signature: signPayment(orderId, paymentId) })
 })
 
 /** Mounted with express.raw in app.ts: the signature is checked on the exact bytes Razorpay sent. */

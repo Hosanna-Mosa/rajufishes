@@ -1,5 +1,9 @@
-import { ComingSoon } from '@/components/ComingSoon'
-export const metadata = { title: 'Account' }
-export default function Account() {
-  return <ComingSoon title="Account" text="Sign in and order history are coming soon." />
+import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { AccountView } from '@/components/AccountView'
+
+export const metadata: Metadata = { title: 'My account' }
+
+export default function AccountPage() {
+  return <main><Suspense fallback={null}><AccountView /></Suspense></main>
 }

@@ -1,6 +1,6 @@
 import type { Product } from './api'
 
-export const rupees = (paise: number) => `₹${(paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`
+export const rupees = (paise: number) => `₹${(paise / 100).toLocaleString('en-IN', { minimumFractionDigits: paise % 100 ? 2 : 0, maximumFractionDigits: 2 })}`
 
 export const weightLabel = (g: number) => (g >= 1000 ? `${g / 1000} kg` : `${g} g`)
 
@@ -24,4 +24,10 @@ export function landedIsToday(iso?: string | null) {
 export function unitPrice(p: Pick<Product, 'unit' | 'price' | 'packWeightG'>, cutDeltaPerKg: number, weightG: number | null) {
   if (p.unit === 'kg') return Math.round(((p.price + cutDeltaPerKg) * (weightG ?? 1000)) / 1000)
   return p.price + Math.round((cutDeltaPerKg * (p.packWeightG ?? 0)) / 1000)
+}
+
+/** "Steaks · 1 kg · fresh" or "250 g pack · dry" */
+export function optionsText(l: { cut: string | null; weightG: number | null; category: string }) {
+  const w = l.weightG ? `${weightLabel(l.weightG)}${l.category === 'fresh' ? '' : ' pack'}` : null
+  return [l.cut, w, l.category].filter(Boolean).join(' · ')
 }

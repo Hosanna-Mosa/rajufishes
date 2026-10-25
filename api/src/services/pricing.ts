@@ -125,7 +125,9 @@ export async function quote(opts: QuoteOptions) {
   const problems: Problem[] = []
   const settings = await getSettings()
   const zones = await DeliveryZone.find({ active: true }).lean()
-  const zone = matchZone(zones, opts.pincode ?? '', opts.state ?? undefined)
+  // no pincode yet (the cart page): preview with the default zone, but raise no area problems
+  const estimated = !opts.pincode
+  const zone = matchZone(zones, opts.pincode ?? '', opts.state ?? undefined) ?? (estimated ? zones.find((z) => z.isDefault) ?? zones[0] ?? null : null)
   if (opts.pincode && !zone) problems.push({ code: 'no_zone', message: 'We do not deliver to this pincode yet.' })
 
   const ids = [...new Set(opts.items.map((i) => i.productId))]
@@ -156,12 +158,12 @@ export async function quote(opts: QuoteOptions) {
 
   const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0)
 
-  if (zone && settings.restrictFreshToZones && !zone.freshAllowed) {
+  if (!estimated && zone && settings.restrictFreshToZones && !zone.freshAllowed) {
     for (const l of lines.filter((x) => x.category === 'fresh')) {
       problems.push({ code: 'fresh_not_delivered', message: settings.freshOnlyMessage, productId: l.productId })
     }
   }
-  if (zone?.minOrder && subtotal < zone.minOrder) {
+  if (!estimated && zone?.minOrder && subtotal < zone.minOrder) {
     problems.push({ code: 'min_order', message: `Minimum order for this area is ₹${Math.ceil(zone.minOrder / 100)}.` })
   }
 
@@ -187,7 +189,7 @@ export async function quote(opts: QuoteOptions) {
   const charge = zone ? deliveryCharge(zone, subtotal) : 0 // free-over check uses subtotal before any coupon
   const total = Math.max(0, subtotal - discount) + charge
 
-  if (opts.paymentMethod === 'cod' && zone) {
+  if (opts.paymentMethod === 'cod' && zone && !estimated) {
     if (!zone.codAllowed) problems.push({ code: 'cod_not_allowed', message: 'Cash on delivery is not available for this pincode.' })
     else if (settings.codMaxTotal && total > settings.codMaxTotal) {
       problems.push({ code: 'cod_not_allowed', message: `Cash on delivery is limited to ₹${Math.floor(settings.codMaxTotal / 100)}. Please pay online.` })
@@ -195,7 +197,7 @@ export async function quote(opts: QuoteOptions) {
   }
 
   return {
-    lines, subtotal, deliveryCharge: charge, discount, total, couponCode, couponError, problems,
+    estimated, lines, subtotal, deliveryCharge: charge, discount, total, couponCode, couponError, problems,
     zone: zone ? { id: String(zone._id), name: zone.name, charge: zone.charge, freeOver: zone.freeOver, etaDays: zone.etaDays ?? 3, codAllowed: zone.codAllowed !== false, freshAllowed: zone.freshAllowed !== false } : null,
     amountToFreeDelivery: zone ? Math.max(0, zone.freeOver - subtotal) : null,
   }

@@ -1,5 +1,20 @@
-import { ComingSoon } from '@/components/ComingSoon'
-export const metadata = { title: 'Cart' }
-export default function Cart() {
-  return <ComingSoon title="Cart" text="Your cart page is coming soon. Items you add are kept in this browser." />
+import type { Metadata } from 'next'
+import { CartCount, CartView } from '@/components/CartView'
+import { Stripes } from '@/components/Stripes'
+
+export const metadata: Metadata = { title: 'Your cart' }
+
+export default function CartPage() {
+  return (
+    <main>
+      <div className="banner">
+        <div className="wrap">
+          <h1 className="st" style={{ paddingTop: 32 }}>Your cart</h1>
+          <CartCount />
+        </div>
+        <Stripes />
+      </div>
+      <CartView />
+    </main>
+  )
 }

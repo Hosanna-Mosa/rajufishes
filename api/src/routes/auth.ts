@@ -27,15 +27,17 @@ authRouter.post('/auth/logout', (_req, res) => {
   res.json({ ok: true })
 })
 
+const pub = (c: { _id: unknown; phone: string; name: string; email: string }) => ({ id: String(c._id), phone: c.phone, name: c.name, email: c.email })
+
 authRouter.get('/me', requireCustomer, async (req, res) => {
   const c = await Customer.findById(req.customerId).lean()
   if (!c) throw notFound('Account not found')
-  res.json({ customer: c })
+  res.json({ customer: pub(c) })
 })
 
 authRouter.patch('/me', requireCustomer, validate({ body: z.object({ name: z.string().trim().max(80).optional(), email: z.union([z.literal(''), z.email().max(120)]).optional() }).strict() }), async (req, res) => {
   const c = await Customer.findByIdAndUpdate(req.customerId, { $set: req.valid.body }, { returnDocument: 'after' }).lean()
-  res.json({ customer: c })
+  res.json({ customer: c ? pub(c) : c })
 })
 
 authRouter.get('/me/addresses', requireCustomer, async (req, res) => {
@@ -73,4 +75,38 @@ authRouter.delete('/me/addresses/:id', requireCustomer, validate({ params: z.obj
     else await Customer.updateOne({ _id: req.customerId }, { $unset: { defaultAddressId: 1 } })
   }
   res.json({ ok: true })
+})
+
+// ---- saved cart: the browser cart is merged into the account on sign in ----
+const cartLines = z.object({ items: z.array(z.object({
+  productId: objectId, slug: z.string().max(120).default(''), cut: z.string().max(40).nullish(), weightG: z.number().int().min(1).max(100_000).nullish(), qty: z.number().int().min(1).max(50),
+}).strict()).max(50) }).strict()
+
+const sameLine = (a: any, b: any) => a.productId === b.productId && (a.cut ?? null) === (b.cut ?? null) && (a.weightG ?? null) === (b.weightG ?? null)
+
+authRouter.get('/me/cart', requireCustomer, async (req, res) => {
+  const c = await Customer.findById(req.customerId)
+  if (!c) throw notFound('Account not found')
+  res.json({ items: c.cart })
+})
+
+/** Adds the lines to the saved cart (same product, cut and weight: quantities add up, max 50) and returns the result. */
+authRouter.post('/me/cart/merge', requireCustomer, validate({ body: cartLines }), async (req, res) => {
+  const c = await Customer.findById(req.customerId)
+  if (!c) throw notFound('Account not found')
+  const merged: any[] = c.cart.map((l: any) => ({ ...l.toObject() }))
+  for (const l of req.valid.body.items) {
+    const hit = merged.find((m) => sameLine(m, l))
+    if (hit) hit.qty = Math.min(50, hit.qty + l.qty)
+    else merged.push({ ...l, cut: l.cut ?? null, weightG: l.weightG ?? null })
+  }
+  c.cart = merged.slice(0, 50) as any
+  await c.save()
+  res.json({ items: c.cart })
+})
+
+/** Replaces the saved cart (called whenever a signed in customer changes the cart). */
+authRouter.put('/me/cart', requireCustomer, validate({ body: cartLines }), async (req, res) => {
+  await Customer.updateOne({ _id: req.customerId }, { $set: { cart: req.valid.body.items } })
+  res.json({ items: req.valid.body.items })
 })

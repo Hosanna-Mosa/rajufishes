@@ -4,7 +4,8 @@ import { Settings, getSettings } from '../models/DeliveryZone.js'
 import { HttpError } from '../lib/errors.js'
 import { quote, type CartInput } from './pricing.js'
 import { releaseStock, takeStock } from './stock.js'
-import { createRazorpayOrder } from './razorpay.js'
+import { createRazorpayOrder, razorpayKeyId, razorpayIsMock } from './razorpay.js'
+import { notifyOrderPlaced, notifyStatusChanged, safely } from './notify.js'
 
 export interface CreateOrderInput {
   customerId?: string | null
@@ -87,7 +88,25 @@ export async function createOrder(input: CreateOrderInput) {
       throw e
     }
   }
-  return { order: (await Order.findById(order._id))!, razorpay }
+  const created = (await Order.findById(order._id))!
+  if (!online) await safely(notifyOrderPlaced(created)) // online orders are announced once paid
+  return { order: created, razorpay }
+}
+
+/** What the browser needs to open (or reopen) the payment window for an unpaid online order. */
+export async function paymentForOrder(orderNo: string) {
+  const o = await Order.findOne({ orderNo })
+  if (!o) throw new HttpError(404, 'Order not found')
+  if (o.payment!.method !== 'razorpay' || o.payment!.status !== 'pending' || o.status !== 'placed') {
+    throw new HttpError(409, 'This order does not need a payment.')
+  }
+  if (o.holdExpiresAt && o.holdExpiresAt.getTime() < Date.now()) throw new HttpError(409, 'The payment time ran out. Please place the order again.')
+  let rid = o.payment!.razorpayOrderId
+  if (!rid) {
+    rid = (await createRazorpayOrder(o.total!, o.orderNo)).id
+    await Order.updateOne({ _id: o._id }, { $set: { 'payment.razorpayOrderId': rid } })
+  }
+  return { orderId: rid, keyId: razorpayKeyId(), amount: o.total!, mock: razorpayIsMock() }
 }
 
 /** Marks an online order paid and keeps its stock. Repeat-safe (verify and webhook can both call it). */
@@ -97,7 +116,10 @@ export async function markPaid(razorpayOrderId: string, paymentId: string) {
     { $set: { 'payment.status': 'paid', 'payment.razorpayPaymentId': paymentId, 'payment.paidAt': new Date(), stockState: 'committed', holdExpiresAt: null } },
     { returnDocument: 'after' },
   )
-  if (paid) return paid
+  if (paid) {
+    await safely(notifyOrderPlaced(paid))
+    return paid
+  }
   const existing = await Order.findOne({ 'payment.razorpayOrderId': razorpayOrderId })
   if (!existing) throw new HttpError(404, 'Order not found')
   // paid after the hold expired and the order was cancelled: record it so the family can refund
@@ -134,5 +156,7 @@ export async function changeStatus(orderId: string, to: string, by: string, opts
   }
   await order.save()
   if (to === 'cancelled') await releaseStock(String(order._id))
-  return (await Order.findById(orderId))!
+  const updated = (await Order.findById(orderId))!
+  await safely(notifyStatusChanged(updated, from, to))
+  return updated
 }

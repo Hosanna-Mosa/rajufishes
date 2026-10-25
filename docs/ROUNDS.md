@@ -52,7 +52,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 
 ---
 
-## Round 3: Cart, checkout, payments, orders, account, sign in
+## Round 3 (DONE): Cart, checkout, payments, orders, account, sign in
 - Cart page (J): lines, quantity, remove, free-delivery bar, coupon, summary, all priced by the server.
 - Sign in (M): phone + 6 digit OTP, with the fixed test code in development. SMS provider connected behind a switch, left off until the family picks one.
 - Checkout (K): details, address, delivery slot, payment choice. Guest checkout or signed in. Saved address picker for signed-in customers.

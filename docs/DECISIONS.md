@@ -58,3 +58,13 @@ Options (do not sign up yet):
 - **Minimum order:** none by default (zone setting exists).
 - **Licences:** the family confirms the food licence (FSSAI) details to show on the site before launch.
 - **Returns:** fresh fish is not returnable except for a quality problem; refund by photo within a few hours of delivery. The family writes the final wording.
+
+## 7. Choices made in Round 3
+- **Prices come only from the API.** The browser stores choices (product, cut, weight, quantity); the cart, checkout and payment totals are quoted by the API each time, so editing a price in the browser changes nothing.
+- **Cart:** kept in the browser; on sign-in it is merged into the account cart (same item adds up, up to 50 each) and saved there while signed in.
+- **Order placed page is also the tracking page** (`/orders/<no>`). Guests use the private link with a signed token; `/track?orderNo=&token=` redirects to it. The cart is cleared when the order is created.
+- **Online payment:** the order is created first, then the payment opens. Closing the window leaves it unpaid and retryable for 30 minutes (stock held); after that it cancels itself and the stock returns.
+- **Mock payments:** when `RAZORPAY_KEY_ID` is empty (not production) a clearly labelled test window signs a payment with a dev-only secret and goes through the real verify path.
+- **SMS:** small provider interface; MSG91 is used only when `SMS_PROVIDER=msg91` and its keys are set. Otherwise the test code (123456, `OTP_MODE=test`).
+- **Notifications:** `api/src/services/notify.ts` has empty "order placed" and "status changed" places for email or SMS later.
+- **Delivery slots** come from `GET /api/meta/slots`. A quote without a pincode is marked `estimated`.
