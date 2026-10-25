@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { acall, type AdminUser } from '@/lib/admin'
 import { ApiError } from '@/lib/client'
+import { AlertsProvider, SoundBar, useAlerts } from './Alerts'
 
 const Ctx = createContext<AdminUser | null>(null)
 export const useAdminUser = () => useContext(Ctx)!
@@ -18,6 +19,27 @@ const NAV: { href: string; label: string; owner?: boolean }[] = [
   { href: '/admin/coupons', label: 'Coupons', owner: true },
   { href: '/admin/staff', label: 'Staff', owner: true },
 ]
+
+/** Orders menu item with the count of new orders. Opening an order marks it as seen. */
+function Nav({ me, path }: { me: AdminUser; path: string }) {
+  const { count, opened } = useAlerts()
+  const m = path.match(/^\/admin\/orders\/([a-f0-9]{24})$/)
+  const id = m?.[1]
+  useEffect(() => { if (id) opened(id) }, [id, opened])
+  return (
+    <nav aria-label="Admin" className="a-nav st">
+      {NAV.filter((n) => !n.owner || me.role === 'owner').map((n) => {
+        const on = n.href === '/admin' ? path === '/admin' : path === n.href || path.startsWith(n.href + '/')
+        return (
+          <Link key={n.href} href={n.href} className={on ? 'on' : undefined} aria-current={on ? 'page' : undefined}>
+            {n.label}
+            {n.href === '/admin/orders' && count > 0 && <span className="a-badge" aria-label={`${count} new orders`}>{count}</span>}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
 
 /** Sign in check, side menu and the page area. The sign in page and the print page skip the menu. */
 export function AdminShell({ children }: { children: ReactNode }) {
@@ -47,17 +69,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const signOut = async () => { await acall('/auth/logout', { method: 'POST', body: {} }).catch(() => {}); router.replace('/admin/login') }
   return (
     <Ctx.Provider value={me}>
+      <AlertsProvider>
       <div className="adm">
         <div className="topbar" />
         <div className="a-wrap">
           <aside className="a-side">
             <Link href="/admin" className="a-logo st">Raju Fishes<small>Shop admin</small></Link>
-            <nav aria-label="Admin" className="a-nav st">
-              {NAV.filter((n) => !n.owner || me.role === 'owner').map((n) => {
-                const on = n.href === '/admin' ? path === '/admin' : path === n.href || path.startsWith(n.href + '/')
-                return <Link key={n.href} href={n.href} className={on ? 'on' : undefined} aria-current={on ? 'page' : undefined}>{n.label}</Link>
-              })}
-            </nav>
+            <Nav me={me} path={path} />
             <div className="a-me small">
               <b>{me.email}</b>
               <span>{me.role === 'owner' ? 'Owner' : 'Staff'} login</span>
@@ -65,9 +83,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <Link href="/" target="_blank" className="a-lnk">Open the shop ↗</Link>
             </div>
           </aside>
-          <main className="a-main">{children}</main>
+          <main className="a-main"><SoundBar />{children}</main>
         </div>
       </div>
+      </AlertsProvider>
     </Ctx.Provider>
   )
 }

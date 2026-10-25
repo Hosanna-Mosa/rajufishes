@@ -7,6 +7,7 @@ import { errText, Loading, Notice, PageHead, Pill, payTone, statusTone } from '@
 import { optionsText, rupees } from '@/lib/format'
 import { toPaise, fromPaise } from '@/lib/admin'
 import { useAdminUser } from '@/components/admin/AdminShell'
+import { WhatsAppButton } from '@/components/admin/Alerts'
 
 type Order = {
   _id: string; orderNo: string; status: string; total: number; subtotal: number; deliveryCharge: number; discount: number; couponCode?: string; createdAt: string; deliverySlot?: string
@@ -49,6 +50,7 @@ export default function OrderPage() {
     <>
       <PageHead title={`Order #${o.orderNo}`} sub={`Placed ${fmtDateTime(o.createdAt)}${o.deliverySlot ? ` · delivery slot: ${o.deliverySlot.replace(/_/g, ' ')}` : ''}`}>
         <Link href="/admin/orders" className="btn line2">← All orders</Link>
+        <WhatsAppButton order={o} className="btn line2" />
         <Link href={`/admin/orders/${o._id}/slip`} target="_blank" className="btn shadow">Print packing slip</Link>
       </PageHead>
       {msg && <Notice kind={msg.kind}>{msg.text}</Notice>}

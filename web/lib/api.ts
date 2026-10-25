@@ -52,4 +52,6 @@ export const getProducts = (query: Record<string, string | number | undefined>) 
 export const getProduct = (slug: string) => get<{ product: Product; related: Product[] }>(`/products/${encodeURIComponent(slug)}`)
 export type Contact = { businessName: string; phone: string; whatsapp: string; email: string; address: string; hours: string }
 export const getContact = async () => (await get<{ contact: Contact }>('/meta/contact'))?.contact ?? null
+export type Site = { loginMode: 'guest' | 'otp'; freeOver: number | null; contact: Contact }
+export const getSite = () => get<Site>('/meta/site')
 export const getMarket = () => get<{ items: Product[]; updatedAt: string | null }>('/market')

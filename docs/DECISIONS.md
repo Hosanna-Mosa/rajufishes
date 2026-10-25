@@ -94,4 +94,10 @@ Options (do not sign up yet):
 - **Images:** Cloudinary URLs get automatic format and quality, responsive `srcset`, lazy loading and a blurred tiny preview; the first image on a page loads eagerly.
 - **Security headers** (nosniff, frame, referrer, permissions, HSTS in production). A strict Content-Security-Policy is left out on purpose: Razorpay's payment window and Cloudinary images make a wrong policy likely to break payments. Revisit with testing.
 - **Layout shift:** `loading.tsx` is tall so the footer is never visible while the page loads; the display font uses `display: optional` to avoid a font swap jump.
-- **Not built:** automatic order alerts to the family (email or WhatsApp). The notify stubs are still empty. The family must watch Admin > Orders until this is added.
+- **Order alerts:** built in Round 6 (see section 10).
+
+## 10. Round 6: alerts, guest mode, business config
+- **Order email:** `api/src/services/mail.ts` with `MAIL_PROVIDER=log|smtp`. Sent for confirmed orders only (cash at once, online after payment). Fire and forget: a mail error is caught and logged and never fails or delays the order.
+- **Admin alerts:** the admin polls `GET /api/admin/orders/alerts` (placed, confirmed orders from the last 3 days) every 20 seconds. The first check only sets a baseline, so signing in does not chime for old orders. The badge counts alerts not yet opened (opened ids are kept in the browser). Sound is a short chime made with the Web Audio API; a one-time tap is needed. Mute is remembered in the browser. WhatsApp is click-to-chat (`wa.me`), with no WhatsApp API.
+- **Guest-only login:** `LOGIN_MODE=guest` (default). OTP routes answer 403 "switched off"; the OTP and MSG91 code stay in place. Tracking by link, and by order number + phone (`POST /api/orders/lookup`, rate limited). Account and sign-in pages redirect to Track order. The production checks only require SMS settings when `LOGIN_MODE=otp`.
+- **Business config:** `web/config/business.ts` is the source for the footer, delivery bar, Contact and policy pages. Phone, email, address, name, hours and the free-delivery amount set in Admin > Delivery override the file. Blanks show `[ADD YOUR ...]`. See `docs/FILL-ME-IN.md`.

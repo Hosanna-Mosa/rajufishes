@@ -1,4 +1,5 @@
-import { Router } from 'express'
+import { Router, type RequestHandler } from 'express'
+import { env } from '../config/env.js'
 import { z } from 'zod'
 import { Address } from '../models/Address.js'
 import { Customer } from '../models/Customer.js'
@@ -6,16 +7,22 @@ import { CUSTOMER_COOKIE, cookieOpts, limiter, optionalCustomer, requireCustomer
 import { addressBody, objectId, phoneField } from '../lib/schemas.js'
 import { sendOtp, verifyOtp } from '../services/otp.js'
 import { signCustomer } from '../services/tokens.js'
-import { notFound } from '../lib/errors.js'
+import { HttpError, notFound } from '../lib/errors.js'
 
 export const authRouter = Router()
 
-authRouter.post('/auth/otp/send', limiter(10 * 60_000, 10, 'Too many code requests. Please wait a few minutes.'),
+/** Phone-code sign in is switched off in guest mode (LOGIN_MODE=guest). The code stays so "otp" can be turned on later. */
+const needOtpLogin: RequestHandler = (_req, _res, next) => {
+  if (env.LOGIN_MODE !== 'otp') return next(new HttpError(403, 'Sign in with a phone code is switched off. You can order as a guest.', { code: 'login_disabled' }))
+  next()
+}
+
+authRouter.post('/auth/otp/send', needOtpLogin, limiter(10 * 60_000, 10, 'Too many code requests. Please wait a few minutes.'),
   validate({ body: z.object({ phone: phoneField }).strict() }), async (req, res) => {
     res.json(await sendOtp(req.valid.body.phone))
   })
 
-authRouter.post('/auth/otp/verify', limiter(10 * 60_000, 20, 'Too many tries. Please wait a few minutes.'),
+authRouter.post('/auth/otp/verify', needOtpLogin, limiter(10 * 60_000, 20, 'Too many tries. Please wait a few minutes.'),
   validate({ body: z.object({ phone: phoneField, code: z.string().regex(/^\d{6}$/, 'Enter the 6 digit code') }).strict() }), async (req, res) => {
     const c = await verifyOtp(req.valid.body.phone, req.valid.body.code)
     res.cookie(CUSTOMER_COOKIE, signCustomer(String(c._id)), cookieOpts(30 * 24 * 3600_000))

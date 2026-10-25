@@ -181,6 +181,13 @@ adminRouter.get('/orders', validate({ query: z.object({
   ])
   res.json({ items, total, page, pages: Math.max(1, Math.ceil(total / limit)) })
 })
+/** Confirmed orders still waiting to be packed (cash orders, and online orders once paid). The admin screens poll this to alert the family. */
+adminRouter.get('/orders/alerts', async (_req, res) => {
+  const since = new Date(Date.now() - 3 * 24 * 3600_000)
+  const items = await Order.find({ ...paidOrCod, status: 'placed', createdAt: { $gte: since } })
+    .sort({ createdAt: -1 }).limit(50).select('orderNo total createdAt contact.name').lean()
+  res.json({ items })
+})
 adminRouter.get('/orders/:id', validate({ params: id }), async (req, res) => {
   const o = await Order.findById(req.valid.params.id).lean()
   if (!o) throw notFound()

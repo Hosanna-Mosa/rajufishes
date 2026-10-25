@@ -49,6 +49,14 @@ ordersRouter.get('/orders/track', limiter(60_000, 30), validate({ query: z.objec
   res.json({ order: publicOrder(await findForViewer(req.valid.query.orderNo, undefined, req.valid.query.token)) })
 })
 
+/** Find an order again with its number and the phone it was placed with. Gives a tracking token like the first order response. */
+ordersRouter.post('/orders/lookup', limiter(10 * 60_000, 15, 'Too many tries. Please wait a few minutes.'), validate({ body: z.object({ orderNo: z.string().trim().max(12), phone: phoneField }).strict() }), async (req, res) => {
+  const orderNo = req.valid.body.orderNo.replace(/^#/, '')
+  const o = await Order.findOne({ orderNo, $or: [{ guestPhone: req.valid.body.phone }, { 'contact.phone': req.valid.body.phone }] })
+  if (!o) throw notFound('We could not find an order with that number and phone.')
+  res.json({ order: publicOrder(o), trackToken: signTrack(o.orderNo) })
+})
+
 ordersRouter.get('/orders/:orderNo', optionalCustomer, validate({ query: z.object({ token: z.string().max(1000).optional() }) }), async (req, res) => {
   res.json({ order: publicOrder(await findForViewer(String(req.params.orderNo), req.customerId, req.valid.query.token)) })
 })

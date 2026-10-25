@@ -89,7 +89,7 @@ export async function createOrder(input: CreateOrderInput) {
     }
   }
   const created = (await Order.findById(order._id))!
-  if (!online) await safely(notifyOrderPlaced(created)) // online orders are announced once paid
+  if (!online) void safely(notifyOrderPlaced(created)) // online orders are announced once paid
   return { order: created, razorpay }
 }
 
@@ -117,7 +117,7 @@ export async function markPaid(razorpayOrderId: string, paymentId: string) {
     { returnDocument: 'after' },
   )
   if (paid) {
-    await safely(notifyOrderPlaced(paid))
+    void safely(notifyOrderPlaced(paid))
     return paid
   }
   const existing = await Order.findOne({ 'payment.razorpayOrderId': razorpayOrderId })

@@ -28,6 +28,14 @@ const schema = z.object({
   MSG91_AUTH_KEY: z.string().default(''),
   MSG91_TEMPLATE_ID: z.string().default(''),
   MSG91_SENDER_ID: z.string().default(''),
+  LOGIN_MODE: z.enum(['guest', 'otp']).default('guest'),
+  OWNER_EMAIL: z.string().default(''),
+  MAIL_PROVIDER: z.enum(['log', 'smtp']).default('log'),
+  MAIL_FROM: z.string().default(''),
+  SMTP_HOST: z.string().default(''),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().default(''),
+  SMTP_PASS: z.string().default(''),
   SEED_ADMIN_EMAIL: z.string().default(''),
   SEED_ADMIN_PASSWORD: z.string().default(''),
   SEED_STAFF_EMAIL: z.string().default(''),
@@ -45,7 +53,8 @@ export function loadEnv(raw: NodeJS.ProcessEnv = process.env): Env {
     )
     if (missing.length) throw new Error(`The API cannot start. These settings are missing: ${missing.join(', ')}`)
     const problems: string[] = []
-    if (env.OTP_MODE === 'test') problems.push('OTP_MODE=test is not allowed in production. Set OTP_MODE=live and the MSG91 values.')
+    const otp = env.LOGIN_MODE === 'otp' // phone-code login is switched off in guest mode, so its settings are not needed
+    if (otp && env.OTP_MODE === 'test') problems.push('OTP_MODE=test is not allowed in production. Set OTP_MODE=live and the MSG91 values.')
     if (env.CUSTOMER_JWT_SECRET === env.ADMIN_JWT_SECRET) problems.push('CUSTOMER_JWT_SECRET and ADMIN_JWT_SECRET must be different.')
     for (const k of ['CUSTOMER_JWT_SECRET', 'ADMIN_JWT_SECRET'] as const) if (env[k].length < 32) problems.push(`${k} must be a long random string (at least 32 characters).`)
     if (!/^mongodb(\+srv)?:\/\//.test(env.MONGODB_URI)) problems.push('MONGODB_URI must start with mongodb:// or mongodb+srv://. Copy it from MongoDB Atlas.')
@@ -62,7 +71,9 @@ export function loadEnv(raw: NodeJS.ProcessEnv = process.env): Env {
     group(['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RAZORPAY_WEBHOOK_SECRET'], 'Razorpay')
     if (!env.CLOUDINARY_CLOUD_NAME) problems.push('Cloudinary keys are empty. Photos cannot be uploaded in production without them.')
     if (!env.RAZORPAY_KEY_ID) problems.push('Razorpay keys are empty. Online payment cannot work in production without them.')
-    if (env.SMS_PROVIDER !== 'msg91') problems.push('SMS_PROVIDER must be msg91 in production.')
+    if (env.MAIL_PROVIDER === 'smtp') for (const k of ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'MAIL_FROM', 'OWNER_EMAIL'] as const) if (!env[k]) problems.push(`${k} is empty. It is needed to email you new orders.`)
+    if (!otp) { /* guest mode: no SMS settings needed */ }
+    else if (env.SMS_PROVIDER !== 'msg91') problems.push('SMS_PROVIDER must be msg91 when LOGIN_MODE=otp in production.')
     else for (const k of ['MSG91_AUTH_KEY', 'MSG91_TEMPLATE_ID', 'MSG91_SENDER_ID'] as const) if (!env[k]) problems.push(`${k} is empty. Copy it from your MSG91 account.`)
     if (/dev-|\.test$/.test(env.SEED_ADMIN_PASSWORD + env.SEED_ADMIN_EMAIL)) problems.push('SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD still hold the development test login. Use your own, or leave them empty after the first start.')
     if (problems.length) throw new Error(`The API cannot start. Please fix these settings:\n - ${problems.join('\n - ')}`)

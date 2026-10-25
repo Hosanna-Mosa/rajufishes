@@ -147,3 +147,8 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
   .cellin .field { width: 96px; }
   .mb-bar { position: static; }
 }
+
+.a-head { display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-wrap: wrap; margin: -8px 0 16px; }
+.a-tap, .a-mute { min-height: 44px; padding: 0 16px; font: inherit; font-size: 15px; font-weight: 700; border: 2px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; }
+.a-tap { background: var(--sun); }
+.a-badge { margin-left: 10px; min-width: 28px; height: 28px; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; background: var(--red); color: #fff; font-size: 16px; line-height: 1; border-radius: 14px; }

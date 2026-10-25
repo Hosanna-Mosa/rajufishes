@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Archivo, Big_Shoulders_Stencil } from 'next/font/google'
 import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
-import { getContact } from '@/lib/api'
+import { getBusiness } from '@/lib/business'
+import { SiteProvider } from '@/components/SiteContext'
 import { CartSync } from '@/components/CartSync'
 import { ShopChrome } from '@/components/ShopChrome'
 import './globals.css'
@@ -20,13 +21,16 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const contact = await getContact() // read here so the footer is part of the first render and does not pop in
+  const biz = await getBusiness() // read here so the footer is part of the first render and does not pop in
+  const bar = `Free delivery over ${biz.b.freeOver} · Cash on delivery available`
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
-        <ShopChrome><CartSync /><SiteHeader /></ShopChrome>
-        {children}
-        <ShopChrome><SiteFooter c={contact} /></ShopChrome>
+        <SiteProvider loginMode={biz.loginMode}>
+          <ShopChrome><CartSync /><SiteHeader bar={bar} /></ShopChrome>
+          {children}
+          <ShopChrome><SiteFooter biz={biz} /></ShopChrome>
+        </SiteProvider>
       </body>
     </html>
   )

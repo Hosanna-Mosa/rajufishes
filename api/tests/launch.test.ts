@@ -43,3 +43,20 @@ describe('launch basics', () => {
     expect(r.body).toMatchObject({ items: [], total: 0, page: 1 })
   })
 })
+
+describe('admin order alerts', () => {
+  it('lists confirmed new orders only (cash, or paid), not unpaid online ones', async () => {
+    const { Order } = await import('../src/models/Order.js')
+    await AdminUser.create({ email: 'o3@t.test', name: 'O', role: 'owner', passwordHash: await bcrypt.hash('a-long-test-password', 4) })
+    const login = await request(app).post('/api/admin/auth/login').send({ email: 'o3@t.test', password: 'a-long-test-password' })
+    const cookie = (login.headers['set-cookie'] as unknown as string[])[0].split(';')[0]
+    const base = { shippingAddress: { name: 'A', phone: '9876543210', line1: 'x', city: 'c', state: 's', pincode: '500001' }, contact: { name: 'A', phone: '9876543210' }, items: [], total: 1000, status: 'placed' as const }
+    await Order.create({ ...base, orderNo: '0501', payment: { method: 'cod', status: 'cod_due' } })
+    await Order.create({ ...base, orderNo: '0502', payment: { method: 'razorpay', status: 'paid' } })
+    await Order.create({ ...base, orderNo: '0503', payment: { method: 'razorpay', status: 'pending' } })
+    const r = await request(app).get('/api/admin/orders/alerts').set('Cookie', cookie)
+    expect(r.status).toBe(200)
+    expect(r.body.items.map((i: any) => i.orderNo).sort()).toEqual(['0501', '0502'])
+    expect((await request(app).get('/api/admin/orders/alerts')).status).toBe(401)
+  })
+})

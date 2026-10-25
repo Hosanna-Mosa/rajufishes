@@ -7,6 +7,7 @@ import { ApiError, call, type AddressT, type OrderT, type Slot } from '@/lib/cli
 import { rupees } from '@/lib/format'
 import { INDIA_STATES } from '@/lib/states'
 import { useCustomer } from '@/lib/session'
+import { useSite } from './SiteContext'
 import { getSavedCoupon, saveCoupon, useQuote } from '@/lib/useQuote'
 
 type Form = { name: string; phone: string; email: string; line1: string; line2: string; city: string; state: string; pincode: string }
@@ -14,6 +15,7 @@ const EMPTY: Form = { name: '', phone: '', email: '', line1: '', line2: '', city
 const FALLBACK_SLOTS: Slot[] = [{ id: 'tomorrow_morning', label: 'Tomorrow morning' }, { id: 'tomorrow_evening', label: 'Tomorrow evening' }]
 
 export function CheckoutView() {
+  const otp = useSite().loginMode === 'otp'
   const router = useRouter()
   const lines = useCart()
   const customer = useCustomer()
@@ -135,7 +137,7 @@ export function CheckoutView() {
         <section className="box">
           <div className="box-h st">1 · Your details</div>
           <div className="box-b">
-            {!customer ? <p className="small" style={{ margin: 0, flex: '1 1 100%' }}>Ordering as a guest. <Link href="/sign-in" style={{ textDecoration: 'underline', fontWeight: 700 }}>Sign in</Link> to use saved addresses.</p> : null}
+            {!customer && otp ? <p className="small" style={{ margin: 0, flex: '1 1 100%' }}>Ordering as a guest. <Link href="/sign-in" style={{ textDecoration: 'underline', fontWeight: 700 }}>Sign in</Link> to use saved addresses.</p> : null}
             {fld('name', 'Full name', { autoComplete: 'name' })}
             {fld('phone', 'Mobile number', { type: 'tel', inputMode: 'tel', placeholder: '+91', autoComplete: 'tel' })}
             {fld('email', 'Email (optional)', { type: 'email', autoComplete: 'email' })}

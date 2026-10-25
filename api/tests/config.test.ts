@@ -6,7 +6,7 @@ const good = {
   CUSTOMER_JWT_SECRET: 'a'.repeat(40), ADMIN_JWT_SECRET: 'b'.repeat(40), CORS_ORIGIN: 'https://www.rajufishes.example',
   CLOUDINARY_CLOUD_NAME: 'c', CLOUDINARY_API_KEY: 'k', CLOUDINARY_API_SECRET: 's',
   RAZORPAY_KEY_ID: 'rzp_live_x', RAZORPAY_KEY_SECRET: 's', RAZORPAY_WEBHOOK_SECRET: 'w',
-  OTP_MODE: 'live', SMS_PROVIDER: 'msg91', MSG91_AUTH_KEY: 'a', MSG91_TEMPLATE_ID: 't', MSG91_SENDER_ID: 'RJFISH',
+  LOGIN_MODE: 'otp', OTP_MODE: 'live', SMS_PROVIDER: 'msg91', MSG91_AUTH_KEY: 'a', MSG91_TEMPLATE_ID: 't', MSG91_SENDER_ID: 'RJFISH',
 } as unknown as NodeJS.ProcessEnv
 
 describe('production settings check', () => {
@@ -19,6 +19,11 @@ describe('production settings check', () => {
   })
   it('refuses the development test login', () => {
     expect(() => loadEnv({ ...good, SEED_ADMIN_EMAIL: 'owner@rajufishes.test', SEED_ADMIN_PASSWORD: 'dev-admin-pass-123' } as unknown as NodeJS.ProcessEnv)).toThrowError(/development test login/)
+  })
+  it('does not ask for SMS settings in guest mode, but does when mail is smtp and incomplete', () => {
+    const guest = { ...good, LOGIN_MODE: 'guest', OTP_MODE: 'test', SMS_PROVIDER: '', MSG91_AUTH_KEY: '' } as unknown as NodeJS.ProcessEnv
+    expect(loadEnv(guest).LOGIN_MODE).toBe('guest')
+    expect(() => loadEnv({ ...guest, MAIL_PROVIDER: 'smtp', SMTP_HOST: 'smtp.example.test' } as unknown as NodeJS.ProcessEnv)).toThrowError(/SMTP_USER[\s\S]*OWNER_EMAIL/)
   })
   it('names a missing setting', () => {
     expect(() => loadEnv({ ...good, MONGODB_URI: '' } as unknown as NodeJS.ProcessEnv)).toThrowError(/MONGODB_URI/)

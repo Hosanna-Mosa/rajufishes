@@ -126,7 +126,7 @@ Then build:
 - [~] Terms, delivery terms, refund and contact details: drafts written, family must edit (see docs/LAUNCH.md)
 - [ ] FSSAI and any other food licence details shown if required (family to confirm)
 - [ ] Test orders: COD, online, cancel, refund, guest track
-- [ ] Order alert to family (email or WhatsApp) tested: NOT BUILT yet
+- [ ] Order alert to family tested (email with SMTP set; admin chime and WhatsApp button) — built in Round 6
 - [ ] `npm audit` clean of serious issues; no secrets in git history
 - [ ] Error monitoring and uptime check on
 - [~] Phone and tablet widths checked in a browser; slow-network checked with throttling for layout shift

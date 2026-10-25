@@ -6,7 +6,7 @@ An online fish store for our family's fishing business, Raju Fishes. We now sell
 
 **What the site does:**
 - Product pages, cart, and checkout with online payment (Razorpay) or cash on delivery.
-- Customers sign in with their phone number and a one-time code (OTP). Guests can also check out.
+- Customers order as guests (name, phone, address) by default. Phone sign-in with a one-time code (OTP) is built and can be switched on with `LOGIN_MODE=otp`.
 - Customers can track their orders and save addresses.
 - A simple admin panel for the family: products, today's market prices, orders, delivery areas and charges, coupons.
 - English only. Fast and simple. No launch date yet.

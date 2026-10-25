@@ -436,3 +436,9 @@ img.ph { background: #fff; }
 .skel { height: 220px; border: 3px solid var(--ink); background: linear-gradient(90deg, #e3eef5 25%, #f3f8fb 50%, #e3eef5 75%); background-size: 200% 100%; animation: skel 1.4s linear infinite; }
 @keyframes skel { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
+
+.utility { margin: 0; padding: 7px var(--gut); background: var(--sea); color: #fff; font-size: 13px; text-align: center; }
+.trackpage { padding-top: 40px; padding-bottom: 48px; max-width: 560px; }
+.trackpage h1 { font-size: 56px; margin: 0 0 12px; }
+.trackform { display: grid; gap: 14px; margin-top: 20px; }
+.trackform .err { color: var(--red); font-weight: 700; margin: 0; }

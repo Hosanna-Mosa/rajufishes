@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ApiError, call, type OrderT, type RazorpayInfo } from '@/lib/client'
 import { optionsText, rupees } from '@/lib/format'
+import { useSite } from './SiteContext'
 import { StatusSteps, statusText } from './StatusSteps'
 
 declare global { interface Window { Razorpay?: new (o: Record<string, unknown>) => { open(): void; on(e: string, cb: () => void): void } } }
@@ -22,6 +23,7 @@ function loadRazorpay(): Promise<boolean> {
 }
 
 export function OrderView({ orderNo }: { orderNo: string }) {
+  const otp = useSite().loginMode === 'otp'
   const sp = useSearchParams()
   const token = sp.get('token') ?? undefined
   const justPlaced = sp.get('placed') === '1' || sp.get('pay') === '1'
@@ -86,7 +88,7 @@ export function OrderView({ orderNo }: { orderNo: string }) {
     finally { setBusy(false) }
   }
 
-  if (missing) return <div className="wrap" style={{ padding: '56px var(--gut)' }}><div className="empty"><h2 className="st">Order not found</h2><p>This link may be incomplete. Open the tracking link from your order page, or sign in to see your orders.</p><Link href="/account" className="btn yellow st">My orders</Link></div></div>
+  if (missing) return <div className="wrap" style={{ padding: '56px var(--gut)' }}><div className="empty"><h2 className="st">Order not found</h2><p>This link may be incomplete. Open the tracking link from your order page{otp ? ', or sign in to see your orders' : ''}, or look the order up with its number and your phone.</p><Link href={otp ? '/account' : '/track'} className="btn yellow st">{otp ? 'My orders' : 'Find my order'}</Link></div></div>
   if (!order) return <div className="wrap" style={{ padding: '56px var(--gut)' }} aria-busy="true">{msg || 'Loading your order…'}</div>
 
   const trackUrl = typeof window !== 'undefined' && token ? `${window.location.origin}/orders/${order.orderNo}?token=${token}` : ''
@@ -135,7 +137,7 @@ export function OrderView({ orderNo }: { orderNo: string }) {
           <button className="btn yellow st" onClick={() => navigator.clipboard?.writeText(trackUrl).then(() => setMsg('Link copied.'))}>Copy link</button>
         </div></div>
       ) : null}
-      <div className="obtns"><Link href="/products" className="btn st">Shop more</Link><Link href="/account" className="btn line2 st">My orders</Link></div>
+      <div className="obtns"><Link href="/products" className="btn st">Shop more</Link><Link href={otp ? '/account' : '/track'} className="btn line2 st">{otp ? 'My orders' : 'Find another order'}</Link></div>
 
       {mock ? (
         <div className="modal" role="dialog" aria-modal="true" aria-label="Test payment">

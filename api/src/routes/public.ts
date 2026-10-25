@@ -1,3 +1,4 @@
+import { env } from '../config/env.js'
 import { Router } from 'express'
 import { z } from 'zod'
 import { Product } from '../models/Product.js'
@@ -55,6 +56,14 @@ publicRouter.get('/meta/slots', async (_req, res) => res.json({ slots: (await ge
 publicRouter.get('/meta/contact', async (_req, res) => {
   const s = await getSettings()
   res.json({ contact: { businessName: s.businessName, phone: s.stallPhone, whatsapp: s.whatsapp, email: s.stallEmail, address: s.stallAddress, hours: s.openingHours } })
+})
+/** What the website needs on every page: login mode, the free-delivery amount, and the shop details set in the admin panel. */
+publicRouter.get('/meta/site', async (_req, res) => {
+  const [s, zone] = await Promise.all([getSettings(), DeliveryZone.findOne({ active: true, isDefault: true }).lean()])
+  res.json({
+    loginMode: env.LOGIN_MODE, freeOver: zone?.freeOver ?? null,
+    contact: { businessName: s.businessName, phone: s.stallPhone, whatsapp: s.whatsapp, email: s.stallEmail, address: s.stallAddress, hours: s.openingHours },
+  })
 })
 publicRouter.get('/meta/states', (_req, res) => res.json({ states: INDIA_STATES }))
 

@@ -5,10 +5,12 @@ import { Suspense } from 'react'
 import { acall, fmtDateTime, payLabel, STATUS_LABEL } from '@/lib/admin'
 import { Loading, PageHead, Pill, payTone, statusTone, useLoad } from '@/components/admin/ui'
 import { rupees } from '@/lib/format'
+import { WhatsAppButton, useAlerts } from '@/components/admin/Alerts'
 
 type O = { _id: string; orderNo: string; status: string; total: number; createdAt: string; contact: { name: string; phone: string }; shippingAddress: { city: string }; items: unknown[]; payment: { method: string; status: string } }
 
 function List() {
+  const { tick } = useAlerts()
   const router = useRouter()
   const sp = useSearchParams()
   const get = (k: string) => sp.get(k) ?? ''
@@ -22,7 +24,7 @@ function List() {
   // dates are picked as days in India time
   if (get('from')) qs.set('from', new Date(`${get('from')}T00:00:00+05:30`).toISOString())
   if (get('to')) qs.set('to', new Date(`${get('to')}T23:59:59+05:30`).toISOString())
-  const { data, error } = useLoad(() => acall<{ items: O[]; total: number; page: number; pages: number }>(`/orders?${qs}`), [qs.toString()])
+  const { data, error } = useLoad(() => acall<{ items: O[]; total: number; page: number; pages: number }>(`/orders?${qs}`), [qs.toString(), tick])
   const page = Number(get('page') || 1)
   return (
     <>
@@ -47,7 +49,7 @@ function List() {
         <>
           <div className="tblw">
             <table className="tbl stack">
-              <thead><tr><th>Order</th><th>When</th><th>Customer</th><th className="num">Items</th><th className="num">Total</th><th>Payment</th><th>Status</th></tr></thead>
+              <thead><tr><th>Order</th><th>When</th><th>Customer</th><th className="num">Items</th><th className="num">Total</th><th>Payment</th><th>Status</th><th>Customer chat</th></tr></thead>
               <tbody>
                 {data.items.map((o) => (
                   <tr key={o._id}>
@@ -58,9 +60,10 @@ function List() {
                     <td data-l="Total" className="num"><b>{rupees(o.total)}</b></td>
                     <td data-l="Payment"><Pill tone={payTone(o.payment.status)}>{payLabel(o.payment)}</Pill><div className="small">{o.payment.method === 'cod' ? 'Cash on delivery' : 'Online'}</div></td>
                     <td data-l="Status"><Pill tone={statusTone(o.status)}>{STATUS_LABEL[o.status]}</Pill></td>
+                    <td data-l="Chat"><WhatsAppButton order={o} /></td>
                   </tr>
                 ))}
-                {data.items.length === 0 && <tr><td colSpan={7} className="a-empty">No orders match.</td></tr>}
+                {data.items.length === 0 && <tr><td colSpan={8} className="a-empty">No orders match.</td></tr>}
               </tbody>
             </table>
           </div>
