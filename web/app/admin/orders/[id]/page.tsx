@@ -51,14 +51,14 @@ export default function OrderPage() {
       <PageHead title={`Order #${o.orderNo}`} sub={`Placed ${fmtDateTime(o.createdAt)}${o.deliverySlot ? ` · delivery slot: ${o.deliverySlot.replace(/_/g, ' ')}` : ''}`}>
         <Link href="/admin/orders" className="btn line2">← All orders</Link>
         <WhatsAppButton order={o} className="btn line2" />
-        <Link href={`/admin/orders/${o._id}/slip`} target="_blank" className="btn shadow">Print packing slip</Link>
+        <Link href={`/admin/orders/${o._id}/slip`} target="_blank" className="btn">Print packing slip</Link>
       </PageHead>
       {msg && <Notice kind={msg.kind}>{msg.text}</Notice>}
       <div className="rowsplit">
         <div className="main">
           <div className="a-card">
-            <h2 className="st">What to pack</h2>
-            <div className="tblw" style={{ border: 0, boxShadow: 'none' }}>
+            <h2>What to pack</h2>
+            <div className="tblw" style={{ border: 0 }}>
               <table className="tbl">
                 <thead><tr><th>Item</th><th className="num">Qty</th><th className="num">Price</th><th className="num">Total</th></tr></thead>
                 <tbody>
@@ -74,7 +74,7 @@ export default function OrderPage() {
             </div>
           </div>
           <div className="a-card">
-            <h2 className="st">Notes</h2>
+            <h2>Notes</h2>
             <div className="in fgrid">
               <div className="fld"><label htmlFor="an">Note for us (customers never see this)</label><textarea id="an" className="field" value={notes.adminNote} maxLength={1000} onChange={(e) => setNotes({ ...notes, adminNote: e.target.value })} /></div>
               <div className="fld"><label htmlFor="tn">Tracking note for the customer (courier name, number…)</label><input id="tn" className="field" value={notes.trackingNote} maxLength={300} onChange={(e) => setNotes({ ...notes, trackingNote: e.target.value })} /></div>
@@ -84,12 +84,12 @@ export default function OrderPage() {
         </div>
         <div className="side">
           <div className="a-card">
-            <h2 className="st">Status</h2>
+            <h2>Status</h2>
             <div className="in">
               <p style={{ marginTop: 0 }}><Pill tone={statusTone(o.status)}>{STATUS_LABEL[o.status]}</Pill> <Pill tone={payTone(o.payment.status)}>{payLabel(o.payment)}</Pill></p>
               {o.status === 'cancelled' && o.cancelReason && <p className="small">Reason: {o.cancelReason}</p>}
               <div className="btnrow">
-                {next && <button className="btn yellow shadow" disabled={busy || !canPackNow} onClick={() => act(() => acall(`/orders/${id}/status`, { method: 'PATCH', body: { status: next.to } }), `Order is now ${STATUS_LABEL[next.to].toLowerCase()}. The customer has been told.`)}>{next.label}</button>}
+                {next && <button className="btn" disabled={busy || !canPackNow} onClick={() => act(() => acall(`/orders/${id}/status`, { method: 'PATCH', body: { status: next.to } }), `Order is now ${STATUS_LABEL[next.to].toLowerCase()}. The customer has been told.`)}>{next.label}</button>}
                 {o.payment.status === 'cod_due' && o.status !== 'cancelled' && <button className="btn green" disabled={busy} onClick={() => act(() => acall(`/orders/${id}/mark-cod-collected`, { method: 'POST', body: {} }), 'Marked as cash collected.')}>Cash collected</button>}
                 {canRefund && <button className="btn line2" disabled={busy} onClick={() => { setPanel(panel === 'refund' ? null : 'refund'); setAmount(fromPaise(o.total)) }}>Refund</button>}
                 {canCancel && <button className="btn red" disabled={busy} onClick={() => setPanel(panel === 'cancel' ? null : 'cancel')}>Cancel order</button>}
@@ -116,19 +116,19 @@ export default function OrderPage() {
             </div>
           </div>
           <div className="a-card">
-            <h2 className="st">Customer</h2>
+            <h2>Customer</h2>
             <div className="in">
               <dl className="kv">
                 <dt>Name</dt><dd>{o.contact.name}</dd>
                 <dt>Phone</dt><dd><a href={`tel:${o.contact.phone}`}><u>{o.contact.phone}</u></a></dd>
                 {o.contact.email && <><dt>Email</dt><dd>{o.contact.email}</dd></>}
-                <dt>Deliver to</dt><dd>{a.name}, {a.phone}<br />{a.line1}{a.line2 ? `, ${a.line2}` : ''}<br />{a.city}, {a.state} {a.pincode}</dd>
+                <dt>Deliver to</dt><dd>{a.name}, {a.phone}<br/>{a.line1}{a.line2 ? `, ${a.line2}` : ''}<br/>{a.city}, {a.state} {a.pincode}</dd>
                 <dt>Payment</dt><dd>{o.payment.method === 'cod' ? 'Cash on delivery' : 'Online (Razorpay)'}{o.payment.razorpayPaymentId ? <div className="small">{o.payment.razorpayPaymentId}</div> : null}</dd>
               </dl>
             </div>
           </div>
           <div className="a-card">
-            <h2 className="st">History</h2>
+            <h2>History</h2>
             <div className="in"><ul className="hist">{[...o.statusHistory].reverse().map((h, i) => (
               <li key={i}><span><b>{STATUS_LABEL[h.status] ?? h.status}</b>{h.note ? <span className="small"> · {h.note}</span> : null}<div className="small">{h.by.startsWith('admin') ? 'by shop staff' : h.by}</div></span><span className="small">{fmtDateTime(h.at)}</span></li>
             ))}</ul></div>

@@ -116,8 +116,8 @@ export function CheckoutView() {
   if (ready && lines.length === 0) {
     return (
       <div className="wrap" style={{ padding: '56px var(--gut)' }}>
-        <div className="empty"><h2 className="st">Your cart is empty</h2><p>Add something first, then come back to check out.</p>
-          <Link href="/products" className="btn yellow big st" style={{ padding: '0 32px' }}>Shop the catch</Link></div>
+        <div className="empty"><h2>Your cart is empty</h2><p>Add something first, then come back to check out.</p>
+          <Link href="/products" className="btn big" style={{ padding: '0 32px' }}>Shop the catch</Link></div>
       </div>
     )
   }
@@ -135,7 +135,7 @@ export function CheckoutView() {
     <div className="wrap cols">
       <div className="left">
         <section className="box">
-          <div className="box-h st">1 · Your details</div>
+          <div className="box-h">1 · Your details</div>
           <div className="box-b">
             {!customer && otp ? <p className="small" style={{ margin: 0, flex: '1 1 100%' }}>Ordering as a guest. <Link href="/sign-in" style={{ textDecoration: 'underline', fontWeight: 700 }}>Sign in</Link> to use saved addresses.</p> : null}
             {fld('name', 'Full name', { autoComplete: 'name' })}
@@ -145,13 +145,13 @@ export function CheckoutView() {
         </section>
 
         <section className="box">
-          <div className="box-h st">2 · Delivery address</div>
+          <div className="box-h">2 · Delivery address</div>
           <div className="box-b">
             {saved.length > 0 ? (
               <div className="picker" role="group" aria-label="Saved addresses">
                 {saved.map((a) => (
                   <button key={a._id} type="button" className={a._id === pickedId ? 'sel' : ''} onClick={() => pick(a)} aria-pressed={a._id === pickedId}>
-                    <b>{a.label || 'Address'}{a.isDefault ? ' · default' : ''}</b><br />{a.line1}, {a.city} {a.pincode}
+                    <b>{a.label || 'Address'}{a.isDefault ? ' · default' : ''}</b><br/>{a.line1}, {a.city} {a.pincode}
                   </button>
                 ))}
               </div>
@@ -183,14 +183,14 @@ export function CheckoutView() {
         </section>
 
         <section className="box">
-          <div className="box-h st">3 · Payment</div>
+          <div className="box-h">3 · Payment</div>
           <div className="box-b pay" role="radiogroup" aria-label="Payment">
             <label className={pay === 'razorpay' ? 'sel' : ''}>
-              <span><input type="radio" name="pay" checked={pay === 'razorpay'} onChange={() => setPay('razorpay')} /><span className="t st">Pay online</span></span>
+              <span><input type="radio" name="pay" checked={pay === 'razorpay'} onChange={() => setPay('razorpay')} /><span className="t">Pay online</span></span>
               <p>UPI, cards and net banking.</p>
             </label>
             <label className={pay === 'cod' ? 'sel' : ''} style={codOk ? undefined : { opacity: 0.5 }}>
-              <span><input type="radio" name="pay" disabled={!codOk} checked={pay === 'cod'} onChange={() => setPay('cod')} /><span className="t st">Cash on delivery</span></span>
+              <span><input type="radio" name="pay" disabled={!codOk} checked={pay === 'cod'} onChange={() => setPay('cod')} /><span className="t">Cash on delivery</span></span>
               <p>{codOk ? 'Pay when your order arrives.' : 'Not available for this pincode or order size.'}</p>
             </label>
           </div>
@@ -198,18 +198,18 @@ export function CheckoutView() {
       </div>
 
       <aside className="right sum" aria-label="Your order">
-        <div className="sum-h st">Your order</div>
+        <div className="sum-h">Your order</div>
         <div className="sum-b">
           {quote?.lines.map((l, i) => (
             <div className="r" key={i}><span>{l.name}{l.weightG && l.category === 'fresh' ? ` · ${l.weightG >= 1000 ? l.weightG / 1000 + ' kg' : l.weightG + ' g'}` : ''} × {l.qty}</span><b>{rupees(l.lineTotal)}</b></div>
           ))}
           <div className="r"><span>Delivery</span><b>{!quote ? '…' : quote.deliveryCharge === 0 ? 'Free' : rupees(quote.deliveryCharge)}</b></div>
           {quote && quote.discount > 0 ? <div className="r"><span>Coupon {quote.couponCode}</span><b>−{rupees(quote.discount)}</b></div> : null}
-          <div className="total"><span className="st">Total</span><span className="st">{rupees(quote?.total ?? 0)}</span></div>
+          <div className="total"><span>Total</span><span>{rupees(quote?.total ?? 0)}</span></div>
           {error ? <div className="bad-t" role="alert">{error}</div> : null}
           {problems.map((p, i) => <div key={i} className="bad-t" role="alert">{p.message}</div>)}
           {fail ? <div className="bad-t" role="alert">{fail}</div> : null}
-          <button className="go st" disabled={busy || !quote || problems.length > 0} onClick={place}>{busy ? 'Placing…' : 'Place order'}</button>
+          <button className="go" disabled={busy || !quote || problems.length > 0} onClick={place}>{busy ? 'Placing…' : 'Place order'}</button>
           <div className="note">By placing the order you agree to our delivery terms. {pay === 'razorpay' ? 'Online orders are held for 30 minutes while you pay.' : ''}</div>
         </div>
       </aside>

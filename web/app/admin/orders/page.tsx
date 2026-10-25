@@ -29,7 +29,7 @@ function List() {
   return (
     <>
       <PageHead title="Orders" sub="Orders waiting for online payment are hidden until they are paid. Choose “Waiting for payment” to see them.">
-        <Link href="/admin/orders/picklist" target="_blank" className="btn line2 shadow">Print pick list (new orders)</Link>
+        <Link href="/admin/orders/picklist" target="_blank" className="btn line2">Print pick list (new orders)</Link>
       </PageHead>
       <div className="filters">
         <div className="fld"><label htmlFor="st">Status</label>
@@ -77,4 +77,4 @@ function List() {
     </>
   )
 }
-export default function Orders() { return <Suspense fallback={<p className="small">Loading…</p>}><List /></Suspense> }
+export default function Orders() { return <Suspense fallback={<p className="small">Loading…</p>}><List/></Suspense> }

@@ -13,7 +13,7 @@ Planning document, updated in Round 1 (decisions accepted, API built). The web p
 | `/products/[slug]` | Product | I | Gallery, cut and weight choosers, quantity, Add to cart, Buy now, pincode check, "You may also like". |
 | `/cart` | Cart | J | Lines, free-delivery progress bar, coupon box, order summary. |
 | `/checkout` | Checkout | K | Details, address, delivery slot, payment (online / COD), order summary. |
-| `/order/[orderNo]/thanks` | Order placed | not designed | Simple confirmation. Needed after payment. Built in Boat Paint style from existing parts. |
+| `/order/[orderNo]/thanks` | Order placed | not designed | Simple confirmation. Needed after payment. Built in the shop style from existing parts. |
 | `/account` | Account, Orders tab | L | Redirects to `/account/orders`. |
 | `/account/orders` | Your orders | L | Each order: packed, shipped, delivered strip, Track order, Order again. |
 | `/account/orders/[orderNo]` | Track order | not designed | Status timeline, items, address, payment. Also reached by guests with a signed link. |
@@ -23,7 +23,7 @@ Planning document, updated in Round 1 (decisions accepted, API built). The web p
 | `/about` | About | G nav link "boats" now points here, no design | Small About page: the boats, the family, the stall. Built in Round 5. |
 | `/terms`, `/delivery-terms` | Text pages | not designed | Linked from checkout text. Plain text in the same layout. |
 
-**Responsive (overrides the desktop-only designs):** the customer site must work at 390 px wide and at 1440 px. The admin panel must also work on a phone, because the owner updates prices from the market stall. Keep the Boat Paint look, scale the big headings down on phones, and use the full state list (36 states and UTs) at checkout.
+**Responsive (overrides the desktop-only designs):** the customer site must work at 390 px wide and at 1440 px. The admin panel must also work on a phone, because the owner updates prices from the market stall. Keep the shop look, scale the big headings down on phones, and use the full state list (36 states and UTs) at checkout.
 
 Shared layout parts, all from the designs: red top bar (12px), header (logo, Fresh / Dry / Frozen / Account, Cart count), blue page banner with white and red stripe bands, red "All-India delivery" band, ink footer.
 
@@ -243,7 +243,7 @@ rajufishes/
   README.md
   .gitignore
   .env.example
-  design/                  chosen Boat Paint pages (reference, read only)
+  design/                  Ice and Paper design reference (read only)
   docs/
     PLAN.md  ROUNDS.md  PHOTOS.md  DECISIONS.md
   api/
@@ -272,7 +272,7 @@ rajufishes/
     public/
 ```
 
-Design tokens live in one file: fonts, the four colours (plus teal `#27B0A8` for fresh cards, `#F4B400` for dry, `#8CC4E8` for frozen as used in the designs), 3px border, solid shadows 6/7/10px, pennant clip-path.
+Design tokens live in one file, `web/styles/theme.css`: fonts, colours, photo tints. Hairline borders, square corners, no shadows.
 
 ## 8. Security basics
 

@@ -58,21 +58,19 @@ export function SignInView() {
   return (
     <div className="sign">
       <div className="sign-l">
-        <div className="kick st">Welcome back</div>
-        <h1 className="st">Sign in<br />to order.</h1>
+        <h1>Sign in to order.</h1>
         <p>No password to remember. We send a code to your mobile number.</p>
-        <div className="bands"><i style={{ background: 'var(--white)' }} /><i style={{ background: 'var(--red)' }} /></div>
       </div>
       <div className="sign-r">
         <div className="sum">
-          <div className="sum-h st">Sign in with your phone</div>
+          <div className="sum-h">Sign in with your phone</div>
           <div className="sign-b">
             <form onSubmit={send} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
                 <label className="lab" htmlFor="ph">Mobile number</label>
-                <div className="phonerow"><b className="st">+91</b><input id="ph" type="tel" inputMode="numeric" autoComplete="tel-national" placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} /></div>
+                <div className="phonerow"><b>+91</b><input id="ph" type="tel" inputMode="numeric" autoComplete="tel-national" placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} /></div>
               </div>
-              <button className="dark st" disabled={busy}>{sent ? 'Send code again' : 'Send code'}</button>
+              <button className="btn" disabled={busy}>{sent ? 'Send code again' : 'Send code'}</button>
             </form>
             {sent ? (
               <form className="otp" onSubmit={verify}>
@@ -84,7 +82,7 @@ export function SignInView() {
                   ))}
                 </div>
                 <p className="small" style={{ margin: 0 }}>Did not get it? <button type="button" className="linkbtn" onClick={() => send()}>Send again</button></p>
-                <button className="red st" disabled={busy}>Verify and continue</button>
+                <button className="btn" disabled={busy}>Verify and continue</button>
               </form>
             ) : null}
             {msg ? <div className="bad-t" role="alert">{msg}</div> : null}

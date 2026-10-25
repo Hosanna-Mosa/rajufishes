@@ -42,9 +42,9 @@ export function CartView() {
     return (
       <div className="wrap lost" style={{ padding: '56px var(--gut)' }}>
         <div className="empty">
-          <h2 className="st">Your cart is empty</h2>
+          <h2>Your cart is empty</h2>
           <p>Add something fresh from the catch and it will show up here.</p>
-          <Link href="/products" className="btn yellow big st" style={{ padding: '0 32px' }}>Shop the catch</Link>
+          <Link href="/products" className="btn big" style={{ padding: '0 32px' }}>Shop the catch</Link>
         </div>
       </div>
     )
@@ -88,42 +88,42 @@ export function CartView() {
                   <div className="line" key={`${l.productId}-${l.cut}-${l.weightG}`}>
                     <LineThumb image={l.image} name={l.name} category={l.category} />
                     <div className="lbody">
-                      <Link href={`/products/${l.slug}`} className="lname st">{l.name}</Link>
+                      <Link href={`/products/${l.slug}`} className="lname">{l.name}</Link>
                       <div className="lopt">{optionsText(l)}</div>
                       <button className="lrm" onClick={() => removeLine(cl)} aria-label={`Remove ${l.name}`}>Remove</button>
                     </div>
-                    <div className="stepper st">
+                    <div className="stepper">
                       <button onClick={() => setQty(cl, cl.qty - 1)} aria-label="One less">−</button>
                       <span aria-live="polite">{cl.qty}</span>
                       <button onClick={() => setQty(cl, cl.qty + 1)} aria-label="One more">+</button>
                     </div>
-                    <div className="ltot st">{rupees(l.lineTotal)}</div>
+                    <div className="ltot">{rupees(l.lineTotal)}</div>
                   </div>
                 )
               })
             : lines.filter((l) => !unknown.has(l.productId)).map((l) => (
                 <div className="line" key={`${l.productId}-${l.cut}-${l.weightG}`} aria-busy="true">
                   <span className="thumb" />
-                  <div className="lbody"><span className="lname st">{loading ? 'Loading…' : l.slug}</span></div>
+                  <div className="lbody"><span className="lname">{loading ? 'Loading…' : l.slug}</span></div>
                 </div>
               ))}
         </div>
-        <Link href="/products" className="keep st">← Keep shopping</Link>
+        <Link href="/products" className="keep">← Keep shopping</Link>
       </div>
 
       <aside className="right sum" aria-label="Order summary">
-        <div className="sum-h st">Order summary</div>
+        <div className="sum-h">Order summary</div>
         <div className="sum-b">
           <div className="r"><span>Subtotal</span><b>{rupees(subtotal)}</b></div>
           <div className="r"><span>Delivery</span><b>{!quote ? '…' : quote.deliveryCharge === 0 ? 'Free' : rupees(quote.deliveryCharge)}</b></div>
           {quote && quote.discount > 0 ? <div className="r"><span>Coupon {quote.couponCode}</span><b>−{rupees(quote.discount)}</b></div> : null}
           <form className="coup" onSubmit={apply}>
             <input aria-label="Coupon code" placeholder="Coupon code" value={typed} onChange={(e) => setTyped(e.target.value)} maxLength={30} autoCapitalize="characters" />
-            <button className="st" type="submit">Apply</button>
+            <button type="submit">Apply</button>
           </form>
           {couponMsg ? <div className={quote?.couponError ? 'bad-t' : 'good-t'} role="status">{couponMsg}</div> : null}
-          <div className="total"><span className="st">Total</span><span className="st">{rupees(quote?.total ?? 0)}</span></div>
-          <button className="go st" disabled={!quote || problems.length > 0 || loading} onClick={() => router.push('/checkout')}>Go to checkout</button>
+          <div className="total"><span>Total</span><span>{rupees(quote?.total ?? 0)}</span></div>
+          <button className="go" disabled={!quote || problems.length > 0 || loading} onClick={() => router.push('/checkout')}>Go to checkout</button>
           <div className="note">Pay online or on delivery. Final delivery charge depends on your pincode.</div>
         </div>
       </aside>

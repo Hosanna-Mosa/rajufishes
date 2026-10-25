@@ -11,9 +11,9 @@ export default async function Track({ searchParams }: { searchParams: Promise<{ 
   return (
     <main>
       <div className="wrap trackpage">
-        <h1 className="st">Track your order</h1>
+        <h1>Track your order</h1>
         <p>Type the order number from your confirmation page and the phone number you gave when you ordered. You can also open the private tracking link you were shown after ordering.</p>
-        <TrackForm />
+        <TrackForm/>
       </div>
     </main>
   )

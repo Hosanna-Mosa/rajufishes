@@ -59,12 +59,12 @@ export default function Delivery() {
   return (
     <>
       <PageHead title="Delivery" sub="Where we deliver and what it costs. The shop picks the zone that matches the customer’s pincode.">
-        <button className="btn yellow shadow" onClick={() => { setMsg(null); setEdit(blankZone) }}>+ Add a zone</button>
+        <button className="btn" onClick={() => { setMsg(null); setEdit(blankZone) }}>+ Add a zone</button>
       </PageHead>
       {msg && <Notice kind={msg.kind}>{msg.text}</Notice>}
 
       <div className="a-card">
-        <h2 className="st">Fresh fish only to chosen cities</h2>
+        <h2>Fresh fish only to chosen cities</h2>
         <div className="in">
           <label className="chk"><input type="checkbox" checked={settings.restrictFreshToZones} disabled={busy} onChange={(e) => saveSettings({ restrictFreshToZones: e.target.checked }, e.target.checked ? 'Fresh fish is now only delivered to zones that allow it.' : 'Fresh fish can go anywhere we deliver.')} /> Only deliver fresh fish to zones marked “fresh fish allowed”</label>
           <p className="small" style={{ margin: '4px 0 0' }}>{settings.restrictFreshToZones ? 'ON: customers in other places can still buy dry and frozen packs.' : 'OFF: fresh fish goes to every pincode we deliver to.'}</p>
@@ -73,7 +73,7 @@ export default function Delivery() {
 
       {edit && (
         <form className="a-card" onSubmit={saveZone} noValidate>
-          <h2 className="st">{edit._id ? 'Change zone' : 'New zone'}</h2>
+          <h2>{edit._id ? 'Change zone' : 'New zone'}</h2>
           <div className="in fgrid">
             <div className="fld h2"><label htmlFor="zn">Zone name</label><input id="zn" className="field" value={edit.name} maxLength={60} onChange={(e) => set({ name: e.target.value })} /></div>
             <div className="fld h2"><label htmlFor="ze">Delivery takes (days)</label><input id="ze" className="field" inputMode="numeric" value={edit.etaDays} onChange={(e) => set({ etaDays: e.target.value })} /></div>
@@ -88,14 +88,14 @@ export default function Delivery() {
             <label className="chk fld"><input type="checkbox" checked={edit.codAllowed} onChange={(e) => set({ codAllowed: e.target.checked })} /> Cash on delivery allowed here</label>
             <label className="chk fld"><input type="checkbox" checked={edit.isDefault} onChange={(e) => set({ isDefault: e.target.checked })} /> This is the default zone (used for any pincode no other zone covers)</label>
             <label className="chk fld"><input type="checkbox" checked={edit.active} onChange={(e) => set({ active: e.target.checked })} /> Zone is on</label>
-            <div className="btnrow fld"><button className="btn yellow" type="submit" disabled={busy}>{busy ? 'Saving…' : 'Save zone'}</button><button type="button" className="btn line2" onClick={() => setEdit(null)}>Cancel</button></div>
+            <div className="btnrow fld"><button className="btn" type="submit" disabled={busy}>{busy ? 'Saving…' : 'Save zone'}</button><button type="button" className="btn line2" onClick={() => setEdit(null)}>Cancel</button></div>
           </div>
         </form>
       )}
 
       <div className="tblw">
         <table className="tbl stack">
-          <thead><tr><th>Zone</th><th>Covers</th><th className="num">Charge</th><th className="num">Free over</th><th>Fresh</th><th>Cash</th><th /></tr></thead>
+          <thead><tr><th>Zone</th><th>Covers</th><th className="num">Charge</th><th className="num">Free over</th><th>Fresh</th><th>Cash</th><th/></tr></thead>
           <tbody>
             {zones.data.items.map((z) => (
               <tr key={z._id} className={z.active ? undefined : 'dim'}>
@@ -115,11 +115,11 @@ export default function Delivery() {
       <div className="rowsplit" style={{ marginTop: 28 }}>
         <div className="main">
           <form className="a-card" onSubmit={testPin}>
-            <h2 className="st">Test a pincode</h2>
+            <h2>Test a pincode</h2>
             <div className="in fgrid">
               <div className="fld"><label htmlFor="tp">Pincode</label><input id="tp" className="field" inputMode="numeric" maxLength={6} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} /></div>
               <button className="btn" type="submit" disabled={pin.length !== 6}>Check</button>
-              {pinRes && <p style={{ margin: 0, fontWeight: 700 }} role="status">{pinRes}</p>}
+              {pinRes && <p style={{ margin: 0, fontWeight: 600 }} role="status">{pinRes}</p>}
             </div>
           </form>
         </div>
@@ -143,7 +143,7 @@ function SettingsCard({ s, busy, save }: { s: Settings; busy: boolean; save: (p:
   const codP = toPaise(cod)
   return (
     <div className="a-card">
-      <h2 className="st">Shop details and other settings</h2>
+      <h2>Shop details and other settings</h2>
       <div className="in fgrid">
         <div className="fld"><label htmlFor="cm">Biggest cash on delivery order ₹ (0 = no limit)</label><input id="cm" className="field" inputMode="decimal" value={cod} onChange={(e) => setCod(e.target.value)} /></div>
         <div className="fld"><label htmlFor="fm">Message when fresh fish cannot go to a pincode</label><textarea id="fm" className="field" value={msgTxt} maxLength={300} onChange={(e) => setMsgTxt(e.target.value)} /></div>

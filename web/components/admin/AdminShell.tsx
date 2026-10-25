@@ -27,7 +27,7 @@ function Nav({ me, path }: { me: AdminUser; path: string }) {
   const id = m?.[1]
   useEffect(() => { if (id) opened(id) }, [id, opened])
   return (
-    <nav aria-label="Admin" className="a-nav st">
+    <nav aria-label="Admin" className="a-nav">
       {NAV.filter((n) => !n.owner || me.role === 'owner').map((n) => {
         const on = n.href === '/admin' ? path === '/admin' : path === n.href || path.startsWith(n.href + '/')
         return (
@@ -74,7 +74,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <div className="topbar" />
         <div className="a-wrap">
           <aside className="a-side">
-            <Link href="/admin" className="a-logo st">Raju Fishes<small>Shop admin</small></Link>
+            <Link href="/admin" className="a-logo">Raju Fishes<small>Shop admin</small></Link>
             <Nav me={me} path={path} />
             <div className="a-me small">
               <b>{me.email}</b>
@@ -83,7 +83,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <Link href="/" target="_blank" className="a-lnk">Open the shop ↗</Link>
             </div>
           </aside>
-          <main className="a-main"><SoundBar />{children}</main>
+          <main className="a-main"><SoundBar/>{children}</main>
         </div>
       </div>
       </AlertsProvider>

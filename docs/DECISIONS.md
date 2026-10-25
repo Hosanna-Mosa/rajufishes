@@ -8,7 +8,7 @@
 - **Stock:** a number per product, held 30 minutes during online payment, put back on cancel or expiry.
 - **Pricing:** each product is per kg or per pack. "Prawns and crab" is a display group on top of fresh, dry and frozen.
 - **"Boats" nav link** becomes an About page.
-- **Responsive (overrides the desktop-only designs):** customer site works at 390 px and 1440 px; the admin panel also works on a phone. Boat Paint look kept, big headings scaled down on phones, full state list at checkout.
+- **Responsive (overrides the desktop-only designs):** customer site works at 390 px and 1440 px; the admin panel also works on a phone. Shop look kept, big headings scaled down on phones, full state list at checkout.
 
 ## Still open
 

@@ -61,7 +61,7 @@ export default function MarketBoard() {
       <PageHead title="Today’s market board" sub="Set today’s price and stock for every product, switch products on or off for today, then press Save once." />
       <div className="mb-bar">
         <button className="btn big" type="button" onClick={save} disabled={busy || dirty.length === 0 || anyInvalid}>{busy ? 'Saving…' : 'Save'}</button>
-        <div className="grow st" style={{ fontSize: 24, fontWeight: 800 }}>
+        <div className="grow" style={{ fontSize: 20, fontWeight: 600 }}>
           {anyInvalid ? 'Fix the red boxes first' : dirty.length ? `${dirty.length} ${dirty.length === 1 ? 'change' : 'changes'} not saved yet` : 'Everything is saved'}
         </div>
         <input className="field" placeholder="Find a product…" aria-label="Find a product" value={q} onChange={(e) => setQ(e.target.value)} />
@@ -101,5 +101,5 @@ export default function MarketBoard() {
 }
 
 function MarketGroup({ name, children }: { name: string; children: React.ReactNode }) {
-  return <><tr className="grp"><td colSpan={5} className="st nolab">{name}</td></tr>{children}</>
+  return <><tr className="grp"><td colSpan={5} className="nolab">{name}</td></tr>{children}</>
 }

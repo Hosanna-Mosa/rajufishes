@@ -14,7 +14,7 @@ export default function Products() {
   return (
     <>
       <PageHead title="Products" sub="Everything the shop sells. To change today’s price or stock quickly, use the market board.">
-        <Link href="/admin/products/new" className="btn yellow shadow">+ Add a product</Link>
+        <Link href="/admin/products/new" className="btn">+ Add a product</Link>
       </PageHead>
       <div className="filters">
         <div className="fld grow"><label htmlFor="q">Search</label><input id="q" className="field" placeholder="Name of the product" value={q} onChange={(e) => setQ(e.target.value)} /></div>
@@ -27,7 +27,7 @@ export default function Products() {
             <tbody>
               {data.items.map((p) => (
                 <tr key={p._id} className={p.active ? undefined : 'dim'}>
-                  <td data-l="Photo" style={{ width: 70 }}>{p.images[0]?.url ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={p.images[0].url} alt="" width={56} height={44} style={{ objectFit: 'cover', border: '2px solid var(--ink)' }} /> : <span className="small">none</span>}</td>
+                  <td data-l="Photo" style={{ width: 70 }}>{p.images[0]?.url ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={p.images[0].url} alt="" width={56} height={44} style={{ objectFit: 'cover', border: '1px solid var(--hair)' }} /> : <span className="small">none</span>}</td>
                   <td data-l="Name"><Link className="rowlink" href={`/admin/products/${p._id}`}>{p.name}</Link><div className="small">{p.group}</div></td>
                   <td data-l="Type">{CATEGORY_LABEL[p.category]}</td>
                   <td data-l="Price" className="num">{priceText(p)}</td>

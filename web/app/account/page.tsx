@@ -9,5 +9,5 @@ export const metadata: Metadata = { title: 'My account' }
 export default async function AccountPage() {
   // phone sign in is switched off in guest mode: orders are found with the order number and phone
   if ((await getBusiness()).loginMode !== 'otp') redirect('/track')
-  return <main><Suspense fallback={null}><AccountView /></Suspense></main>
+  return <main><Suspense fallback={null}><AccountView/></Suspense></main>
 }

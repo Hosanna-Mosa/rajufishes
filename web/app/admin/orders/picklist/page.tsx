@@ -23,7 +23,7 @@ export default function PickList() {
     <>
       <div className="noprint"><button className="btn" onClick={() => window.print()}>Print</button><button className="btn line2" onClick={() => window.close()}>Close</button></div>
       <div className="slip">
-        <div className="hd"><h1 className="st">Pick list</h1><div>{orders.length} new orders · {fmtDateTime(new Date().toISOString())}</div></div>
+        <div className="hd"><h1>Pick list</h1><div>{orders.length} new orders · {fmtDateTime(new Date().toISOString())}</div></div>
         {list.length === 0 ? <p>No new orders to pack.</p> : (
           <table>
             <thead><tr><th style={{ width: 28 }} /><th>Item</th><th>Option</th><th style={{ textAlign: 'right' }}>Total qty</th><th>Orders</th></tr></thead>

@@ -1,0 +1,28 @@
+/* Ice and Paper: the one place colours, fonts and spacing are defined. Everything else uses these tokens. */
+:root {
+  --white: #ffffff;
+  --ink: #111418;
+  --grey: #3b444d;
+  --soft: #5b656f;
+  --hair: #d9dee3;
+  --brand: #0a5c8f;
+  --danger: #8a1c14;
+  --skel: #e4e7ea;
+  --wash: #f5f7f8;
+
+  /* photo placeholder tints */
+  --tint-1: #dce8ee;
+  --tint-2: #e4e7ea;
+  --tint-3: #efe4dc;
+  --tint-4: #e9e3db;
+  --tint-5: #ebe8d8;
+  --tint-6: #e8e6dc;
+  --tint-7: #dde5ee;
+  --tint-8: #e0e6ea;
+
+  --font-head: var(--font-bricolage), 'Helvetica Neue', Arial, sans-serif;
+  --font-text: var(--font-hanken), 'Helvetica Neue', Arial, sans-serif;
+
+  --page: 1280px;
+  --gut: 40px;
+}

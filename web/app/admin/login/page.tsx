@@ -23,10 +23,10 @@ export default function AdminLogin() {
   }
   return (
     <div className="a-login">
-      <div className="tag st">Staff only</div>
-      <h1 className="st">Raju Fishes<br />shop admin</h1>
+      <span className="price">Staff only</span>
+      <h1>Raju Fishes<br/>shop admin</h1>
       <form className="a-card" onSubmit={submit} noValidate>
-        <h2 className="st">Sign in</h2>
+        <h2>Sign in</h2>
         <div className="in fgrid">
           {err && <Notice kind="bad">{err}</Notice>}
           <div className="fld">
@@ -37,7 +37,7 @@ export default function AdminLogin() {
             <label htmlFor="pw">Password</label>
             <input id="pw" className="field" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          <button className="btn yellow big" type="submit" disabled={busy || !email || !password} style={{ width: '100%' }}>{busy ? 'Signing in…' : 'Sign in'}</button>
+          <button className="btn" type="submit" disabled={busy || !email || !password} style={{ width: '100%' }}>{busy ? 'Signing in…' : 'Sign in'}</button>
         </div>
       </form>
     </div>

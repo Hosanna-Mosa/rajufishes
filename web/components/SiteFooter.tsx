@@ -4,31 +4,33 @@ import type { Resolved } from '@/lib/business'
 export function SiteFooter({ biz }: { biz: Resolved }) {
   const { b } = biz
   return (
-    <footer>
-      <div className="strip st">
-        <div>All-India delivery · Online or cash on delivery · Free delivery over {b.freeOver}</div>
-      </div>
-      <div className="ftr">
-        <div>
-          <span className="big st">{b.name}</span>
-          <span>Fresh fish from our own boats. Prices on the site are the prices you pay.</span>
-          <nav className="st" aria-label="Footer">
-            <Link href="/products">All products</Link>
-            <Link href="/about">About</Link>
-            <Link href="/cart">Cart</Link>
-            <Link href="/track">Track order</Link>
-          </nav>
-          <nav className="legal" aria-label="Policies">
-            <Link href="/contact">Contact us</Link>
-            <Link href="/shipping">Shipping and delivery</Link>
-            <Link href="/refunds">Cancellation and refunds</Link>
-            <Link href="/privacy">Privacy policy</Link>
-            <Link href="/terms">Terms and conditions</Link>
-          </nav>
-          <span className="reach">{b.phone} · {b.email}</span>
-          <span className="reach">{b.address}</span>
-          <span className="reach">FSSAI {b.fssai} · GST {b.gst}</span>
+    <footer className="ftr">
+      <div className="wrap">
+        <div className="ftr-top">
+          <span className="big">{b.name}</span>
+          <div className="ftr-cols">
+            <nav aria-label="Shop">
+              <Link href="/products?group=Fresh+fish,Prawns+and+crab">Fresh</Link>
+              <Link href="/products?group=Dry+fish">Dry</Link>
+              <Link href="/products?group=Frozen+packs">Frozen</Link>
+              <Link href="/track">Track order</Link>
+            </nav>
+            <nav aria-label="Company">
+              <Link href="/about">About</Link>
+              <Link href="/contact">Contact</Link>
+              <Link href="/shipping">Shipping</Link>
+              <Link href="/cart">Cart</Link>
+            </nav>
+            <nav aria-label="Policies">
+              <Link href="/refunds">Refunds</Link>
+              <Link href="/privacy">Privacy</Link>
+              <Link href="/terms">Terms</Link>
+            </nav>
+          </div>
         </div>
+        <p className="reach">All-India delivery · Online or cash on delivery · Free delivery over {b.freeOver}</p>
+        <p className="reach">{b.phone} · {b.email} · {b.address}</p>
+        <p className="reach">FSSAI {b.fssai} · GST {b.gst}</p>
       </div>
     </footer>
   )

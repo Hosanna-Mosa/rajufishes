@@ -27,7 +27,7 @@ export default function Staff() {
       {msg && <Notice kind={msg.kind}>{msg.text}</Notice>}
       <div className="tblw">
         <table className="tbl stack">
-          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last sign in</th><th /></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last sign in</th><th/></tr></thead>
           <tbody>
             {data.items.map((u) => (
               <tr key={u.id}>
@@ -56,16 +56,16 @@ export default function Staff() {
       </div>
       <div className="rowsplit" style={{ marginTop: 28 }}>
         <form className="main a-card" onSubmit={(e) => { e.preventDefault(); void run(() => acall('/staff', { method: 'POST', body: add }), `${add.name} can now sign in.`, () => setAdd({ name: '', email: '', password: '' })) }}>
-          <h2 className="st">Add a staff login</h2>
+          <h2>Add a staff login</h2>
           <div className="in fgrid">
             <div className="fld h2"><label htmlFor="sn">Name</label><input id="sn" className="field" value={add.name} maxLength={80} onChange={(e) => setAdd({ ...add, name: e.target.value })} /></div>
             <div className="fld h2"><label htmlFor="se">Email</label><input id="se" className="field" type="email" autoComplete="off" value={add.email} onChange={(e) => setAdd({ ...add, email: e.target.value })} /></div>
             <div className="fld"><label htmlFor="sp">Password (at least 10 characters)</label><input id="sp" className="field" type="password" autoComplete="new-password" value={add.password} onChange={(e) => setAdd({ ...add, password: e.target.value })} /><div className="hint">Tell them the password in person. They can sign in right away.</div></div>
-            <button className="btn yellow" disabled={busy || !add.name.trim() || !add.email || add.password.length < 10}>Add staff login</button>
+            <button className="btn" disabled={busy || !add.name.trim() || !add.email || add.password.length < 10}>Add staff login</button>
           </div>
         </form>
         <form className="side a-card" onSubmit={(e) => { e.preventDefault(); void run(() => acall('/auth/password', { method: 'POST', body: mine }), 'Your password was changed.', () => setMine({ current: '', next: '' })) }}>
-          <h2 className="st">Your own password</h2>
+          <h2>Your own password</h2>
           <div className="in fgrid">
             <p className="small" style={{ margin: 0 }}>Signed in as {me.email}</p>
             <div className="fld"><label htmlFor="mc">Current password</label><input id="mc" className="field" type="password" autoComplete="current-password" value={mine.current} onChange={(e) => setMine({ ...mine, current: e.target.value })} /></div>

@@ -12,7 +12,7 @@ export function AddButton({ product }: { product: Mini }) {
   return (
     <button
       type="button"
-      className="btn add st"
+      className="btn add"
       disabled={!product.available}
       aria-label={`Add ${product.name} to cart`}
       onClick={() => {

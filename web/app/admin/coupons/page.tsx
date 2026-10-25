@@ -37,11 +37,11 @@ export default function Coupons() {
   if (!data) return <Loading error={error} />
   return (
     <>
-      <PageHead title="Coupons" sub="Discount codes customers type at checkout."><button className="btn yellow shadow" onClick={() => { setMsg(null); setF(blank) }}>+ Add a coupon</button></PageHead>
+      <PageHead title="Coupons" sub="Discount codes customers type at checkout."><button className="btn" onClick={() => { setMsg(null); setF(blank) }}>+ Add a coupon</button></PageHead>
       {msg && <Notice kind={msg.kind}>{msg.text}</Notice>}
       {f && (
         <form className="a-card" onSubmit={save} noValidate>
-          <h2 className="st">{f._id ? `Change ${f.code}` : 'New coupon'}</h2>
+          <h2>{f._id ? `Change ${f.code}` : 'New coupon'}</h2>
           <div className="in fgrid">
             {!f._id && <div className="fld h3"><label htmlFor="cc">Code</label><input id="cc" className="field" value={f.code} maxLength={20} onChange={(e) => set({ code: e.target.value.toUpperCase() })} /></div>}
             <div className="fld h3"><label htmlFor="ct">Kind of discount</label><select id="ct" className="field" value={f.type} onChange={(e) => set({ type: e.target.value as F['type'] })}><option value="percent">Percent off</option><option value="flat">Rupees off</option></select></div>
@@ -53,13 +53,13 @@ export default function Coupons() {
             <div className="fld h3"><label htmlFor="cu">Can be used this many times in all (0 = no limit)</label><input id="cu" className="field" inputMode="numeric" value={f.usageLimit} onChange={(e) => set({ usageLimit: e.target.value })} /></div>
             <div className="fld h3"><label htmlFor="cp">Times per customer (0 = no limit)</label><input id="cp" className="field" inputMode="numeric" value={f.perCustomerLimit} onChange={(e) => set({ perCustomerLimit: e.target.value })} /></div>
             <label className="chk fld"><input type="checkbox" checked={f.active} onChange={(e) => set({ active: e.target.checked })} /> Coupon is on</label>
-            <div className="btnrow fld"><button className="btn yellow" disabled={busy}>{busy ? 'Saving…' : 'Save coupon'}</button><button type="button" className="btn line2" onClick={() => setF(null)}>Cancel</button></div>
+            <div className="btnrow fld"><button className="btn" disabled={busy}>{busy ? 'Saving…' : 'Save coupon'}</button><button type="button" className="btn line2" onClick={() => setF(null)}>Cancel</button></div>
           </div>
         </form>
       )}
       <div className="tblw">
         <table className="tbl stack">
-          <thead><tr><th>Code</th><th>Discount</th><th>Smallest order</th><th>Valid</th><th className="num">Used</th><th>Status</th><th /></tr></thead>
+          <thead><tr><th>Code</th><th>Discount</th><th>Smallest order</th><th>Valid</th><th className="num">Used</th><th>Status</th><th/></tr></thead>
           <tbody>
             {data.items.map((c) => (
               <tr key={c._id} className={c.active ? undefined : 'dim'}>

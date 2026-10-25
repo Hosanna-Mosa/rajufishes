@@ -7,7 +7,6 @@ import { ApiError, call, type AddressT, type OrderT } from '@/lib/client'
 import { optionsText, rupees } from '@/lib/format'
 import { INDIA_STATES } from '@/lib/states'
 import { refreshCustomer, signOut, useCustomer } from '@/lib/session'
-import { Stripes } from './Stripes'
 import { StatusSteps, statusText } from './StatusSteps'
 
 const TABS = [['orders', 'Orders'], ['addresses', 'Saved addresses'], ['profile', 'Profile']] as const
@@ -23,21 +22,20 @@ export function AccountView() {
 
   return (
     <>
-      <div className="banner">
-        <div className="wrap">
-          <h1 className="st" style={{ paddingTop: 32 }}>My account</h1>
+      <div className="wrap">
+        <div className="banner">
+          <h1>My account</h1>
           <p className="sub">{customer ? `Signed in as +91 ${customer.phone.slice(0, 2)}XXXXXX${customer.phone.slice(-2)}` : 'Checking…'}</p>
         </div>
-        <Stripes />
       </div>
       {customer ? (
         <div className="wrap acct">
-          <nav className="menu st" aria-label="Account">
+          <nav className="menu" aria-label="Account">
             {TABS.map(([k, label]) => <Link key={k} href={`/account?tab=${k}`} className={k === tab ? 'on' : ''} aria-current={k === tab ? 'page' : undefined}>{label}</Link>)}
-            <button className="out st" onClick={async () => { await signOut(); router.replace('/') }}>Sign out</button>
+            <button className="out" onClick={async () => { await signOut(); router.replace('/') }}>Sign out</button>
           </nav>
           <div className="acct-main">
-            {tab === 'orders' ? <Orders /> : tab === 'addresses' ? <Addresses /> : <Profile />}
+            {tab === 'orders' ? <Orders/> : tab === 'addresses' ? <Addresses/> : <Profile/>}
           </div>
         </div>
       ) : null}
@@ -61,22 +59,22 @@ function Orders() {
 
   return (
     <>
-      <h2 className="st">Your orders</h2>
+      <h2>Your orders</h2>
       {err ? <p className="bad-t" role="alert">{err}</p> : null}
       {orders === null && !err ? <p>Loading…</p> : null}
-      {orders?.length === 0 ? <div className="empty"><h2 className="st">No orders yet</h2><p>When you order, it shows up here.</p><Link href="/products" className="btn yellow st">Shop the catch</Link></div> : null}
+      {orders?.length === 0 ? <div className="empty"><h2>No orders yet</h2><p>When you order, it shows up here.</p><Link href="/products" className="btn">Shop the catch</Link></div> : null}
       {orders?.map((o) => (
         <div className="ocard" key={o.orderNo}>
-          <div className="ocard-h"><span className="st">Order #{o.orderNo}</span><span>{day(o.createdAt)} · {statusText(o)}</span></div>
+          <div className="ocard-h"><span>Order #{o.orderNo}</span><span>{day(o.createdAt)} · {statusText(o)}</span></div>
           <div className="ocard-b">
             <StatusSteps status={o.status} />
             <div className="orow">
               <div className="items">{o.items.map((i) => `${i.name} × ${i.qty}`).join(', ')}</div>
-              <div className="amt st">{rupees(o.total)}</div>
+              <div className="amt">{rupees(o.total)}</div>
             </div>
             <div className="obtns">
-              <Link href={`/orders/${o.orderNo}`} className="btn yellow st">Track order</Link>
-              <button className="btn line2 st" onClick={() => again(o)}>Order again</button>
+              <Link href={`/orders/${o.orderNo}`} className="btn">Track order</Link>
+              <button className="btn line2" onClick={() => again(o)}>Order again</button>
             </div>
           </div>
         </div>
@@ -124,21 +122,21 @@ function Addresses() {
 
   return (
     <>
-      <h2 className="st">Saved addresses</h2>
+      <h2>Saved addresses</h2>
       {msg ? <p className="bad-t" role="alert">{msg}</p> : null}
       <div className="addrs">
         {list?.map((a) => (
           <div className="addr" key={a._id}>
-            <span className="tg st">{a.label || 'Address'}{a.isDefault ? ' · default' : ''}</span>
-            <p>{a.name}<br />{a.line1}{a.line2 ? `, ${a.line2}` : ''}<br />{a.city}, {a.state} {a.pincode}<br />{a.phone}</p>
+            <span className="tg">{a.label || 'Address'}{a.isDefault ? ' · default' : ''}</span>
+            <p>{a.name}<br/>{a.line1}{a.line2 ? `, ${a.line2}` : ''}<br/>{a.city}, {a.state} {a.pincode}<br/>{a.phone}</p>
             <div className="acts"><button className="linkbtn" onClick={() => open(a)}>Edit</button><button className="linkbtn" onClick={() => remove(a)}>Remove</button></div>
           </div>
         ))}
-        {editing === null && (list?.length ?? 0) < 10 ? <button className="addr add st" onClick={() => open()}>+ Add new address</button> : null}
+        {editing === null && (list?.length ?? 0) < 10 ? <button className="addr add" onClick={() => open()}>+ Add new address</button> : null}
       </div>
       {editing !== null ? (
         <form className="box" onSubmit={save}>
-          <div className="box-h st">{editing === 'new' ? 'New address' : 'Edit address'}</div>
+          <div className="box-h">{editing === 'new' ? 'New address' : 'Edit address'}</div>
           <div className="box-b">
             {inp('label', 'Label (Home, Work…)', true, { maxLength: 30 })}
             {inp('name', 'Full name', true, { required: true })}
@@ -150,7 +148,7 @@ function Addresses() {
               <select id="a-state" className="field" value={f.state} onChange={set('state')} required><option value="">Choose state</option>{INDIA_STATES.map((s) => <option key={s}>{s}</option>)}</select></div>
             {inp('pincode', 'Pincode', true, { inputMode: 'numeric', maxLength: 6, required: true })}
             <label style={{ flex: '1 1 100%', display: 'flex', gap: 10, alignItems: 'center', minHeight: 44 }}><input type="checkbox" checked={f.isDefault} onChange={set('isDefault')} style={{ width: 22, height: 22 }} /> Make this my default address</label>
-            <div className="obtns"><button className="btn yellow st">Save address</button><button type="button" className="btn line2 st" onClick={() => setEditing(null)}>Cancel</button></div>
+            <div className="obtns"><button className="btn">Save address</button><button type="button" className="btn line2" onClick={() => setEditing(null)}>Cancel</button></div>
           </div>
         </form>
       ) : null}
@@ -171,14 +169,14 @@ function Profile() {
   }
   return (
     <>
-      <h2 className="st">Profile</h2>
+      <h2>Profile</h2>
       <form className="box" onSubmit={save}>
         <div className="box-b">
           <div className="fld"><label htmlFor="p-name">Name</label><input id="p-name" className="field" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} autoComplete="name" /></div>
           <div className="fld"><label htmlFor="p-phone">Mobile number</label><input id="p-phone" className="field" value={`+91 ${customer?.phone ?? ''}`} readOnly /></div>
           <div className="fld"><label htmlFor="p-email">Email (optional)</label><input id="p-email" type="email" className="field" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></div>
           {msg ? <div className={msg === 'Saved.' ? 'good-t' : 'bad-t'} role="status" style={{ flex: '1 1 100%' }}>{msg}</div> : null}
-          <div className="obtns"><button className="btn yellow st">Save</button><button type="button" className="btn line2 st" onClick={async () => { await signOut(); router.replace('/') }}>Sign out</button></div>
+          <div className="obtns"><button className="btn">Save</button><button type="button" className="btn line2" onClick={async () => { await signOut(); router.replace('/') }}>Sign out</button></div>
         </div>
       </form>
     </>

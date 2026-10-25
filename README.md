@@ -15,7 +15,7 @@ An online fish store for our family's fishing business, Raju Fishes. We now sell
 
 ## Look
 
-The chosen design is "Boat Paint". The pages are in `design/` (G home, H all products, I product, J cart, K checkout, L account, M sign in). The site must reuse that look exactly: Big Shoulders Stencil Display + Archivo fonts, hull blue `#0A5C8F`, yellow `#F4B400`, red `#D7342A`, ink `#10202B`, hard 3px borders with solid shadows, the red pennant price tag, the "Today's market" panel and the white-and-red stripe bands.
+The look is "Ice and Paper" (reference page `design/ice-and-paper-home.html`). Light and white, Bricolage Grotesque headings and Hanken Grotesk body, brand blue, hairline borders, square corners, no shadows. All colours and fonts are tokens in `web/styles/theme.css`.
 
 ## Stack
 
@@ -34,7 +34,7 @@ The chosen design is "Boat Paint". The pages are in `design/` (G home, H all pro
 ```
 web/      Next.js site: customer pages and /admin
 api/      Express API, models, seed script
-design/   The chosen Boat Paint design pages (reference only)
+design/   The Ice and Paper design reference (reference only)
 docs/     PLAN.md, ROUNDS.md, PHOTOS.md, DECISIONS.md
 ```
 

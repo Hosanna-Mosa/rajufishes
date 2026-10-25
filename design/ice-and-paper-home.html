@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Raju Fishes home, Ice and Paper</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+a:hover{color:#0A5C8F}
+.tab:hover{border-bottom-color:#0A5C8F}
+.card:hover .cardname{color:#0A5C8F}
+</style>
+</helmet>
+<div style="width:100%;background:#FFFFFF;color:#111418;font-family:'Hanken Grotesk',system-ui,sans-serif">
+
+<div style="background:#0A5C8F;color:#FFFFFF;font-size:13px;letter-spacing:0.04em;text-align:center;padding:9px 16px">Free delivery over ₹999 (sample) · Cash on delivery available</div>
+
+<div style="max-width:1280px;margin:0 auto;padding:0 40px">
+
+<header style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding:26px 0;border-bottom:1px solid #D9DEE3">
+<nav style="flex:1 1 280px;display:flex;flex-wrap:wrap;gap:8px 28px;font-size:15px;font-weight:500">
+<a href="B-IceAndPaper.dc.html">Fresh</a><a href="B-IceAndPaper.dc.html">Dry</a><a href="B-IceAndPaper.dc.html">Frozen</a><a href="B-IceAndPaper.dc.html">About</a>
+</nav>
+<a href="B-IceAndPaper.dc.html" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:26px;letter-spacing:0.18em;text-transform:uppercase;text-align:center">Raju Fishes</a>
+<div style="flex:1 1 280px;display:flex;justify-content:flex-end;gap:28px;font-size:15px;font-weight:500">
+<a href="B-IceAndPaper.dc.html">Search</a><a href="B-IceAndPaper.dc.html">Account</a><a href="B-IceAndPaper.dc.html">Cart (2)</a>
+</div>
+</header>
+
+<section style="padding:88px 0 72px;display:flex;flex-wrap:wrap;gap:32px 64px;align-items:flex-end;justify-content:space-between">
+<h1 style="margin:0;flex:1 1 640px;font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:124px;line-height:0.95;letter-spacing:-0.035em">Fresh fish,<br>delivered cold.</h1>
+<div style="flex:0 1 340px;display:flex;flex-direction:column;gap:20px;padding-bottom:10px">
+<p style="margin:0;font-size:18px;line-height:1.6;color:#3B444D">Landed by our own boats at first light, then cleaned, packed on ice and sent to your door.</p>
+<a href="B-IceAndPaper.dc.html" style="align-self:flex-start;background:#111418;color:#FFFFFF;font-weight:600;font-size:15px;padding:15px 28px">Shop the catch</a>
+</div>
+</section>
+
+<section style="padding:0 0 88px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 24px;border-bottom:1px solid #D9DEE3">
+<div style="display:flex;gap:32px;font-size:17px;font-weight:500">
+<span class="tab" style="padding:0 0 14px;border-bottom:2px solid #111418">All</span>
+<a href="B-IceAndPaper.dc.html" class="tab" style="padding:0 0 14px;border-bottom:2px solid transparent;color:#5B656F">Fresh</a>
+<a href="B-IceAndPaper.dc.html" class="tab" style="padding:0 0 14px;border-bottom:2px solid transparent;color:#5B656F">Dry</a>
+<a href="B-IceAndPaper.dc.html" class="tab" style="padding:0 0 14px;border-bottom:2px solid transparent;color:#5B656F">Frozen</a>
+</div>
+<span style="font-size:14px;color:#5B656F;padding-bottom:14px">Landed 5:40 AM · sample prices</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:44px 28px;padding-top:36px">
+<sc-for list="{{products}}" as="p" hint-placeholder-count="8">
+<a href="B-IceAndPaper.dc.html" class="card" style="display:flex;flex-direction:column;gap:14px">
+<div style="aspect-ratio:3/4;background:{{p.tint}};display:flex;align-items:flex-end;padding:12px;box-sizing:border-box"><span style="font-size:12px;color:#33414C;background:#FFFFFF;padding:4px 9px">{{p.photo}}</span></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+<span class="cardname" style="font-family:'Bricolage Grotesque',sans-serif;font-size:21px;font-weight:500;letter-spacing:-0.01em">{{p.name}}</span>
+<span style="font-size:17px;font-weight:600;font-variant-numeric:tabular-nums">{{p.price}}</span>
+</div>
+<span style="font-size:14px;color:#5B656F;margin-top:-8px">{{p.note}}</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<section style="padding:0 0 88px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 24px;border-bottom:1px solid #D9DEE3;padding-bottom:18px;margin-bottom:36px">
+<h2 style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:400;font-size:40px;letter-spacing:-0.02em">Browse by kind</h2>
+<span style="font-size:14px;color:#5B656F">Fresh, dry and frozen</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px">
+<sc-for list="{{kinds}}" as="k" hint-placeholder-count="6">
+<a href="B-IceAndPaper.dc.html" class="card" style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 8px;border:1px solid #D9DEE3">
+<svg width="96" height="44" viewBox="0 0 96 44" fill="none" stroke="#0A5C8F" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+<path d="M8 22 C22 6 52 4 72 22 C52 40 22 38 8 22 Z"/>
+<path d="M72 22 L90 8 L90 36 Z"/>
+<circle cx="24" cy="20" r="1.6" fill="#0A5C8F"/>
+<path d="M40 14 C44 20 44 24 40 30"/>
+</svg>
+<span class="cardname" style="font-size:15px;font-weight:600">{{k}}</span>
+</a>
+</sc-for>
+</div>
+</section>
+
+<section style="padding:0 0 96px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid #111418">
+<sc-for list="{{promise}}" as="m" hint-placeholder-count="3">
+<div style="padding:32px 32px 0 0;display:flex;flex-direction:column;gap:12px">
+<span style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:400;letter-spacing:-0.015em">{{m.title}}</span>
+<span style="font-size:16px;line-height:1.6;color:#3B444D;max-width:340px">{{m.text}}</span>
+</div>
+</sc-for>
+</section>
+
+</div>
+
+<div style="border-top:1px solid #D9DEE3">
+<div style="max-width:1280px;margin:0 auto;padding:56px 40px 44px;display:flex;flex-wrap:wrap;gap:32px 64px;justify-content:space-between;align-items:flex-start">
+<span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:34px;letter-spacing:0.16em;text-transform:uppercase">Raju Fishes</span>
+<div style="display:flex;flex-wrap:wrap;gap:12px 72px;font-size:15px;line-height:2">
+<div style="display:flex;flex-direction:column"><a href="B-IceAndPaper.dc.html">Fresh</a><a href="B-IceAndPaper.dc.html">Dry</a><a href="B-IceAndPaper.dc.html">Frozen</a></div>
+<div style="display:flex;flex-direction:column"><a href="B-IceAndPaper.dc.html">About</a><a href="B-IceAndPaper.dc.html">Contact</a><a href="B-IceAndPaper.dc.html">Shipping</a></div>
+<div style="display:flex;flex-direction:column"><a href="B-IceAndPaper.dc.html">Refunds</a><a href="B-IceAndPaper.dc.html">Privacy</a><a href="B-IceAndPaper.dc.html">Terms</a></div>
+</div>
+</div>
+<div style="max-width:1280px;margin:0 auto;padding:0 40px 36px;font-size:13px;color:#5B656F">Concept design. Photos and prices are placeholders.</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2500}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+products: [
+{ name: 'Seer fish steaks', price: '₹899/kg', note: 'Fresh · steaks', tint: '#DCE8EE', photo: 'Photo: seer steaks' },
+{ name: 'Black pomfret', price: '₹749/kg', note: 'Fresh · whole', tint: '#E4E7EA', photo: 'Photo: pomfret' },
+{ name: 'Tiger prawns', price: '₹699/kg', note: 'Fresh · peeled or whole', tint: '#EFE4DC', photo: 'Photo: prawns' },
+{ name: 'Mud crab', price: '₹599/kg', note: 'Fresh · live-cleaned', tint: '#E9E3DB', photo: 'Photo: crab' },
+{ name: 'Dry anchovies', price: '₹199/pack', note: 'Dry · 250 g', tint: '#EBE8D8', photo: 'Photo: dry anchovies' },
+{ name: 'Dry bombay duck', price: '₹249/pack', note: 'Dry · 250 g', tint: '#E8E6DC', photo: 'Photo: dry fish' },
+{ name: 'Frozen basa fillet', price: '₹329/pack', note: 'Frozen · 500 g', tint: '#DDE5EE', photo: 'Photo: frozen fillet' },
+{ name: 'Frozen squid rings', price: '₹379/pack', note: 'Frozen · 400 g', tint: '#E0E6EA', photo: 'Photo: squid rings' }
+],
+kinds: ['Seer', 'Pomfret', 'Prawns', 'Crab', 'Anchovy', 'Squid'],
+promise: [
+{ title: 'Landed today', text: 'Our boats land before sunrise, and we pack the same morning.' },
+{ title: 'Kept cold', text: 'Sealed insulated box with ice from our door to yours.' },
+{ title: 'Track it', text: 'Follow your order from packed to delivered, no account needed.' }
+]
+};
+}
+}
+</script>
+</body>
+</html>

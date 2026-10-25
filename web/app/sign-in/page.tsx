@@ -11,7 +11,7 @@ export default async function SignInPage() {
   if ((await getBusiness()).loginMode !== 'otp') redirect('/track')
   return (
     <main>
-      <Suspense fallback={null}><SignInView /></Suspense>
+      <Suspense fallback={null}><SignInView/></Suspense>
     </main>
   )
 }

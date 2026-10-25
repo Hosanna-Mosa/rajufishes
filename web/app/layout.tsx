@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from 'next'
-import { Archivo, Big_Shoulders_Stencil } from 'next/font/google'
+import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google'
 import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
 import { getBusiness } from '@/lib/business'
 import { SiteProvider } from '@/components/SiteContext'
 import { CartSync } from '@/components/CartSync'
 import { ShopChrome } from '@/components/ShopChrome'
+import '../styles/theme.css'
 import './globals.css'
 
-// The design's "Big Shoulders Stencil Display" is published as "Big Shoulders Stencil" in Google Fonts.
-const display = Big_Shoulders_Stencil({ subsets: ['latin'], weight: ['700', '800', '900'], variable: '--font-display', display: 'optional' })
-const body = Archivo({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-body', display: 'swap' })
+const head = Bricolage_Grotesque({ subsets: ['latin'], weight: ['300', '400', '500'], variable: '--font-bricolage', display: 'swap' })
+const text = Hanken_Grotesk({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-hanken', display: 'swap' })
 
 const site = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 export const metadata: Metadata = {
@@ -24,10 +24,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const biz = await getBusiness() // read here so the footer is part of the first render and does not pop in
   const bar = `Free delivery over ${biz.b.freeOver} · Cash on delivery available`
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en" className={`${head.variable} ${text.variable}`}>
       <body>
         <SiteProvider loginMode={biz.loginMode}>
-          <ShopChrome><CartSync /><SiteHeader bar={bar} /></ShopChrome>
+          <ShopChrome><CartSync/><SiteHeader bar={bar} /></ShopChrome>
           {children}
           <ShopChrome><SiteFooter biz={biz} /></ShopChrome>
         </SiteProvider>

@@ -34,7 +34,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 ---
 
 ## Round 2: Customer site: home, all products, product (DONE)
-- Boat Paint look from designs G, H, I, built as proper components (header, footer, stripe band, price tag, product card, market panel). Fully responsive, since the designs are desktop only: check at 390 px and 1440 px, big headings scaled down on phones.
+- Original shop look (replaced in Round 7 by Ice and Paper), built as proper components (header, footer, stripe band, price tag, product card, market panel). Fully responsive, since the designs are desktop only: check at 390 px and 1440 px, big headings scaled down on phones.
 - Home with live "Today's market" panel and product grid from the API.
 - All products: category filter with counts, sort, paging, pincode check.
 - Product page: gallery, cut and weight choosers that change the price, quantity, pincode check, "You may also like".
@@ -74,7 +74,7 @@ README, PLAN, ROUNDS, PHOTOS, DECISIONS, .gitignore, .env.example. No code.
 
 ## Round 4 (DONE): Admin panel
 - Must work on a phone (the owner updates prices from the market stall). Check at 390 px as well as desktop.
-**Design first.** There is no admin design yet. Before any admin code, I design these admin pages in the same Boat Paint style (dashboard, market board, products list and form, orders list and detail, delivery zones, coupons, login) as static pages in `design/`, and show them to the family. Build starts only after a yes or changes.
+**Design first.** There is no admin design yet. Before any admin code, I design these admin pages in the same shop style (dashboard, market board, products list and form, orders list and detail, delivery zones, coupons, login) as static pages in `design/`, and show them to the family. Build starts only after a yes or changes.
 
 Then build:
 - Admin login (JWT, roles owner and staff).

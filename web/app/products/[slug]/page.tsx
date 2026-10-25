@@ -51,39 +51,39 @@ export default async function ProductPage({ params }: Props) {
       <div className="wrap pdp">
         <Gallery product={p} />
         <div className="info">
-          <span className="kick st">{kicker}</span>
-          <h1 className="st">{p.name}</h1>
+          <span className="kick">{kicker}</span>
+          <h1>{p.name}</h1>
           <ProductBuy product={p} />
         </div>
       </div>
 
       <div className="wrap facts">
         <div>
-          <div className="h st">Freshness</div>
+          <div className="h">Freshness</div>
           <div className="b">Landed at first light, cleaned and packed on ice the same morning.</div>
         </div>
         <div>
-          <div className="h st">Storage</div>
+          <div className="h">Storage</div>
           <div className="b">Keep in the fridge and cook within 2 days, or freeze it right away.</div>
         </div>
         <div>
-          <div className="h st">Delivery</div>
+          <div className="h">Delivery</div>
           <div className="b">Packed in an insulated box with ice. Track your order from packed to delivered.</div>
         </div>
       </div>
 
       {related.length > 0 && (
         <section className="wrap also">
-          <h2 className="st">You may also like</h2>
+          <h2>You may also like</h2>
           <div className="grid">
             {related.map((r) => (
               <Link key={r._id} href={`/products/${r.slug}`} className="card">
                 <div className={`card-top ${r.category}`}>
-                  <ProductImage product={r} height={110} />
+                  <ProductImage product={r} />
                 </div>
-                <div className="row">
-                  <span className="nm st">{r.name}</span>
-                  <span className="p st">{priceText(r)}</span>
+                <div className="card-row">
+                  <span className="nm">{r.name}</span>
+                  <span className="price">{priceText(r)}</span>
                 </div>
               </Link>
             ))}

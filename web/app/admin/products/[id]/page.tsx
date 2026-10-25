@@ -97,7 +97,7 @@ export default function ProductForm() {
         <div className="rowsplit">
           <div className="main">
             <div className="a-card">
-              <h2 className="st">About the product</h2>
+              <h2>About the product</h2>
               <div className="in fgrid">
                 <div className="fld"><label htmlFor="n">Name</label><input id="n" className="field" value={f.name} maxLength={120} onChange={(e) => set({ name: e.target.value })} /></div>
                 <div className="fld h2"><label htmlFor="c">Type</label>
@@ -109,7 +109,7 @@ export default function ProductForm() {
               </div>
             </div>
             <div className="a-card">
-              <h2 className="st">Price and stock</h2>
+              <h2>Price and stock</h2>
               <div className="in fgrid">
                 <div className="fld h3"><label htmlFor="u">Sold</label>
                   <select id="u" className="field" value={f.unit} onChange={(e) => set({ unit: e.target.value as Form['unit'] })}><option value="kg">By the kg</option><option value="pack">By the pack</option></select></div>
@@ -124,7 +124,7 @@ export default function ProductForm() {
               </div>
             </div>
             <div className="a-card">
-              <h2 className="st">Cuts</h2>
+              <h2>Cuts</h2>
               <div className="in">
                 <p className="small" style={{ marginTop: 0 }}>Ways the customer can have it cut or cleaned. “Extra ₹ per kg” is added to the price (use 0 for no change).</p>
                 {f.cuts.map((c, i) => (
@@ -140,7 +140,7 @@ export default function ProductForm() {
           </div>
           <div className="side">
             <div className="a-card">
-              <h2 className="st">Photos</h2>
+              <h2>Photos</h2>
               <div className="in">
                 {storage === 'local' && <div className="local-tag">TEST MODE: photos are saved on this computer, not on Cloudinary</div>}
                 <div className="photos">
@@ -159,11 +159,11 @@ export default function ProductForm() {
               </div>
             </div>
             <div className="a-card">
-              <h2 className="st">Shop</h2>
+              <h2>Shop</h2>
               <div className="in fgrid">
                 <label className="chk fld"><input type="checkbox" checked={f.active} onChange={(e) => set({ active: e.target.checked })} /> For sale in the shop</label>
                 <div className="hint fld" style={{ marginTop: -8 }}>Switch off to hide it from the shop. Old orders keep working.</div>
-                <button className="btn yellow big" type="submit" disabled={busy} style={{ width: '100%' }}>{busy ? 'Saving…' : isNew ? 'Add product' : 'Save product'}</button>
+                <button className="btn big" type="submit" disabled={busy} style={{ width: '100%' }}>{busy ? 'Saving…' : isNew ? 'Add product' : 'Save product'}</button>
               </div>
             </div>
           </div>

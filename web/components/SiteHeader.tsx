@@ -10,24 +10,34 @@ export function SiteHeader({ bar }: { bar: string }) {
   const otp = useSite().loginMode === 'otp'
   return (
     <header>
-      <div className="topbar" />
       <p className="utility">{bar}</p>
       <div className="wrap hdr">
-        <Link href="/" className="logo st">Raju Fishes</Link>
         {path === '/checkout' ? (
-          <Link href="/cart" className="backlink st">← Back to cart</Link>
+          <>
+            <Link href="/cart" className="backlink">← Back to cart</Link>
+            <Link href="/" className="logo">Raju Fishes</Link>
+            <span />
+          </>
         ) : path === '/sign-in' ? (
-          <Link href="/products" className="backlink st">← Back to the shop</Link>
+          <>
+            <Link href="/products" className="backlink">← Back to the shop</Link>
+            <Link href="/" className="logo">Raju Fishes</Link>
+            <span />
+          </>
         ) : (
           <>
-            <nav className="nav st" aria-label="Main">
+            <nav className="nav" aria-label="Main">
               <Link href="/products?group=Fresh+fish,Prawns+and+crab">Fresh</Link>
               <Link href="/products?group=Dry+fish">Dry</Link>
               <Link href="/products?group=Frozen+packs">Frozen</Link>
               <Link href="/about">About</Link>
-              {otp && <Link href="/account" className={path.startsWith('/account') ? 'on' : undefined}>Account</Link>}
             </nav>
-            <CartLink on={path === '/cart'} />
+            <Link href="/" className="logo">Raju Fishes</Link>
+            <div className="nav right">
+              <Link href="/products">Search</Link>
+              {otp && <Link href="/account" className={path.startsWith('/account') ? 'on' : undefined}>Account</Link>}
+              <CartLink on={path === '/cart'} />
+            </div>
           </>
         )}
       </div>

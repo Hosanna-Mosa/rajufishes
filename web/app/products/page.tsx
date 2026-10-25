@@ -2,8 +2,8 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { GROUPS, SORTS, getProducts } from '@/lib/api'
 import { ProductCard } from '@/components/ProductCard'
+import { Tabs } from '@/components/Tabs'
 import { ProductFilters } from '@/components/ProductFilters'
-import { Stripes } from '@/components/Stripes'
 
 export const metadata: Metadata = {
   title: 'All products',
@@ -32,40 +32,41 @@ export default async function Products({ searchParams }: { searchParams: SP }) {
     return `/products${q.size ? `?${q}` : ''}`
   }
 
+  const kinds: [string, string[]][] = [['All', []], ['Fresh', ['Fresh fish', 'Prawns and crab']], ['Dry', ['Dry fish']], ['Frozen', ['Frozen packs']]]
+  const same = (g: string[]) => g.length === selected.length && g.every((x) => selected.includes(x))
+  const tab = (g: string[]) => {
+    const q = new URLSearchParams()
+    if (g.length) q.set('group', g.join(','))
+    if (sort !== 'landed') q.set('sort', sort)
+    return `/products${q.size ? `?${q}` : ''}`
+  }
+
   return (
     <main>
-      <div className="banner">
-        <div className="wrap">
-          <div className="crumb">Home / All products</div>
-          <h1 className="st">All products</h1>
+      <div className="wrap">
+        <div className="banner">
+          <h1>All products</h1>
           <p className="sub">{data ? `${data.total} product${data.total === 1 ? '' : 's'}` : ' '}</p>
         </div>
-        <Stripes />
-      </div>
-      <div className="wrap shop">
+        <Tabs items={kinds.map(([label, g]) => ({ label, href: tab(g), on: same(g) }))} />
         <ProductFilters selected={selected} sort={sort} counts={counts} total={allTotal} />
-        <div className="main">
-          {!data && <div className="empty"><h2 className="st">Cannot load</h2>We cannot load the products right now. Please refresh in a minute.</div>}
-          {data && data.items.length === 0 && (
-            <div className="empty">
-              <h2 className="st">Nothing here</h2>
-              {page > 1 ? 'That page does not exist.' : 'No products match these filters.'} <Link href="/products" style={{ textDecoration: 'underline' }}>Show all products</Link>
-            </div>
-          )}
-          {data && data.items.length > 0 && (
-            <>
-              <div className="grid">{data.items.map((p) => <ProductCard key={p._id} product={p} imgHeight={130} />)}</div>
-              {data.pages > 1 && (
-                <nav className="pager st" aria-label="Pages">
-                  {Array.from({ length: data.pages }, (_, i) => i + 1).map((n) => (
-                    <Link key={n} href={link(n)} className={n === data.page ? 'on' : ''} aria-current={n === data.page ? 'page' : undefined}>{n}</Link>
-                  ))}
-                  {data.page < data.pages && <Link href={link(data.page + 1)}>Next</Link>}
-                </nav>
-              )}
-            </>
-          )}
-        </div>
+        {!data && <p className="empty">We cannot load the products right now. <Link href="/products">Refresh</Link></p>}
+        {data && data.items.length === 0 && (
+          <p className="empty">{page > 1 ? 'That page does not exist.' : 'No products match these filters.'} <Link href="/products">Show all products</Link></p>
+        )}
+        {data && data.items.length > 0 && (
+          <>
+            <div className="grid">{data.items.map((p) => <ProductCard key={p._id} product={p} />)}</div>
+            {data.pages > 1 && (
+              <nav className="pager" aria-label="Pages">
+                {Array.from({ length: data.pages }, (_, i) => i + 1).map((n) => (
+                  <Link key={n} href={link(n)} className={n === data.page ? 'on' : ''} aria-current={n === data.page ? 'page' : undefined}>{n}</Link>
+                ))}
+                {data.page < data.pages && <Link href={link(data.page + 1)}>Next</Link>}
+              </nav>
+            )}
+          </>
+        )}
       </div>
     </main>
   )

@@ -30,7 +30,7 @@ export function TrackForm() {
       <div className="fld"><label htmlFor="tp">Phone number used for the order</label>
         <input id="tp" className="field" type="tel" inputMode="tel" autoComplete="tel" placeholder="+91" value={phone} onChange={(e) => setPhone(e.target.value)} required /></div>
       {err && <p role="alert" className="err">{err}</p>}
-      <button className="btn st" disabled={busy || !orderNo.trim() || !phone.trim()}>{busy ? 'Looking…' : 'Track my order'}</button>
+      <button className="btn" disabled={busy || !orderNo.trim() || !phone.trim()}>{busy ? 'Looking…' : 'Track my order'}</button>
     </form>
   )
 }

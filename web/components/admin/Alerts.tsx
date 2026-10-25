@@ -106,7 +106,7 @@ export function AlertsProvider({ children }: { children: ReactNode }) {
 export function SoundBar() {
   const { muted, soundOn, toggleMute, turnOnSound } = useAlerts()
   return (
-    <div className="a-head" role="region" aria-label="Order alerts">
+    <div className="a-sound" role="region" aria-label="Order alerts">
       {!muted && !soundOn && <button type="button" className="a-tap" onClick={turnOnSound}>Tap to turn on order sound</button>}
       <button type="button" className="a-mute" onClick={toggleMute} aria-pressed={muted}>{muted ? '🔇 Sound off · Turn on' : '🔔 Sound on · Mute'}</button>
     </div>

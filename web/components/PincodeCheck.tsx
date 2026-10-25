@@ -36,7 +36,7 @@ export function PincodeCheck({ fresh = false, title, compact = false }: { fresh?
       <label className="lbl" htmlFor={`pin-${compact ? 's' : 'p'}`}>{compact ? 'Your pincode' : title}</label>
       <div className="row" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 6 }}>
         <input id={`pin-${compact ? 's' : 'p'}`} className="field" style={{ flex: '1 1 120px', width: 'auto' }} inputMode="numeric" autoComplete="postal-code" maxLength={6} placeholder="6 digits" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} />
-        <button className={compact ? 'btn yellow st' : 'btn st'} style={{ height: 48 }} disabled={busy}>{busy ? '…' : 'Check'}</button>
+        <button className={compact ? 'btn ghost' : 'btn'} disabled={busy}>{busy ? '…' : 'Check'}</button>
       </div>
       <p className={`msg ${res ? (res.ok ? 'good' : 'bad') : ''}`} role="status" style={{ margin: '10px 0 0' }}>
         {res ? res.text : compact ? '' : 'Delivery time and cash on delivery depend on your pincode.'}
@@ -44,13 +44,5 @@ export function PincodeCheck({ fresh = false, title, compact = false }: { fresh?
     </form>
   )
 
-  if (compact) {
-    return (
-      <div className="panel">
-        <div className="panel-h st">Delivers to</div>
-        <div className="panel-b">{form}</div>
-      </div>
-    )
-  }
-  return <div className="pin">{form}</div>
+  return <div className={compact ? 'pin compact' : 'pin'}>{form}</div>
 }

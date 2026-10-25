@@ -25,9 +25,9 @@ export default function Slip() {
     <>
       <div className="noprint"><button className="btn" onClick={() => window.print()}>Print</button><button className="btn line2" onClick={() => window.close()}>Close</button></div>
       <div className="slip">
-        <div className="hd"><h1 className="st">Raju Fishes</h1><div style={{ textAlign: 'right' }}><div className="st" style={{ fontSize: 40, fontWeight: 900, lineHeight: 1 }}>Order #{o.orderNo}</div><div>{fmtDateTime(o.createdAt)}</div></div></div>
-        <div className="box2"><b>Deliver to</b><br />{a.name} · {a.phone}<br />{a.line1}{a.line2 ? `, ${a.line2}` : ''}<br />{a.city}, {a.state} <b>{a.pincode}</b>{o.deliverySlot && <><br />Slot: {o.deliverySlot.replace(/_/g, ' ')}</>}</div>
-        {cod && <div className="box2" style={{ borderWidth: 5 }}><b className="st" style={{ fontSize: 26 }}>Collect cash: {rupees(o.total)}</b></div>}
+        <div className="hd"><h1>Raju Fishes</h1><div style={{ textAlign: 'right' }}><div style={{ fontSize: 40, fontWeight: 600, lineHeight: 1 }}>Order #{o.orderNo}</div><div>{fmtDateTime(o.createdAt)}</div></div></div>
+        <div className="box2"><b>Deliver to</b><br/>{a.name} · {a.phone}<br/>{a.line1}{a.line2 ? `, ${a.line2}` : ''}<br/>{a.city}, {a.state} <b>{a.pincode}</b>{o.deliverySlot && <><br/>Slot: {o.deliverySlot.replace(/_/g, ' ')}</>}</div>
+        {cod && <div className="box2" style={{ borderWidth: 5 }}><b style={{ fontSize: 26 }}>Collect cash: {rupees(o.total)}</b></div>}
         <table>
           <thead><tr><th style={{ width: 28 }} /><th>Item</th><th>Option</th><th style={{ textAlign: 'right' }}>Qty</th></tr></thead>
           <tbody>{o.items.map((i, k) => (

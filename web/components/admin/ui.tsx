@@ -6,7 +6,7 @@ export function PageHead({ title, sub, children }: { title: string; sub?: string
   return (
     <div className="a-head">
       <div>
-        <h1 className="st">{title}</h1>
+        <h1>{title}</h1>
         {sub && <p className="small a-sub">{sub}</p>}
       </div>
       {children && <div className="a-head-r">{children}</div>}
@@ -49,7 +49,7 @@ export const payTone = (s?: string) => (s === 'paid' || s === 'cod_collected' ? 
 export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
     <button type="button" role="switch" aria-checked={on} aria-label={label} className={`sw ${on ? 'on' : ''}`} onClick={() => onChange(!on)}>
-      <span className="st">{on ? 'Shown' : 'Hidden'}</span>
+      <span>{on ? 'Shown' : 'Hidden'}</span>
     </button>
   )
 }
