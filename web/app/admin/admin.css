@@ -150,3 +150,12 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
   .tbl.stack td.nolab::before { content: none; }
   .mb-bar { position: static; }
 }
+
+/* ---------- motion (small only) ---------- */
+@keyframes a-flash { from { background-color: rgba(10, 92, 143, 0.14); } to { background-color: transparent; } }
+@keyframes a-slide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@keyframes a-pop { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+.tbl tr.newrow { animation: a-slide var(--motion-med) var(--ease-out) both; }
+.tbl tr.newrow td { animation: a-flash 2s ease-out both; }
+.a-badge.pop { animation: a-pop var(--motion-med) var(--ease-out) 1; }
+@media (prefers-reduced-motion: reduce) { .tbl tr.newrow td { animation-duration: 2s; } }

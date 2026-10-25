@@ -25,4 +25,30 @@
 
   --page: 1280px;
   --gut: 40px;
+
+  /* motion: only transform and opacity (plus a thin underline width). Tune here. */
+  --motion-fast: 150ms;
+  --motion-med: 280ms;
+  --motion-slow: 350ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --rise: 12px;          /* page content fade-up distance */
+  --shift: 8px;          /* small slides: number roll, dialogs, toasts */
+  --nudge: 4px;          /* hover nudges */
+  --stagger: 60ms;
+  --shimmer: 1.8s;
+  --ring: rgba(10, 92, 143, 0.22);
+}
+
+/* The OS asks for less motion: no movement, and fades are near instant. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 1ms;
+    --motion-med: 1ms;
+    --motion-slow: 1ms;
+    --rise: 0px;
+    --shift: 0px;
+    --nudge: 0px;
+    --stagger: 0ms;
+    --shimmer: 0s;
+  }
 }

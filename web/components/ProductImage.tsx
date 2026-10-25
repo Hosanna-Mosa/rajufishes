@@ -1,5 +1,6 @@
 import type { Product } from '@/lib/api'
 import { blurUrl, sized, srcSet } from '@/lib/img'
+import { FadeImg } from './FadeImg'
 
 /** Same name, same tint. */
 const tint = (name: string) => ([...name].reduce((n, c) => n + c.charCodeAt(0), 0) % 8) + 1
@@ -18,8 +19,7 @@ export function ProductImage({ product, label, priority, sizes = '(max-width: 76
     if (blur) style.backgroundImage = `url(${blur})`
     style.backgroundSize = 'cover'
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <FadeImg
         className="ph"
         src={sized(img.url, 640)}
         srcSet={srcSet(img.url, WIDTHS)}

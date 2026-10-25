@@ -6,6 +6,8 @@ import { removeLine, setQty, useCart, useCartCount } from '@/lib/cart'
 import { optionsText, rupees } from '@/lib/format'
 import { getSavedCoupon, saveCoupon, useQuote } from '@/lib/useQuote'
 import { LineThumb } from './LineThumb'
+import { Roll, Ticker } from './Motion'
+import { reducedMotion } from '@/lib/toast'
 
 export function CartCount() {
   const n = useCartCount()
@@ -19,6 +21,12 @@ export function CartView() {
   const [typed, setTyped] = useState('')
   const [couponMsg, setCouponMsg] = useState('')
   const [ready, setReady] = useState(false)
+  const [leaving, setLeaving] = useState<string | null>(null)
+  function drop(cl: Parameters<typeof removeLine>[0], key: string) {
+    if (reducedMotion()) { removeLine(cl); return }
+    setLeaving(key)
+    setTimeout(() => { removeLine(cl); setLeaving(null) }, 280)
+  }
 
   useEffect(() => { const c = getSavedCoupon(); setCoupon(c); setTyped(c); setReady(true) }, [])
   const { quote, error, loading } = useQuote(ready ? lines : [], { coupon })
@@ -85,19 +93,19 @@ export function CartView() {
                   ?? lines.find((c) => c.productId === l.productId && c.cut === l.cut)
                 if (!cl) return null
                 return (
-                  <div className="line" key={`${l.productId}-${l.cut}-${l.weightG}`}>
+                  <div className={`line${leaving === `${l.productId}-${l.cut}-${l.weightG}` ? ' leaving' : ''}`} key={`${l.productId}-${l.cut}-${l.weightG}`}>
                     <LineThumb image={l.image} name={l.name} category={l.category} />
                     <div className="lbody">
                       <Link href={`/products/${l.slug}`} className="lname">{l.name}</Link>
                       <div className="lopt">{optionsText(l)}</div>
-                      <button className="lrm" onClick={() => removeLine(cl)} aria-label={`Remove ${l.name}`}>Remove</button>
+                      <button className="lrm" onClick={() => drop(cl, `${l.productId}-${l.cut}-${l.weightG}`)} aria-label={`Remove ${l.name}`}>Remove</button>
                     </div>
                     <div className="stepper">
                       <button onClick={() => setQty(cl, cl.qty - 1)} aria-label="One less">−</button>
-                      <span aria-live="polite">{cl.qty}</span>
+                      <span aria-live="polite"><Roll value={cl.qty} /></span>
                       <button onClick={() => setQty(cl, cl.qty + 1)} aria-label="One more">+</button>
                     </div>
-                    <div className="ltot">{rupees(l.lineTotal)}</div>
+                    <div className="ltot"><Ticker value={l.lineTotal} /></div>
                   </div>
                 )
               })
@@ -114,7 +122,7 @@ export function CartView() {
       <aside className="right sum" aria-label="Order summary">
         <div className="sum-h">Order summary</div>
         <div className="sum-b">
-          <div className="r"><span>Subtotal</span><b>{rupees(subtotal)}</b></div>
+          <div className="r"><span>Subtotal</span><b><Ticker value={subtotal} /></b></div>
           <div className="r"><span>Delivery</span><b>{!quote ? '…' : quote.deliveryCharge === 0 ? 'Free' : rupees(quote.deliveryCharge)}</b></div>
           {quote && quote.discount > 0 ? <div className="r"><span>Coupon {quote.couponCode}</span><b>−{rupees(quote.discount)}</b></div> : null}
           <form className="coup" onSubmit={apply}>
@@ -122,7 +130,7 @@ export function CartView() {
             <button type="submit">Apply</button>
           </form>
           {couponMsg ? <div className={quote?.couponError ? 'bad-t' : 'good-t'} role="status">{couponMsg}</div> : null}
-          <div className="total"><span>Total</span><span>{rupees(quote?.total ?? 0)}</span></div>
+          <div className="total"><span>Total</span><span><Ticker value={quote?.total ?? 0} /></span></div>
           <button className="go" disabled={!quote || problems.length > 0 || loading} onClick={() => router.push('/checkout')}>Go to checkout</button>
           <div className="note">Pay online or on delivery. Final delivery charge depends on your pincode.</div>
         </div>

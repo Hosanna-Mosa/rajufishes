@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { Ticker } from './Motion'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { clearCart, useCart } from '@/lib/cart'
@@ -133,7 +134,7 @@ export function CheckoutView() {
 
   return (
     <div className="wrap cols">
-      <div className="left">
+      <div className="left slidein">
         <section className="box">
           <div className="box-h">1 · Your details</div>
           <div className="box-b">
@@ -205,11 +206,11 @@ export function CheckoutView() {
           ))}
           <div className="r"><span>Delivery</span><b>{!quote ? '…' : quote.deliveryCharge === 0 ? 'Free' : rupees(quote.deliveryCharge)}</b></div>
           {quote && quote.discount > 0 ? <div className="r"><span>Coupon {quote.couponCode}</span><b>−{rupees(quote.discount)}</b></div> : null}
-          <div className="total"><span>Total</span><span>{rupees(quote?.total ?? 0)}</span></div>
+          <div className="total"><span>Total</span><span><Ticker value={quote?.total ?? 0} /></span></div>
           {error ? <div className="bad-t" role="alert">{error}</div> : null}
           {problems.map((p, i) => <div key={i} className="bad-t" role="alert">{p.message}</div>)}
           {fail ? <div className="bad-t" role="alert">{fail}</div> : null}
-          <button className="go" disabled={busy || !quote || problems.length > 0} onClick={place}>{busy ? 'Placing…' : 'Place order'}</button>
+          <button className={`go${busy ? ' busy' : ''}`} disabled={busy || !quote || problems.length > 0} onClick={place} aria-busy={busy}>{busy ? 'Placing your order' : 'Place order'}</button>
           <div className="note">By placing the order you agree to our delivery terms. {pay === 'razorpay' ? 'Online orders are held for 30 minutes while you pay.' : ''}</div>
         </div>
       </aside>

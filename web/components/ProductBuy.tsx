@@ -1,5 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { notifyAdded } from '@/lib/toast'
+import { Roll, SwapLabel, Tick } from './Motion'
 import { useRouter } from 'next/navigation'
 import type { Product } from '@/lib/api'
 import { addToCart } from '@/lib/cart'
@@ -17,8 +19,17 @@ export function ProductBuy({ product }: { product: Product }) {
   const each = unitPrice(product, delta, weightG)
   const perKg = product.price + delta
 
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => () => clearTimeout(timer.current), [])
   function add() {
     addToCart({ productId: product._id, slug: product.slug, cut, weightG, qty })
+  }
+  function addAndShow() {
+    add()
+    setAdded(true)
+    notifyAdded(product.name)
+    clearTimeout(timer.current)
+    timer.current = setTimeout(() => setAdded(false), 1400)
   }
 
   return (
@@ -54,11 +65,11 @@ export function ProductBuy({ product }: { product: Product }) {
         <div className="buyrow">
           <div className="qty" role="group" aria-label="Quantity">
             <button type="button" aria-label="One less" onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
-            <span aria-live="polite">{qty}</span>
+            <span aria-live="polite"><Roll value={qty} /></span>
             <button type="button" aria-label="One more" onClick={() => setQty(Math.min(50, qty + 1))}>+</button>
           </div>
-          <button type="button" className="btn" onClick={() => { add(); setAdded(true); setTimeout(() => setAdded(false), 1500) }}>
-            {added ? 'Added to cart' : `Add to cart · ${rupees(each * qty)}`}
+          <button type="button" className="btn" onClick={addAndShow}>
+            <SwapLabel on={added} a={`Add to cart · ${rupees(each * qty)}`} b={<>Added <Tick className={`tick${added ? ' draw' : ''}`} /></>} />
           </button>
           <button type="button" className="btn ghost" onClick={() => { add(); router.push('/cart') }}>Buy now</button>
         </div>

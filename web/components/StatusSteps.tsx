@@ -8,7 +8,7 @@ export function StatusSteps({ status }: { status: OrderT['status'] }) {
   const at = status === 'placed' ? -1 : STEPS.indexOf(status)
   return (
     <div className="steps3" role="list" aria-label="Order progress">
-      {STEPS.map((s, i) => <div role="listitem" key={s} className={i <= at ? 'done' : ''}>{s}</div>)}
+      {STEPS.map((s, i) => <div role="listitem" key={s} className={i === at ? 'done cur' : i < at ? 'done' : ''}>{s}</div>)}
     </div>
   )
 }

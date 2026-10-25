@@ -6,6 +6,9 @@ import { getBusiness } from '@/lib/business'
 import { SiteProvider } from '@/components/SiteContext'
 import { CartSync } from '@/components/CartSync'
 import { ShopChrome } from '@/components/ShopChrome'
+import { Suspense } from 'react'
+import { RouteProgress } from '@/components/RouteProgress'
+import { Toaster } from '@/components/Toaster'
 import '../styles/theme.css'
 import './globals.css'
 
@@ -26,6 +29,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${head.variable} ${text.variable}`}>
       <body>
+        <Suspense fallback={null}><RouteProgress /></Suspense>
+        <Toaster />
         <SiteProvider loginMode={biz.loginMode}>
           <ShopChrome><CartSync/><SiteHeader bar={bar} /></ShopChrome>
           {children}

@@ -113,7 +113,7 @@ export function OrderView({ orderNo }: { orderNo: string }) {
           <span>{when(order.createdAt)} · {statusText(order)}</span>
         </div>
         <div className="ocard-b">
-          {justPlaced && !pending && order.status !== 'cancelled' ? <div><span className="okmark">Order placed</span><p style={{ margin: '10px 0 0' }}>Thank you, {order.contact.name}. We will pack it fresh and send it on its way.</p></div> : null}
+          {justPlaced && !pending && order.status !== 'cancelled' ? <div className="okwrap"><svg className="okbig" viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="24" cy="24" r="21" pathLength={1} /><path d="M14 25l7 7 13-15" pathLength={1} /></svg><span className="okmark">Order placed</span><p style={{ margin: '10px 0 0' }}>Thank you, {order.contact.name}. We will pack it fresh and send it on its way.</p></div> : null}
           <StatusSteps status={order.status} />
           {order.items.map((it, i) => (
             <div className="r" key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
@@ -122,7 +122,7 @@ export function OrderView({ orderNo }: { orderNo: string }) {
             </div>
           ))}
           <div className="kv"><span>Subtotal <b>{rupees(order.subtotal)}</b></span><span>Delivery <b>{order.deliveryCharge ? rupees(order.deliveryCharge) : 'Free'}</b></span>{order.discount ? <span>Coupon <b>−{rupees(order.discount)}</b></span> : null}</div>
-          <div className="orow"><span style={{ fontSize: 28, fontWeight: 900 }}>Total {order.payment.method === 'cod' ? '(pay on delivery)' : ''}</span><span className="amt">{rupees(order.total)}</span></div>
+          <div className="orow"><span style={{ fontSize: 28, fontWeight: 500 }}>Total {order.payment.method === 'cod' ? '(pay on delivery)' : ''}</span><span className="amt">{rupees(order.total)}</span></div>
           <div className="kv">
             <span>Deliver to <b>{order.shippingAddress.name}, {order.shippingAddress.line1}{order.shippingAddress.line2 ? `, ${order.shippingAddress.line2}` : ''}, {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.pincode}</b></span>
           </div>
@@ -144,7 +144,7 @@ export function OrderView({ orderNo }: { orderNo: string }) {
           <div className="sum"><div className="sum-h">Test payment</div><div className="sum-b">
             <span className="mockbadge">TEST MODE · no real money moves</span>
             <p style={{ margin: 0 }}>Razorpay is not connected, so this is a pretend payment window for {rupees(mock.amount)}.</p>
-            <button className="go" style={{ background: 'var(--ink)' }} onClick={() => mockPay(true)}>Pay {rupees(mock.amount)} (test)</button>
+            <button className="go" onClick={() => mockPay(true)}>Pay {rupees(mock.amount)} (test)</button>
             <button className="btn line2" onClick={() => mockPay(false)}>Fail the payment</button>
             <button className="linkbtn" onClick={() => { setMock(null); setMsg('The payment window was closed. Your order is still waiting for payment.') }}>Close</button>
           </div></div>

@@ -38,7 +38,7 @@ export function PincodeCheck({ fresh = false, title, compact = false }: { fresh?
         <input id={`pin-${compact ? 's' : 'p'}`} className="field" style={{ flex: '1 1 120px', width: 'auto' }} inputMode="numeric" autoComplete="postal-code" maxLength={6} placeholder="6 digits" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} />
         <button className={compact ? 'btn ghost' : 'btn'} disabled={busy}>{busy ? '…' : 'Check'}</button>
       </div>
-      <p className={`msg ${res ? (res.ok ? 'good' : 'bad') : ''}`} role="status" style={{ margin: '10px 0 0' }}>
+      <p key={res?.text ?? ''} className={`msg ${res ? (res.ok ? 'good' : 'bad') : ''}`} role="status" style={{ margin: '10px 0 0' }}>
         {res ? res.text : compact ? '' : 'Delivery time and cash on delivery depend on your pincode.'}
       </p>
     </form>

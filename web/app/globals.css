@@ -319,3 +319,134 @@ select.field { appearance: auto; padding-right: 8px; }
   .line { grid-template-columns: 72px minmax(0, 1fr); }
   .line .stepper, .line .ltot { grid-column: 2; text-align: left; }
 }
+
+/* ---------- motion (tokens live in theme.css; only transform and opacity move) ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(var(--rise)); } to { opacity: 1; transform: none; } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slidein { from { opacity: 0; transform: translateX(var(--shift)); } to { opacity: 1; transform: none; } }
+@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@keyframes shake { 0%, 100% { transform: none; } 33% { transform: translateX(-4px); } 66% { transform: translateX(4px); } }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(2.6); opacity: 0; } }
+@keyframes run { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@keyframes rollup { from { opacity: 0; transform: translateY(var(--shift)); } to { opacity: 1; transform: none; } }
+@keyframes rolldown { from { opacity: 0; transform: translateY(calc(var(--shift) * -1)); } to { opacity: 1; transform: none; } }
+@keyframes toastin { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes toastout { to { opacity: 0; transform: translateX(24px); } }
+@keyframes rowout { to { opacity: 0; transform: translateX(32px); } }
+@keyframes lift { from { transform: translateY(var(--line-h, 0px)); } to { transform: none; } }
+
+/* page content: fade up with a short stagger, first 8 blocks only */
+main:not(.a-main) > *:nth-child(-n+8), main:not(.a-main) > .wrap:only-child > *:nth-child(-n+8) { animation: rise var(--motion-slow) var(--ease-out) both; animation-delay: calc(var(--stagger) * (var(--n, 1) - 1)); }
+main:not(.a-main) > :nth-child(1) { --n: 1; } main:not(.a-main) > :nth-child(2) { --n: 2; } main:not(.a-main) > :nth-child(3) { --n: 3; }
+main:not(.a-main) > :nth-child(4) { --n: 4; } main:not(.a-main) > :nth-child(5) { --n: 5; } main:not(.a-main) > :nth-child(6) { --n: 6; }
+main:not(.a-main) > :nth-child(7) { --n: 7; } main:not(.a-main) > :nth-child(8) { --n: 8; }
+.grid > .card:nth-child(-n+8) { animation: rise var(--motion-slow) var(--ease-out) both; animation-delay: calc(var(--stagger) * (var(--n, 1) - 1)); }
+.grid > .card:nth-child(1) { --n: 1; } .grid > .card:nth-child(2) { --n: 2; } .grid > .card:nth-child(3) { --n: 3; } .grid > .card:nth-child(4) { --n: 4; }
+.grid > .card:nth-child(5) { --n: 5; } .grid > .card:nth-child(6) { --n: 6; } .grid > .card:nth-child(7) { --n: 7; } .grid > .card:nth-child(8) { --n: 8; }
+
+main:not(.a-main) > .wrap:only-child > :nth-child(1) { --n: 1; } main:not(.a-main) > .wrap:only-child > :nth-child(2) { --n: 2; } main:not(.a-main) > .wrap:only-child > :nth-child(3) { --n: 3; }
+main:not(.a-main) > .wrap:only-child > :nth-child(4) { --n: 4; } main:not(.a-main) > .wrap:only-child > :nth-child(5) { --n: 5; } main:not(.a-main) > .wrap:only-child > :nth-child(6) { --n: 6; }
+main:not(.a-main) > .wrap:only-child > :nth-child(7) { --n: 7; } main:not(.a-main) > .wrap:only-child > :nth-child(8) { --n: 8; }
+main:not(.a-main) > .wrap:only-child { animation: none; }
+
+/* route progress line */
+.rprog { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--brand); z-index: 100; transform: scaleX(0); transform-origin: left; opacity: 0; pointer-events: none; }
+.rprog.run { opacity: 1; transform: scaleX(0.85); transition: transform 8s cubic-bezier(0.1, 0.6, 0.2, 1); }
+.rprog.done { opacity: 0; transform: scaleX(1); transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-med) var(--ease-out) var(--motion-fast); }
+
+/* skeleton: the only looping motion */
+.skel { position: relative; overflow: hidden; }
+.skel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent); animation: shimmer var(--shimmer) ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } }
+
+/* photos fade in over their tint */
+img.fade { transition: opacity 250ms var(--ease-out); }
+img.fade.wait { opacity: 0; }
+
+/* buttons */
+.btn, .go { transition: background-color var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out), color var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out); }
+.btn:active:not([disabled]), .go:active:not([disabled]), .chip:active, .stepper button:active, .qty button:active { transform: scale(0.98); }
+.nav a, .cartbtn, .backlink, .tabs a, .kindbox, .nm, .linkbtn { transition: color var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out); }
+
+/* underline that slides in from the left */
+.nav a, .backlink, .nm, .btn.line2, .btn.ghost, .linkbtn, .textlink, .card-foot .btn { position: relative; }
+.nav a::after, .backlink::after, .nm::after, .btn.line2::after, .btn.ghost::after, .linkbtn::after, .textlink::after, .card-foot .btn::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--brand); transform: scaleX(0); transform-origin: left; transition: transform var(--motion-med) var(--ease-out); pointer-events: none;
+}
+.nav a::after { bottom: 10px; } .backlink::after { bottom: 10px; } .nm::after { bottom: -2px; }
+.nav a:hover::after, .nav a.on::after, .backlink:hover::after, .card:hover .nm::after, .nm:hover::after,
+.btn.line2:hover::after, .btn.ghost:hover::after, .linkbtn:hover::after, .textlink:hover::after, .card-foot .btn:hover::after { transform: scaleX(1); }
+.btn.line2[disabled]::after { display: none; }
+
+/* product card: photo grows inside its frame */
+.card-top .ph { transition: transform var(--motion-slow) var(--ease-out), opacity 250ms var(--ease-out); }
+.card:hover .card-top .ph { transform: scale(1.03); }
+
+/* tabs: one bar slides between them */
+.tabs nav { position: relative; }
+.tabbar { position: absolute; left: 0; bottom: -1px; width: 1px; height: 2px; background: var(--ink); transform-origin: left; opacity: 0; pointer-events: none; }
+.tabs.js a.on { border-bottom-color: transparent; }
+.tabs.js a:hover:not(.on) { border-bottom-color: var(--hair); }
+
+/* category boxes */
+.kindbox svg, .kindbox img, .kindbox .ico { transition: transform var(--motion-med) var(--ease-out); }
+.kindbox:hover svg, .kindbox:hover img, .kindbox:hover .ico { transform: translateX(var(--nudge)); }
+
+/* inputs */
+.field, .coup input, .phonerow input, .otpbox input { transition: border-color var(--motion-fast) var(--ease-out), box-shadow var(--motion-med) var(--ease-out); }
+.field:focus, .coup input:focus, .phonerow input:focus, .otpbox input:focus { box-shadow: 0 0 0 2px var(--ring); }
+.field[aria-invalid='true'] { animation: shake 200ms var(--ease-out) 1; }
+.err, .bad-t, .alert, .msg { animation: fadein var(--motion-med) var(--ease-out) both; }
+.msg.good, .msg.bad { animation: rise var(--motion-med) var(--ease-out) both; --rise: calc(var(--shift) * 0.75); }
+.msg.good { color: var(--ink); }
+
+/* add to cart label swap and tick */
+.swap { display: inline-grid; }
+.swap > span { grid-area: 1 / 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: opacity var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out); }
+.swap > .out { opacity: 0; transform: translateY(calc(var(--shift) * -1)); pointer-events: none; }
+.swap > span:last-child:not(.out) { animation: rollup var(--motion-fast) var(--ease-out) both; }
+.tick path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.tick.draw path { animation: draw 300ms var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) { .tick path { stroke-dashoffset: 0; } }
+.bump { display: inline-block; animation: bump var(--motion-med) var(--ease-out) 1; }
+
+/* numbers */
+.roll { display: inline-block; }
+.roll.up { animation: rollup var(--motion-med) var(--ease-out) both; }
+.roll.down { animation: rolldown var(--motion-med) var(--ease-out) both; }
+
+/* toasts */
+.toasts { position: fixed; top: 16px; right: 16px; z-index: 90; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { background: var(--white); border: 1px solid var(--hair); color: var(--ink); padding: 12px 18px; font-size: 14px; font-weight: 500; animation: toastin var(--motion-med) var(--ease-out) both; }
+.toast.out { animation: toastout var(--motion-med) var(--ease-out) both; }
+
+/* cart rows */
+.line.leaving { animation: rowout var(--motion-med) var(--ease-out) both; pointer-events: none; }
+.line.ease-up { animation: lift var(--motion-med) var(--ease-out) both; }
+
+/* place order */
+.go.busy { position: relative; overflow: hidden; }
+.go.busy::after { content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 40%; background: var(--white); animation: run 1.1s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .go.busy::after { animation: none; width: 100%; opacity: 0.6; } }
+.go[disabled].busy { opacity: 0.8; }
+.slidein { animation: slidein var(--motion-med) var(--ease-out) both; }
+
+/* order success and tracking */
+.okwrap { display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: center; }
+.okwrap p { grid-column: 1 / -1; }
+.okbig { color: var(--ink); }
+.okbig circle, .okbig path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 500ms var(--ease-out) both; }
+.okbig path { animation-delay: 250ms; }
+.okwrap .okmark { animation: rise var(--motion-med) var(--ease-out) 650ms both; }
+.okwrap p { animation: rise var(--motion-med) var(--ease-out) 750ms both; }
+@media (prefers-reduced-motion: reduce) { .okbig circle, .okbig path { stroke-dashoffset: 0; animation: none; } }
+.steps3 .cur { position: relative; }
+.steps3 .cur::before { content: ''; position: absolute; left: -12px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--brand); }
+.steps3 .cur::after { content: ''; position: absolute; left: -12px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--brand); animation: pulse 1200ms var(--ease-out) 1 300ms both; pointer-events: none; }
+.steps3 .cur { margin-left: 12px; }
+
+/* dialogs */
+.modal { animation: fadein var(--motion-med) var(--ease-out) both; }
+.modal > * { animation: rise var(--motion-med) var(--ease-out) both; --rise: var(--shift); }

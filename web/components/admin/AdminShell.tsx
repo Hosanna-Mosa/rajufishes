@@ -33,7 +33,7 @@ function Nav({ me, path }: { me: AdminUser; path: string }) {
         return (
           <Link key={n.href} href={n.href} className={on ? 'on' : undefined} aria-current={on ? 'page' : undefined}>
             {n.label}
-            {n.href === '/admin/orders' && count > 0 && <span className="a-badge" aria-label={`${count} new orders`}>{count}</span>}
+            {n.href === '/admin/orders' && count > 0 && <span key={count} className="a-badge pop" aria-label={`${count} new orders`}>{count}</span>}
           </Link>
         )
       })}
