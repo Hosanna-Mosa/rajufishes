@@ -19,6 +19,7 @@ export function Tabs({ items, note }: { items: TabItem[]; note?: string }) {
       const n = nav.current, b = bar.current
       const cur = n?.querySelector<HTMLElement>('a.on')
       if (!n || !b || !cur) { if (b) b.style.opacity = '0'; return }
+      if (window.innerWidth <= 800) n.scrollTo({ left: cur.offsetLeft - (n.clientWidth - cur.offsetWidth) / 2, behavior: 'auto' })
       const to: Spot = { x: cur.offsetLeft, w: cur.offsetWidth }
       const prev = memory().__tabSpot
       b.style.opacity = '1'

@@ -9,15 +9,20 @@ import { GROUPS } from '@/lib/api'
 type Img = { url: string; publicId?: string; alt?: string }
 type Form = {
   name: string; category: 'fresh' | 'dry' | 'frozen'; group: string; unit: 'kg' | 'pack'; price: string; packWeightG: string
-  stock: string; trackStock: boolean; description: string; note: string; active: boolean
+  stock: string; trackStock: boolean; description: string; note: string; active: boolean; caughtOn: string; addedOn: string
   weights: string; cuts: { name: string; delta: string }[]; images: Img[]
 }
-const blank: Form = { name: '', category: 'fresh', group: 'Fresh fish', unit: 'kg', price: '', packWeightG: '', stock: '0', trackStock: true, description: '', note: '', active: true, weights: '500, 1000, 2000', cuts: [{ name: 'Steaks', delta: '0' }], images: [] }
+// dates are IST calendar days (YYYY-MM-DD); saved as noon IST of that day so no timezone can shift them
+const IST_MS = 5.5 * 3600_000
+function istToday() { return new Date(Date.now() + IST_MS).toISOString().slice(0, 10) }
+const istDayOf = (iso?: string | null) => (iso ? new Date(new Date(iso).getTime() + IST_MS).toISOString().slice(0, 10) : '')
+const noonIst = (d: string) => `${d}T12:00:00+05:30`
+const blank: Form = { name: '', category: 'fresh', group: 'Fresh fish', unit: 'kg', price: '', packWeightG: '', stock: '0', trackStock: true, description: '', note: '', active: true, caughtOn: istToday(), addedOn: istToday(), weights: '500, 1000, 2000', cuts: [{ name: 'Steaks', delta: '0' }], images: [] }
 
-type Api = { _id: string; name: string; slug: string; category: Form['category']; group: string; unit: Form['unit']; price: number; packWeightG?: number; stock: number; trackStock: boolean; description?: string; note?: string; active: boolean; weights: number[]; cuts: { name: string; priceDeltaPerKg: number }[]; images: Img[] }
+type Api = { _id: string; name: string; slug: string; category: Form['category']; group: string; unit: Form['unit']; price: number; packWeightG?: number; stock: number; trackStock: boolean; description?: string; note?: string; active: boolean; landedAt?: string | null; addedOn?: string | null; weights: number[]; cuts: { name: string; priceDeltaPerKg: number }[]; images: Img[] }
 const fromApi = (p: Api): Form => ({
   name: p.name, category: p.category, group: p.group, unit: p.unit, price: fromPaise(p.price), packWeightG: p.packWeightG ? String(p.packWeightG) : '', stock: String(p.stock), trackStock: p.trackStock,
-  description: p.description ?? '', note: p.note ?? '', active: p.active, weights: p.weights.join(', '), cuts: p.cuts.map((c) => ({ name: c.name, delta: fromPaise(c.priceDeltaPerKg) })), images: p.images,
+  description: p.description ?? '', note: p.note ?? '', active: p.active, caughtOn: istDayOf(p.landedAt), addedOn: istDayOf(p.addedOn), weights: p.weights.join(', '), cuts: p.cuts.map((c) => ({ name: c.name, delta: fromPaise(c.priceDeltaPerKg) })), images: p.images,
 })
 
 export default function ProductForm() {
@@ -56,7 +61,7 @@ export default function ProductForm() {
       if (d === null || Number.isNaN(d)) return `The extra price for “${c.name}” must be a number.`
       cuts.push({ name: c.name.trim(), priceDeltaPerKg: d })
     }
-    return { name: f!.name.trim(), category: f!.category, group: f!.group, unit: f!.unit, price, stock, trackStock: f!.trackStock, description: f!.description, note: f!.note, active: f!.active, weights, cuts, images: f!.images, ...(f!.unit === 'pack' ? { packWeightG: Number(f!.packWeightG) } : {}) }
+    return { name: f!.name.trim(), category: f!.category, group: f!.group, unit: f!.unit, price, stock, trackStock: f!.trackStock, description: f!.description, note: f!.note, active: f!.active, ...(f!.category === 'fresh' ? { landedAt: f!.caughtOn ? noonIst(f!.caughtOn) : null } : {}), ...(f!.addedOn ? { addedOn: noonIst(f!.addedOn) } : {}), weights, cuts, images: f!.images, ...(f!.unit === 'pack' ? { packWeightG: Number(f!.packWeightG) } : {}) }
   }
 
   async function save(e: React.FormEvent) {
@@ -161,6 +166,13 @@ export default function ProductForm() {
             <div className="a-card">
               <h2>Shop</h2>
               <div className="in fgrid">
+                {f.category === 'fresh' ? (
+                  <>
+                    <div className="fld"><label htmlFor="caught">Caught on</label><input id="caught" type="date" className="field" value={f.caughtOn} onChange={(e) => set({ caughtOn: e.target.value })} /></div>
+                    <div className="fld"><label htmlFor="added">Added on</label><input id="added" type="date" className="field" value={f.addedOn} onChange={(e) => set({ addedOn: e.target.value })} /></div>
+                    <div className="hint fld" style={{ marginTop: -8 }}>Shown to customers as “Caught today, added today.” Leave “Caught on” empty to show nothing. Switching a product back on sets “Added on” to today.</div>
+                  </>
+                ) : null}
                 <label className="chk fld"><input type="checkbox" checked={f.active} onChange={(e) => set({ active: e.target.checked })} /> For sale in the shop</label>
                 <div className="hint fld" style={{ marginTop: -8 }}>Switch off to hide it from the shop. Old orders keep working.</div>
                 <button className="btn big" type="submit" disabled={busy} style={{ width: '100%' }}>{busy ? 'Saving…' : isNew ? 'Add product' : 'Save product'}</button>

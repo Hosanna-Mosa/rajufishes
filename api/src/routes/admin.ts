@@ -85,6 +85,7 @@ const productFields = z.object({
   trackStock: z.boolean().default(true),
   images: z.array(z.object({ url: z.url().max(500), publicId: z.string().max(200).optional(), alt: z.string().max(160).optional() })).max(5).default([]),
   landedAt: z.coerce.date().nullish(),
+  addedOn: z.coerce.date().nullish(),
   marketListed: z.boolean().default(false),
   marketOrder: z.number().int().min(0).default(0),
   active: z.boolean().default(true),
@@ -117,13 +118,32 @@ adminRouter.get('/products/:id', validate({ params: id }), async (req, res) => {
 adminRouter.post('/products', validate({ body: productFields }), async (req, res) => {
   checkUnit(req.valid.body)
   const b = req.valid.body
-  res.status(201).json({ product: await Product.create({ ...b, slug: b.slug ?? slugify(b.name) }) })
+  const { addedOn, landedAt, ...rest } = b
+  res.status(201).json({ product: await Product.create({ ...rest, ...(addedOn ? { addedOn } : {}), ...(landedAt && b.category === 'fresh' ? { landedAt } : {}), slug: b.slug ?? slugify(b.name) }) })
 })
 adminRouter.patch('/products/:id', validate({ params: id, body: productFields.partial() }), async (req, res) => {
   const p = await Product.findById(req.valid.params.id)
   if (!p) throw notFound()
-  p.set(req.valid.body)
+  const wasLive = p.active
+  // a partial update changes only what was sent (the schema's defaults must not wipe the other fields)
+  const sent = Object.fromEntries(Object.entries(req.valid.body).filter(([k]) => k in (req.body ?? {})))
+  p.set(sent)
+  if (!wasLive && p.active && req.valid.body.active === true && !req.valid.body.addedOn) p.addedOn = new Date() // put back on the shop = added today
+  if (p.category !== 'fresh') p.landedAt = undefined // only fresh items carry a caught date
   checkUnit(p.toObject())
+  await p.save()
+  res.json({ product: p })
+})
+// morning routine: stamp fresh items as caught today (IST day is read from the saved moment)
+adminRouter.post('/products/mark-caught', validate({ body: z.object({ ids: z.array(objectId).min(1).max(100) }).strict() }), async (req, res) => {
+  const r = await Product.updateMany({ _id: { $in: req.valid.body.ids }, category: 'fresh' }, { $set: { landedAt: new Date() } })
+  res.json({ ok: true, updated: r.modifiedCount })
+})
+adminRouter.post('/products/:id/landed-today', validate({ params: id }), async (req, res) => {
+  const p = await Product.findById(req.valid.params.id)
+  if (!p) throw notFound()
+  if (p.category !== 'fresh') throw new HttpError(400, 'Only fresh items have a caught day.')
+  p.landedAt = new Date()
   await p.save()
   res.json({ product: p })
 })

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Product } from '@/lib/api'
 import { CATEGORY_LABEL, priceText } from '@/lib/format'
+import { FreshLine } from './FreshLine'
 import { AddButton } from './AddButton'
 import { ProductImage } from './ProductImage'
 
@@ -17,6 +18,7 @@ export function ProductCard({ product, priority }: { product: Product; priority?
           {product.available ? <span className="price">{priceText(product)}</span> : <span className="sold">Sold out today</span>}
         </div>
         {product.note && <span className="note">{product.note}</span>}
+        <FreshLine p={product} />
         <div className="card-foot"><AddButton product={product} /></div>
       </div>
     </article>

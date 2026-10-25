@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: { default: 'Raju Fishes: fresh off the boat', template: '%s | Raju Fishes' },
   description: 'Fresh fish from our own boats, plus dry and frozen packs, delivered all over India.',
 }
-export const viewport: Viewport = { width: 'device-width', initialScale: 1 }
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const biz = await getBusiness() // read here so the footer is part of the first render and does not pop in

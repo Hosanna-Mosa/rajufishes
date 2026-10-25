@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { removeLine, setQty, useCart, useCartCount } from '@/lib/cart'
 import { optionsText, rupees } from '@/lib/format'
 import { getSavedCoupon, saveCoupon, useQuote } from '@/lib/useQuote'
+import { FreshLine } from './FreshLine'
 import { LineThumb } from './LineThumb'
 import { Roll, Ticker } from './Motion'
 import { reducedMotion } from '@/lib/toast'
@@ -111,6 +112,7 @@ export function CartView() {
                     <div className="lbody">
                       <Link href={`/products/${l.slug}`} className="lname">{l.name}</Link>
                       <div className="lopt">{optionsText(l)}</div>
+                      <FreshLine p={l} />
                       <button className="lrm" onClick={(e) => drop(cl, lineKey(l), e.currentTarget.closest('.line'))} aria-label={`Remove ${l.name}`}>Remove</button>
                     </div>
                     <div className="stepper">
@@ -148,6 +150,11 @@ export function CartView() {
           <div className="note">Pay online or on delivery. Final delivery charge depends on your pincode.</div>
         </div>
       </aside>
+
+      <div className="stickybar" role="region" aria-label="Cart total">
+        <div className="sb-t"><small>Total</small><b><Ticker value={quote?.total ?? 0} /></b></div>
+        <button className="go" disabled={!quote || problems.length > 0 || loading} onClick={() => router.push('/checkout')}>Checkout</button>
+      </div>
     </div>
   )
 }

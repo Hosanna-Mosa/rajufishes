@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ApiError, call, type OrderT, type RazorpayInfo } from '@/lib/client'
+import { FreshLine } from './FreshLine'
 import { optionsText, rupees } from '@/lib/format'
 import { useSite } from './SiteContext'
 import { StatusSteps, statusText } from './StatusSteps'
@@ -117,7 +118,7 @@ export function OrderView({ orderNo }: { orderNo: string }) {
           <StatusSteps status={order.status} />
           {order.items.map((it, i) => (
             <div className="r" key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-              <span style={{ minWidth: 0, overflowWrap: 'anywhere' }}><b>{it.name}</b> × {it.qty}<br/><small>{optionsText({ cut: it.cut, weightG: it.weightG, category: it.category })}</small></span>
+              <span style={{ minWidth: 0, overflowWrap: 'anywhere' }}><b>{it.name}</b> × {it.qty}<br/><small>{optionsText({ cut: it.cut, weightG: it.weightG, category: it.category })}</small><FreshLine p={it} now={new Date(order.createdAt)} /></span>
               <b>{rupees(it.lineTotal)}</b>
             </div>
           ))}

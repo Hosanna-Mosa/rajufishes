@@ -14,6 +14,16 @@ export function ProductBuy({ product }: { product: Product }) {
   const [weightG, setWeightG] = useState<number | null>(product.unit === 'kg' ? (product.weights.includes(1000) ? 1000 : product.weights[0] ?? 1000) : null)
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
+  const [kb, setKb] = useState(false) // on-screen keyboard open: the sticky bar steps aside
+  useEffect(() => {
+    const vv = window.visualViewport
+    const check = () => setKb(!!vv && window.innerHeight - vv.height > 140)
+    vv?.addEventListener('resize', check)
+    const typing = (e: Event) => { const t = e.target as HTMLElement; if (t.matches?.('input, textarea, select')) setKb(true) }
+    const done = () => setKb(false)
+    document.addEventListener('focusin', typing); document.addEventListener('focusout', done)
+    return () => { vv?.removeEventListener('resize', check); document.removeEventListener('focusin', typing); document.removeEventListener('focusout', done) }
+  }, [])
 
   const delta = product.cuts.find((c) => c.name === cut)?.priceDeltaPerKg ?? 0
   const each = unitPrice(product, delta, weightG)
@@ -62,7 +72,7 @@ export function ProductBuy({ product }: { product: Product }) {
       )}
 
       {product.available ? (
-        <div className="buyrow">
+        <div className={`buyrow${kb ? ' kbd' : ''}`}>
           <div className="qty" role="group" aria-label="Quantity">
             <button type="button" aria-label="One less" onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
             <span aria-live="polite"><Roll value={qty} /></span>

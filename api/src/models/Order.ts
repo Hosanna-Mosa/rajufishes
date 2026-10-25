@@ -11,6 +11,8 @@ const itemSchema = new Schema(
     slug: String,
     image: String,
     category: String,
+    caughtOn: { type: Date, default: null }, // fresh items: snapshot of the product's dates at order time
+    addedOn: { type: Date, default: null },
     unit: String,
     cut: { type: String, default: null },
     weightG: { type: Number, default: null }, // kg items: weight chosen. pack items: pack weight.

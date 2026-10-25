@@ -19,3 +19,8 @@ next-env.d.ts
 
 # local photo uploads (development only)
 api/uploads/
+
+# service account keys and other credentials must never be committed
+raju-fishes-*.json
+*serviceaccount*.json
+*-firebase-adminsdk-*.json

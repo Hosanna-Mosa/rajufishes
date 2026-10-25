@@ -13,7 +13,13 @@ import { couponDiscount, quote } from '../services/pricing.js'
 
 export const publicRouter = Router()
 
-const publicProduct = (p: any) => ({ ...p, available: p.active && (p.trackStock === false || p.stock > 0) })
+// caughtOn / addedOn are for fresh items only; dry and frozen never show a fresh-day label
+const publicProduct = (p: any) => ({
+  ...p,
+  caughtOn: p.category === 'fresh' ? p.landedAt ?? null : null,
+  addedOn: p.category === 'fresh' ? p.addedOn ?? null : null,
+  available: p.active && (p.trackStock === false || p.stock > 0),
+})
 
 publicRouter.get('/products', validate({ query: z.object({
   category: z.enum(['fresh', 'dry', 'frozen']).optional(),

@@ -32,6 +32,8 @@ interface PricedProduct {
   trackStock?: boolean | null
   active?: boolean | null
   images?: { url?: string | null }[]
+  landedAt?: Date | null
+  addedOn?: Date | null
 }
 
 export interface PricedLine {
@@ -40,6 +42,8 @@ export interface PricedLine {
   slug: string
   image: string
   category: string
+  caughtOn: Date | null
+  addedOn: Date | null
   unit: string
   cut: string | null
   weightG: number | null
@@ -80,7 +84,9 @@ export function priceLine(p: PricedProduct, input: CartInput): PricedLine | Prob
     stockUnits = 1
   }
   return {
-    productId, name: p.name, slug: p.slug, image: p.images?.[0]?.url ?? '', category: p.category, unit: p.unit,
+    productId, name: p.name, slug: p.slug, image: p.images?.[0]?.url ?? '', category: p.category,
+    caughtOn: p.category === 'fresh' ? p.landedAt ?? null : null, addedOn: p.category === 'fresh' ? p.addedOn ?? null : null,
+    unit: p.unit,
     cut, weightG, qty: input.qty, unitPrice, lineTotal: unitPrice * input.qty,
     stockUse: p.trackStock === false ? 0 : stockUnits * input.qty,
   }

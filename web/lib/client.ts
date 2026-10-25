@@ -42,6 +42,7 @@ export type Quote = {
 export type OrderItem = {
   name: string; slug: string; image?: string | null; category: string; unit: 'kg' | 'pack'
   cut: string | null; weightG: number | null; qty: number; unitPrice: number; lineTotal: number; productId?: string
+  caughtOn?: string | null; addedOn?: string | null // fresh items: dates saved when the order was placed
 }
 export type OrderT = {
   orderNo: string; status: 'placed' | 'packed' | 'shipped' | 'delivered' | 'cancelled'

@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getProduct } from '@/lib/api'
-import { CATEGORY_LABEL, landedIsToday, landedTime, priceText, weightLabel } from '@/lib/format'
+import { CATEGORY_LABEL, priceText, weightLabel } from '@/lib/format'
+import { FreshLine } from '@/components/FreshLine'
 import { Gallery } from '@/components/Gallery'
 import { ProductBuy } from '@/components/ProductBuy'
 import { ProductImage } from '@/components/ProductImage'
@@ -27,10 +28,9 @@ export default async function ProductPage({ params }: Props) {
   const data = await getProduct(slug)
   if (!data) notFound()
   const { product: p, related } = data
-  const time = landedTime(p.landedAt)
   const kicker =
     p.category === 'fresh'
-      ? `Fresh${landedIsToday(p.landedAt) && time ? ` · landed today ${time}` : ''}`
+      ? 'Fresh'
       : `${CATEGORY_LABEL[p.category]}${p.packWeightG ? ` · ${weightLabel(p.packWeightG)} pack` : ''}`
 
   const ld = {
@@ -53,6 +53,7 @@ export default async function ProductPage({ params }: Props) {
         <div className="info">
           <span className="kick">{kicker}</span>
           <h1>{p.name}</h1>
+          <FreshLine p={p} size="page" />
           <ProductBuy product={p} />
         </div>
       </div>

@@ -218,6 +218,10 @@ export function CheckoutView() {
         </div>
       </aside>
 
+      <div className="stickybar" role="region" aria-label="Order total">
+        <div className="sb-t"><small>Total</small><b><Ticker value={quote?.total ?? 0} /></b></div>
+        <button className={`go${busy ? ' busy' : ''}`} disabled={busy || !quote || problems.length > 0} onClick={place} aria-busy={busy}>{busy ? 'Placing…' : 'Place order'}</button>
+      </div>
     </div>
   )
 }

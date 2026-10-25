@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import type { Product } from '@/lib/api'
 import { call } from '@/lib/client'
+import { FreshLine } from './FreshLine'
 import { CATEGORY_LABEL, priceText } from '@/lib/format'
 import { LineThumb } from './LineThumb'
 
@@ -57,7 +58,7 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
                   <li key={p._id}>
                     <Link href={`/products/${p.slug}`} className="search-hit" onClick={onClose}>
                       <LineThumb image={p.images[0]?.url} name={p.name} category={p.category} />
-                      <span className="search-nm">{p.name}<small>{CATEGORY_LABEL[p.category]}</small></span>
+                      <span className="search-nm">{p.name}<small>{CATEGORY_LABEL[p.category]}</small><FreshLine p={p} /></span>
                       <span className="search-pr">{p.available ? priceText(p) : 'Sold out today'}</span>
                     </Link>
                   </li>

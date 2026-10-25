@@ -15,6 +15,8 @@ export type Product = {
   weights: number[]
   images: { url: string; alt?: string }[]
   landedAt?: string | null
+  caughtOn?: string | null // fresh items: the day it was caught (IST)
+  addedOn?: string | null // fresh items: the day it was put on the shop (IST)
   available: boolean
 }
 

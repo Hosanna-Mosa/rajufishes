@@ -34,7 +34,7 @@ authRouter.post('/auth/logout', (_req, res) => {
   res.json({ ok: true })
 })
 
-const pub = (c: { _id: unknown; phone: string; name: string; email: string }) => ({ id: String(c._id), phone: c.phone, name: c.name, email: c.email })
+const pub = (c: { _id: unknown; phone?: string | null; name: string; email: string }) => ({ id: String(c._id), phone: c.phone ?? '', name: c.name, email: c.email })
 
 // asked by every page load: answers 200 with customer null when signed out, so no red error shows in the browser console
 authRouter.get('/session', optionalCustomer, async (req, res) => {

@@ -18,7 +18,9 @@ const productSchema = new Schema(
     stock: { type: Number, default: 0, min: 0 }, // kg when unit=kg, packs when unit=pack
     trackStock: { type: Boolean, default: true },
     images: [{ _id: false, url: String, publicId: String, alt: String }],
+    // fresh items only: when it was caught or landed (the "Caught on" day, read in IST) and when it was put on the shop
     landedAt: { type: Date },
+    addedOn: { type: Date, default: () => new Date() },
     marketListed: { type: Boolean, default: false },
     marketOrder: { type: Number, default: 0 },
     active: { type: Boolean, default: true, index: true },
