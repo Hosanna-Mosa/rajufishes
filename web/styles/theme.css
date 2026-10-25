@@ -35,6 +35,9 @@
   --shift: 8px;          /* small slides: number roll, dialogs, toasts */
   --nudge: 4px;          /* hover nudges */
   --stagger: 60ms;
+  --reveal: 24px;        /* scroll reveal: start this far lower */
+  --reveal-dur: 600ms;
+  --reveal-gap: 70ms;    /* between neighbours in a row */
   --shimmer: 1.8s;
   --ring: rgba(10, 92, 143, 0.22);
 }
@@ -49,6 +52,9 @@
     --shift: 0px;
     --nudge: 0px;
     --stagger: 0ms;
+    --reveal: 0px;
+    --reveal-dur: 1ms;
+    --reveal-gap: 0ms;
     --shimmer: 0s;
   }
 }

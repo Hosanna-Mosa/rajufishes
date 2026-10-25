@@ -4,7 +4,7 @@ import { getSite, type Contact } from './api'
 /** The marker shown where a detail has not been filled in. */
 export const todo = (what: string) => `[ADD YOUR ${what.toUpperCase()}]`
 
-export type LoginMode = 'guest' | 'otp'
+export type LoginMode = 'guest' | 'account' | 'otp'
 export type Resolved = {
   b: Record<keyof typeof business, string> & { freeOver: string; freeOverRupees: number }
   /** Same details, raw (empty when not filled in) for links and logic */
@@ -39,5 +39,5 @@ export async function getBusiness(): Promise<Resolved> {
   for (const k of Object.keys(business) as (keyof typeof business)[]) (b as Record<string, string>)[k] = merged[k] || todo(LABEL[k])
   b.freeOverRupees = rupees
   b.freeOver = rupees ? `₹${rupees.toLocaleString('en-IN')}` : todo('free delivery amount')
-  return { b, raw, contact: c, loginMode: site?.loginMode ?? 'guest' }
+  return { b, raw, contact: c, loginMode: site?.loginMode ?? 'account' }
 }

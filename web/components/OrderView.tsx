@@ -23,7 +23,7 @@ function loadRazorpay(): Promise<boolean> {
 }
 
 export function OrderView({ orderNo }: { orderNo: string }) {
-  const otp = useSite().loginMode === 'otp'
+  const otp = useSite().loginMode !== 'guest'
   const sp = useSearchParams()
   const token = sp.get('token') ?? undefined
   const justPlaced = sp.get('placed') === '1' || sp.get('pay') === '1'

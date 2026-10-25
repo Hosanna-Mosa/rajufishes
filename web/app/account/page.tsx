@@ -7,7 +7,7 @@ import { AccountView } from '@/components/AccountView'
 export const metadata: Metadata = { title: 'My account' }
 
 export default async function AccountPage() {
-  // phone sign in is switched off in guest mode: orders are found with the order number and phone
-  if ((await getBusiness()).loginMode !== 'otp') redirect('/track')
+  // no accounts in guest mode: orders are found with the order number and phone
+  if ((await getBusiness()).loginMode === 'guest') redirect('/track')
   return <main><Suspense fallback={null}><AccountView/></Suspense></main>
 }

@@ -7,6 +7,7 @@ import { env } from './config/env.js'
 import { errorHandler, limiter, sanitize } from './middleware/common.js'
 import { publicRouter } from './routes/public.js'
 import { authRouter } from './routes/auth.js'
+import { accountRouter } from './routes/account.js'
 import { ordersRouter, paymentsRouter, razorpayWebhook } from './routes/orders.js'
 import { adminRouter } from './routes/admin.js'
 import { UPLOAD_DIR } from './services/uploads.js'
@@ -33,7 +34,7 @@ export function createApp() {
     const db = mongoose.connection.readyState === 1
     res.status(db ? 200 : 503).json({ status: db ? 'ok' : 'database-down', time: new Date().toISOString() })
   })
-  app.use('/api', publicRouter, authRouter, ordersRouter, paymentsRouter)
+  app.use('/api', publicRouter, authRouter, accountRouter, ordersRouter, paymentsRouter)
   app.use('/api/admin', adminRouter)
   app.use((_req, res) => res.status(404).json({ error: 'Not found' }))
   app.use(errorHandler)

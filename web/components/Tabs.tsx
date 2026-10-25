@@ -12,6 +12,7 @@ export function Tabs({ items, note }: { items: TabItem[]; note?: string }) {
   const nav = useRef<HTMLElement>(null)
   const bar = useRef<HTMLSpanElement>(null)
   const [js, setJs] = useState(false)
+  const active = items.find((t) => t.on)?.label ?? ''
 
   useEffect(() => {
     const place = (animate: boolean) => {
@@ -30,7 +31,7 @@ export function Tabs({ items, note }: { items: TabItem[]; note?: string }) {
     }
     place(true)
     void document.fonts?.ready.then(() => place(false))
-  }, [])
+  }, [active]) // runs again whenever the address changes the active tab, so the underline always follows the URL
 
   return (
     <div className={`tabs${js ? ' js' : ''}`}>

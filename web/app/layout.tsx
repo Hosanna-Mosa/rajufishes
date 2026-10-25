@@ -9,6 +9,7 @@ import { ShopChrome } from '@/components/ShopChrome'
 import { Suspense } from 'react'
 import { RouteProgress } from '@/components/RouteProgress'
 import { Toaster } from '@/components/Toaster'
+import { Reveal } from '@/components/Reveal'
 import '../styles/theme.css'
 import './globals.css'
 
@@ -25,14 +26,15 @@ export const viewport: Viewport = { width: 'device-width', initialScale: 1 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const biz = await getBusiness() // read here so the footer is part of the first render and does not pop in
-  const bar = `Free delivery over ${biz.b.freeOver} · Cash on delivery available`
+  const messages = [`Free delivery over ${biz.b.freeOver}`, 'Cash on delivery available', 'Packed on ice', 'Landed today']
   return (
     <html lang="en" className={`${head.variable} ${text.variable}`}>
       <body>
         <Suspense fallback={null}><RouteProgress /></Suspense>
         <Toaster />
+        <Reveal />
         <SiteProvider loginMode={biz.loginMode}>
-          <ShopChrome><CartSync/><SiteHeader bar={bar} /></ShopChrome>
+          <ShopChrome><CartSync/><SiteHeader messages={messages} /></ShopChrome>
           {children}
           <ShopChrome><SiteFooter biz={biz} /></ShopChrome>
         </SiteProvider>

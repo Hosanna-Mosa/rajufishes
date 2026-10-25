@@ -6,6 +6,7 @@ import { ProductCard } from '@/components/ProductCard'
 import { Tabs } from '@/components/Tabs'
 import { LocalImg } from '@/components/LocalImg'
 import { CATEGORY_PHOTO } from '@/lib/photos'
+import { TABS, tabHref } from '@/lib/groups'
 
 export const metadata: Metadata = {
   title: { absolute: 'Raju Fishes: fresh off the boat' },
@@ -43,12 +44,7 @@ export default async function Home() {
 
         <section id="catch" aria-label="The catch">
           <Tabs
-            items={[
-              { label: 'All', href: '/products', on: true },
-              { label: 'Fresh', href: '/products?group=Fresh+fish,Prawns+and+crab', on: false },
-              { label: 'Dry', href: '/products?group=Dry+fish', on: false },
-              { label: 'Frozen', href: '/products?group=Frozen+packs', on: false },
-            ]}
+            items={TABS.map((t) => ({ label: t.label, href: tabHref(t.key), on: t.key === 'all' }))}
             note={data ? `${data.total} products` : undefined}
           />
           {data ? (

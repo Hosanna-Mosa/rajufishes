@@ -4,7 +4,7 @@ import { env } from '../config/env.js'
 export type CustomerClaims = { sub: string; typ: 'customer' }
 export type AdminClaims = { sub: string; typ: 'admin'; role: 'owner' | 'staff' }
 
-export const signCustomer = (id: string) => jwt.sign({ sub: id, typ: 'customer' } satisfies CustomerClaims, env.CUSTOMER_JWT_SECRET, { expiresIn: '30d' })
+export const signCustomer = (id: string) => jwt.sign({ sub: id, typ: 'customer' } satisfies CustomerClaims, env.CUSTOMER_JWT_SECRET, { expiresIn: '7d' })
 export const signAdmin = (id: string, role: 'owner' | 'staff') => jwt.sign({ sub: id, typ: 'admin', role } satisfies AdminClaims, env.ADMIN_JWT_SECRET, { expiresIn: '8h' })
 
 export function verifyCustomer(token: string): CustomerClaims | null {

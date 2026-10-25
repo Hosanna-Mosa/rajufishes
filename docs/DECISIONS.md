@@ -101,3 +101,10 @@ Options (do not sign up yet):
 - **Admin alerts:** the admin polls `GET /api/admin/orders/alerts` (placed, confirmed orders from the last 3 days) every 20 seconds. The first check only sets a baseline, so signing in does not chime for old orders. The badge counts alerts not yet opened (opened ids are kept in the browser). Sound is a short chime made with the Web Audio API; a one-time tap is needed. Mute is remembered in the browser. WhatsApp is click-to-chat (`wa.me`), with no WhatsApp API.
 - **Guest-only login:** `LOGIN_MODE=guest` (default). OTP routes answer 403 "switched off"; the OTP and MSG91 code stay in place. Tracking by link, and by order number + phone (`POST /api/orders/lookup`, rate limited). Account and sign-in pages redirect to Track order. The production checks only require SMS settings when `LOGIN_MODE=otp`.
 - **Business config:** `web/config/business.ts` is the source for the footer, delivery bar, Contact and policy pages. Phone, email, address, name, hours and the free-delivery amount set in Admin > Delivery override the file. Blanks show `[ADD YOUR ...]`. See `docs/FILL-ME-IN.md`.
+
+## Round 11: customer accounts with email and password
+- **Accounts replace phone OTP for customers.** `LOGIN_MODE=account` (default), `guest` (no sign in), or `otp` (old code, kept but off). Admin login is unchanged.
+- **Passwords:** bcrypt cost 12, 8 to 72 characters with a letter and a number. Sessions are a 7 day JWT in an httpOnly, sameSite=lax cookie (secure in production).
+- **Reset:** a link by email, valid 30 minutes, works once. The reply to "forgot password" is always the same, so nobody can learn which emails have accounts.
+- **Rate limit:** 5 tries per 15 minutes per IP and email for sign in, sign up and forgot password.
+- **Guest orders and accounts:** an order is linked to an account only when placed while signed in. An earlier guest order is added later by entering its order number and phone once.

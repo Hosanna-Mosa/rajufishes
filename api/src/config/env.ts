@@ -28,7 +28,7 @@ const schema = z.object({
   MSG91_AUTH_KEY: z.string().default(''),
   MSG91_TEMPLATE_ID: z.string().default(''),
   MSG91_SENDER_ID: z.string().default(''),
-  LOGIN_MODE: z.enum(['guest', 'otp']).default('guest'),
+  LOGIN_MODE: z.enum(['guest', 'account', 'otp']).default('account'),
   OWNER_EMAIL: z.string().default(''),
   MAIL_PROVIDER: z.enum(['log', 'smtp']).default('log'),
   MAIL_FROM: z.string().default(''),

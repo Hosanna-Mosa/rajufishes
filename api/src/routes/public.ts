@@ -27,7 +27,10 @@ publicRouter.get('/products', validate({ query: z.object({
   const filter: Record<string, unknown> = { active: true }
   if (category) filter.category = category
   if (group) filter.group = { $in: group.split(',').map((g) => g.trim()).filter(Boolean).slice(0, 8) }
-  if (q) filter.name = { $regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' }
+  if (q && q.length >= 2) {
+    const rx = { $regex: q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' } // read-only, case-insensitive, typed text is escaped
+    filter.$or = [{ name: rx }, { category: rx }, { group: rx }]
+  }
   const order: Record<string, 1 | -1> = sort === 'price_asc' ? { price: 1 } : sort === 'price_desc' ? { price: -1 } : sort === 'name' ? { name: 1 } : { landedAt: -1, name: 1 }
   const [items, total, groups] = await Promise.all([
     Product.find(filter).sort(order).skip((page - 1) * limit).limit(limit).lean(),

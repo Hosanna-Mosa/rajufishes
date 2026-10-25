@@ -7,7 +7,7 @@ import { clearCart, useCart } from '@/lib/cart'
 import { ApiError, call, type AddressT, type OrderT, type Slot } from '@/lib/client'
 import { rupees } from '@/lib/format'
 import { INDIA_STATES } from '@/lib/states'
-import { useCustomer } from '@/lib/session'
+import { refreshCustomer, useCustomer } from '@/lib/session'
 import { useSite } from './SiteContext'
 import { getSavedCoupon, saveCoupon, useQuote } from '@/lib/useQuote'
 
@@ -16,7 +16,7 @@ const EMPTY: Form = { name: '', phone: '', email: '', line1: '', line2: '', city
 const FALLBACK_SLOTS: Slot[] = [{ id: 'tomorrow_morning', label: 'Tomorrow morning' }, { id: 'tomorrow_evening', label: 'Tomorrow evening' }]
 
 export function CheckoutView() {
-  const otp = useSite().loginMode === 'otp'
+  const otp = useSite().loginMode !== 'guest'
   const router = useRouter()
   const lines = useCart()
   const customer = useCustomer()
@@ -104,6 +104,7 @@ export function CheckoutView() {
         paymentMethod: pay,
       } })
       clearCart(); saveCoupon('')
+      if (customer && !customer.phone) call('/me/profile', { method: 'PATCH', body: { phone } }).then(refreshCustomer).catch(() => {}) // so the next checkout is prefilled
       const q = new URLSearchParams()
       if (r.trackToken) q.set('token', r.trackToken)
       q.set(pay === 'razorpay' ? 'pay' : 'placed', '1')

@@ -234,7 +234,9 @@ Two alerts are built in:
 - **Email to the family** for every confirmed order (cash orders at once, online orders once paid). Set `OWNER_EMAIL`, `MAIL_PROVIDER=smtp` and the `SMTP_*` values and `MAIL_FROM` (your email host's SMTP details; Gmail needs an app password). With `MAIL_PROVIDER=log` the email is only printed in the server log. A failed email never stops the order.
 - **In the admin:** keep Admin > Orders open on the stall tablet or laptop. It checks every 20 seconds, plays a chime, and shows a number on the Orders menu item and in the browser tab. Tap "Tap to turn on order sound" once after opening the page (browsers require it). Each order has a **WhatsApp customer** button that opens a ready message.
 
-**Guest mode (default).** `LOGIN_MODE=guest` means customers order with name, phone and address, with no sign-in and no SMS provider, so MSG91 and DLT approval (section 5.4) are **not needed to launch**. Customers find their order with the private link, or with order number + phone on the Track order page. To switch phone sign-in on later, set `LOGIN_MODE=otp` and complete section 5.4.
+**Accounts (default).** `LOGIN_MODE=account` lets customers sign up with email and password; reset emails use your mail settings (and `WEB_URL`, the public site address, for the link). Guests can still check out. `LOGIN_MODE=guest` hides sign in entirely.
+
+**Guest mode.** `LOGIN_MODE=guest` means customers order with name, phone and address, with no sign-in and no SMS provider, so MSG91 and DLT approval (section 5.4) are **not needed to launch**. Customers find their order with the private link, or with order number + phone on the Track order page. To switch phone sign-in on later, set `LOGIN_MODE=otp` and complete section 5.4.
 
 ### Security habits
 - Change your admin password if anyone who knew it leaves.

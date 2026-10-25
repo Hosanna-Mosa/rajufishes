@@ -6,7 +6,7 @@ An online fish store for our family's fishing business, Raju Fishes. We now sell
 
 **What the site does:**
 - Product pages, cart, and checkout with online payment (Razorpay) or cash on delivery.
-- Customers order as guests (name, phone, address) by default. Phone sign-in with a one-time code (OTP) is built and can be switched on with `LOGIN_MODE=otp`.
+- Customers can order as guests (name, phone, address) or create an account with email and password (`LOGIN_MODE=account`, the default). `LOGIN_MODE=guest` hides sign in. The phone OTP code is still in the project but switched off (`LOGIN_MODE=otp`).
 - Customers can track their orders and save addresses.
 - A simple admin panel for the family: products, today's market prices, orders, delivery areas and charges, coupons.
 - English only. Fast and simple. No launch date yet.
@@ -25,7 +25,7 @@ The look is "Ice and Paper" (reference page `design/ice-and-paper-home.html`). L
 | API | Express with TypeScript, in `api/` |
 | Database | MongoDB Atlas |
 | Admin login | JWT |
-| Customer login | Phone number + OTP (fixed test code in development) |
+| Customer login | Email + password (bcrypt, httpOnly cookie, 7 days). Guest checkout stays. |
 | Images | Cloudinary |
 | Payments | Razorpay (test mode first) and cash on delivery |
 
@@ -50,7 +50,7 @@ You need Node.js 20 or newer. In development no database account is needed: with
    npm run seed     # only needed with a real database (the in-memory one seeds itself)
    npm test         # API tests
    ```
-4. In development the OTP code is always the fixed test code from `.env` (`OTP_TEST_CODE`). No SMS is sent. Razorpay runs in test mode with test keys.
+4. Password reset emails are written to the API log in development (no mail is sent). Razorpay runs in test mode with test keys.
 
 Until Round 1 is done these commands do not exist yet.
 

@@ -8,8 +8,9 @@ import { optionsText, rupees } from '@/lib/format'
 import { INDIA_STATES } from '@/lib/states'
 import { refreshCustomer, signOut, useCustomer } from '@/lib/session'
 import { StatusSteps, statusText } from './StatusSteps'
+import { strength } from './AuthForm'
 
-const TABS = [['orders', 'Orders'], ['addresses', 'Saved addresses'], ['profile', 'Profile']] as const
+const TABS = [['orders', 'Orders'], ['addresses', 'Saved addresses'], ['profile', 'Profile and password']] as const
 const day = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })
 
 export function AccountView() {
@@ -25,7 +26,7 @@ export function AccountView() {
       <div className="wrap">
         <div className="banner">
           <h1>My account</h1>
-          <p className="sub">{customer ? `Signed in as +91 ${customer.phone.slice(0, 2)}XXXXXX${customer.phone.slice(-2)}` : 'Checking…'}</p>
+          <p className="sub">{customer ? `Signed in as ${customer.email || customer.name}` : 'Checking…'}</p>
         </div>
       </div>
       {customer ? (
@@ -63,6 +64,7 @@ function Orders() {
       {err ? <p className="bad-t" role="alert">{err}</p> : null}
       {orders === null && !err ? <p>Loading…</p> : null}
       {orders?.length === 0 ? <div className="empty"><h2>No orders yet</h2><p>When you order, it shows up here.</p><Link href="/products" className="btn">Shop the catch</Link></div> : null}
+      {orders ? <ClaimOrder onClaimed={() => call<{ orders: OrderT[] }>('/orders').then((r) => setOrders(r.orders))} /> : null}
       {orders?.map((o) => (
         <div className="ocard" key={o.orderNo}>
           <div className="ocard-h"><span>Order #{o.orderNo}</span><span>{day(o.createdAt)} · {statusText(o)}</span></div>
@@ -156,27 +158,73 @@ function Addresses() {
   )
 }
 
+function ClaimOrder({ onClaimed }: { onClaimed: () => void }) {
+  const [open, setOpen] = useState(false)
+  const [no, setNo] = useState('')
+  const [phone, setPhone] = useState('')
+  const [msg, setMsg] = useState('')
+  async function claim(e: React.FormEvent) {
+    e.preventDefault(); setMsg('')
+    try {
+      await call('/me/orders/claim', { method: 'POST', body: { orderNo: no.trim(), phone: phone.replace(/\D/g, '').slice(-10) } })
+      setMsg('Added to your account.'); setNo(''); setPhone(''); onClaimed()
+    } catch (err) { setMsg(err instanceof ApiError ? err.message : 'Could not add that order.') }
+  }
+  if (!open) return <p className="small" style={{ margin: 0 }}>Ordered before as a guest? <button className="linkbtn" onClick={() => setOpen(true)}>Add that order to your account</button></p>
+  return (
+    <form className="box" onSubmit={claim}>
+      <div className="box-h">Add an earlier guest order</div>
+      <div className="box-b">
+        <div className="fld half"><label htmlFor="cl-no">Order number</label><input id="cl-no" className="field" value={no} onChange={(e) => setNo(e.target.value)} maxLength={12} required /></div>
+        <div className="fld half"><label htmlFor="cl-ph">Phone used on the order</label><input id="cl-ph" className="field" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} required /></div>
+        {msg ? <div className={msg.startsWith('Added') ? 'good-t' : 'bad-t'} role="status" style={{ flex: '1 1 100%' }}>{msg}</div> : null}
+        <div className="obtns"><button className="btn">Add order</button><button type="button" className="btn line2" onClick={() => setOpen(false)}>Close</button></div>
+      </div>
+    </form>
+  )
+}
+
 function Profile() {
   const router = useRouter()
   const customer = useCustomer()
   const [name, setName] = useState(customer?.name ?? '')
-  const [email, setEmail] = useState(customer?.email ?? '')
+  const [phone, setPhone] = useState(customer?.phone ?? '')
   const [msg, setMsg] = useState('')
+  const [pw, setPw] = useState({ current: '', password: '', confirm: '' })
+  const [pwMsg, setPwMsg] = useState('')
   async function save(e: React.FormEvent) {
     e.preventDefault(); setMsg('')
-    try { await call('/me', { method: 'PATCH', body: { name: name.trim(), email: email.trim() } }); await refreshCustomer(); setMsg('Saved.') }
+    try { await call('/me/profile', { method: 'PATCH', body: { name: name.trim(), phone } }); await refreshCustomer(); setMsg('Saved.') }
     catch (err) { setMsg(err instanceof ApiError ? err.message : 'Could not save.') }
   }
+  async function change(e: React.FormEvent) {
+    e.preventDefault(); setPwMsg('')
+    if (pw.password !== pw.confirm) return setPwMsg('The two passwords do not match.')
+    try { await call('/me/password', { method: 'POST', body: pw }); setPw({ current: '', password: '', confirm: '' }); setPwMsg('Password changed.') }
+    catch (err) { setPwMsg(err instanceof ApiError ? err.message : 'Could not change the password.') }
+  }
+  const s = strength(pw.password)
   return (
     <>
       <h2>Profile</h2>
       <form className="box" onSubmit={save}>
         <div className="box-b">
           <div className="fld"><label htmlFor="p-name">Name</label><input id="p-name" className="field" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} autoComplete="name" /></div>
-          <div className="fld"><label htmlFor="p-phone">Mobile number</label><input id="p-phone" className="field" value={`+91 ${customer?.phone ?? ''}`} readOnly /></div>
-          <div className="fld"><label htmlFor="p-email">Email (optional)</label><input id="p-email" type="email" className="field" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></div>
+          <div className="fld"><label htmlFor="p-email">Email</label><input id="p-email" type="email" className="field" value={customer?.email ?? ''} readOnly /></div>
+          <div className="fld"><label htmlFor="p-phone">Mobile number (used to prefill checkout)</label><input id="p-phone" className="field" inputMode="tel" autoComplete="tel-national" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} /></div>
           {msg ? <div className={msg === 'Saved.' ? 'good-t' : 'bad-t'} role="status" style={{ flex: '1 1 100%' }}>{msg}</div> : null}
           <div className="obtns"><button className="btn">Save</button><button type="button" className="btn line2" onClick={async () => { await signOut(); router.replace('/') }}>Sign out</button></div>
+        </div>
+      </form>
+      <h2>Change password</h2>
+      <form className="box" onSubmit={change}>
+        <div className="box-b">
+          <div className="fld"><label htmlFor="pw-cur">Current password</label><input id="pw-cur" type="password" className="field" autoComplete="current-password" maxLength={72} value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} required /></div>
+          <div className="fld half"><label htmlFor="pw-new">New password</label><input id="pw-new" type="password" className="field" autoComplete="new-password" maxLength={72} value={pw.password} onChange={(e) => setPw({ ...pw, password: e.target.value })} required aria-describedby="pw-hint" />
+            <p id="pw-hint" className={`pw-hint l${s.level}`}>{s.label || 'At least 8 characters, with letters and a number.'}</p></div>
+          <div className="fld half"><label htmlFor="pw-conf">Confirm new password</label><input id="pw-conf" type="password" className="field" autoComplete="new-password" maxLength={72} value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} required /></div>
+          {pwMsg ? <div className={pwMsg === 'Password changed.' ? 'good-t' : 'bad-t'} role="status" style={{ flex: '1 1 100%' }}>{pwMsg}</div> : null}
+          <div className="obtns"><button className="btn">Change password</button></div>
         </div>
       </form>
     </>
