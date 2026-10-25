@@ -22,10 +22,19 @@ export function CartView() {
   const [couponMsg, setCouponMsg] = useState('')
   const [ready, setReady] = useState(false)
   const [leaving, setLeaving] = useState<string | null>(null)
-  function drop(cl: Parameters<typeof removeLine>[0], key: string) {
+  const [lift, setLift] = useState<{ keys: string[]; h: number } | null>(null)
+  const lineKey = (l: { productId: string; cut: string | null; weightG: number | null }) => `${l.productId}-${l.cut}-${l.weightG}`
+  function drop(cl: Parameters<typeof removeLine>[0], key: string, row: HTMLElement | null) {
     if (reducedMotion()) { removeLine(cl); return }
+    const all = quote?.lines.map(lineKey) ?? []
+    const below = all.slice(all.indexOf(key) + 1)
+    const h = row ? row.getBoundingClientRect().height : 0
     setLeaving(key)
-    setTimeout(() => { removeLine(cl); setLeaving(null) }, 280)
+    setTimeout(() => {
+      removeLine(cl)
+      setLeaving(null)
+      if (below.length && h) { setLift({ keys: below, h }); setTimeout(() => setLift(null), 250) }
+    }, 280)
   }
 
   useEffect(() => { const c = getSavedCoupon(); setCoupon(c); setTyped(c); setReady(true) }, [])
@@ -93,12 +102,16 @@ export function CartView() {
                   ?? lines.find((c) => c.productId === l.productId && c.cut === l.cut)
                 if (!cl) return null
                 return (
-                  <div className={`line${leaving === `${l.productId}-${l.cut}-${l.weightG}` ? ' leaving' : ''}`} key={`${l.productId}-${l.cut}-${l.weightG}`}>
+                  <div
+                    className={`line${leaving === lineKey(l) ? ' leaving' : ''}${lift?.keys.includes(lineKey(l)) ? ' ease-up' : ''}`}
+                    style={lift?.keys.includes(lineKey(l)) ? ({ '--line-h': `${lift.h}px` } as React.CSSProperties) : undefined}
+                    key={lineKey(l)}
+                  >
                     <LineThumb image={l.image} name={l.name} category={l.category} />
                     <div className="lbody">
                       <Link href={`/products/${l.slug}`} className="lname">{l.name}</Link>
                       <div className="lopt">{optionsText(l)}</div>
-                      <button className="lrm" onClick={() => drop(cl, `${l.productId}-${l.cut}-${l.weightG}`)} aria-label={`Remove ${l.name}`}>Remove</button>
+                      <button className="lrm" onClick={(e) => drop(cl, lineKey(l), e.currentTarget.closest('.line'))} aria-label={`Remove ${l.name}`}>Remove</button>
                     </div>
                     <div className="stepper">
                       <button onClick={() => setQty(cl, cl.qty - 1)} aria-label="One less">−</button>

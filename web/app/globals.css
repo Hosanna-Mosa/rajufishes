@@ -425,7 +425,7 @@ img.fade.wait { opacity: 0; }
 
 /* cart rows */
 .line.leaving { animation: rowout var(--motion-med) var(--ease-out) both; pointer-events: none; }
-.line.ease-up { animation: lift var(--motion-med) var(--ease-out) both; }
+.line.ease-up { animation: lift 250ms var(--ease-out) both; }
 
 /* place order */
 .go.busy { position: relative; overflow: hidden; }
