@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ApiError, call } from '@/lib/client'
 import { signedIn, useCustomer, type Customer } from '@/lib/session'
+import { Label, ReqNote } from './Label'
 
 export function SignInView() {
   const router = useRouter()
@@ -66,9 +67,10 @@ export function SignInView() {
           <div className="sum-h">Sign in with your phone</div>
           <div className="sign-b">
             <form onSubmit={send} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <ReqNote />
               <div>
-                <label className="lab" htmlFor="ph">Mobile number</label>
-                <div className="phonerow"><b>+91</b><input id="ph" type="tel" inputMode="numeric" autoComplete="tel-national" placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} /></div>
+                <Label className="lab" htmlFor="ph" req>Mobile number</Label>
+                <div className="phonerow"><b>+91</b><input id="ph" type="tel" required aria-required inputMode="numeric" autoComplete="tel-national" placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} /></div>
               </div>
               <button className="btn" disabled={busy}>{sent ? 'Send code again' : 'Send code'}</button>
             </form>

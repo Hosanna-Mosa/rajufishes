@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ApiError, call } from '@/lib/client'
 import { signedIn, useCustomer, type Customer } from '@/lib/session'
+import { Label, ReqNote } from './Label'
 
 export type AuthMode = 'signin' | 'signup' | 'forgot' | 'reset'
 
@@ -91,23 +92,24 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
               </>
             ) : (
               <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }} noValidate>
+                <ReqNote />
                 {mode === 'signup' && (
-                  <div><label className="lab" htmlFor="au-name">Your name</label>
-                    <input id="au-name" className="field" autoComplete="name" required maxLength={80} value={f.name} onChange={set('name')} /></div>
+                  <div><Label className="lab" htmlFor="au-name" req>Your name</Label>
+                    <input id="au-name" className="field" autoComplete="name" required aria-required maxLength={80} value={f.name} onChange={set('name')} /></div>
                 )}
                 {mode !== 'reset' && (
-                  <div><label className="lab" htmlFor="au-email">Email</label>
-                    <input id="au-email" className="field" type="email" autoComplete="email" required maxLength={120} value={f.email} onChange={set('email')} /></div>
+                  <div><Label className="lab" htmlFor="au-email" req>Email</Label>
+                    <input id="au-email" className="field" type="email" autoComplete="email" required aria-required maxLength={120} value={f.email} onChange={set('email')} /></div>
                 )}
                 {mode !== 'forgot' && (
-                  <div><label className="lab" htmlFor="au-pass">{mode === 'reset' ? 'New password' : 'Password'}</label>
-                    <input id="au-pass" className="field" type="password" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} required maxLength={72} value={f.password} onChange={set('password')} aria-describedby={mode !== 'signin' ? 'au-hint' : undefined} />
+                  <div><Label className="lab" htmlFor="au-pass" req>{mode === 'reset' ? 'New password' : 'Password'}</Label>
+                    <input id="au-pass" className="field" type="password" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} required aria-required maxLength={72} value={f.password} onChange={set('password')} aria-describedby={mode !== 'signin' ? 'au-hint' : undefined} />
                     {mode !== 'signin' && <p id="au-hint" className={`pw-hint l${s.level}`} aria-live="polite">{s.label || 'At least 8 characters, with letters and a number.'}</p>}
                   </div>
                 )}
                 {(mode === 'signup' || mode === 'reset') && (
-                  <div><label className="lab" htmlFor="au-confirm">Confirm password</label>
-                    <input id="au-confirm" className="field" type="password" autoComplete="new-password" required maxLength={72} value={f.confirm} onChange={set('confirm')} aria-invalid={!!f.confirm && f.confirm !== f.password} /></div>
+                  <div><Label className="lab" htmlFor="au-confirm" req>Confirm password</Label>
+                    <input id="au-confirm" className="field" type="password" autoComplete="new-password" required aria-required maxLength={72} value={f.confirm} onChange={set('confirm')} aria-invalid={!!f.confirm && f.confirm !== f.password} /></div>
                 )}
                 {msg ? <div className="bad-t" role="alert">{msg}</div> : null}
                 <button className="btn" disabled={busy}>{busy ? 'One moment…' : c.go}</button>

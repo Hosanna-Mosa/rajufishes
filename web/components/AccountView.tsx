@@ -9,6 +9,7 @@ import { INDIA_STATES } from '@/lib/states'
 import { refreshCustomer, signOut, useCustomer } from '@/lib/session'
 import { StatusSteps, statusText } from './StatusSteps'
 import { strength } from './AuthForm'
+import { Label, ReqNote } from './Label'
 
 const TABS = [['orders', 'Orders'], ['addresses', 'Saved addresses'], ['profile', 'Profile and password']] as const
 const day = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' })
@@ -119,7 +120,7 @@ function Addresses() {
   }
   const set = (k: keyof AForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF((p) => ({ ...p, [k]: e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : k === 'pincode' || k === 'phone' ? e.target.value.replace(/\D/g, '') : e.target.value }))
   const inp = (k: keyof AForm, label: string, half = true, extra: React.InputHTMLAttributes<HTMLInputElement> = {}) => (
-    <div className={`fld${half ? ' half' : ''}`}><label htmlFor={`a-${k}`}>{label}</label><input id={`a-${k}`} className="field" value={f[k] as string} onChange={set(k)} {...extra} /></div>
+    <div className={`fld${half ? ' half' : ''}`}><Label htmlFor={`a-${k}`} req={!!extra.required} opt={!extra.required}>{label}</Label><input id={`a-${k}`} className="field" value={f[k] as string} onChange={set(k)} aria-required={extra.required || undefined} {...extra} /></div>
   )
 
   return (
@@ -140,14 +141,15 @@ function Addresses() {
         <form className="box" onSubmit={save}>
           <div className="box-h">{editing === 'new' ? 'New address' : 'Edit address'}</div>
           <div className="box-b">
+            <ReqNote />
             {inp('label', 'Label (Home, Work…)', true, { maxLength: 30 })}
             {inp('name', 'Full name', true, { required: true })}
             {inp('phone', 'Mobile number', true, { inputMode: 'tel', required: true, maxLength: 10 })}
             {inp('line1', 'House number and street', false, { required: true })}
             {inp('line2', 'Area and landmark', false)}
             {inp('city', 'City', true, { required: true })}
-            <div className="fld half"><label htmlFor="a-state">State</label>
-              <select id="a-state" className="field" value={f.state} onChange={set('state')} required><option value="">Choose state</option>{INDIA_STATES.map((s) => <option key={s}>{s}</option>)}</select></div>
+            <div className="fld half"><Label htmlFor="a-state" req>State</Label>
+              <select id="a-state" className="field" value={f.state} onChange={set('state')} required aria-required><option value="">Choose state</option>{INDIA_STATES.map((s) => <option key={s}>{s}</option>)}</select></div>
             {inp('pincode', 'Pincode', true, { inputMode: 'numeric', maxLength: 6, required: true })}
             <label style={{ flex: '1 1 100%', display: 'flex', gap: 10, alignItems: 'center', minHeight: 44 }}><input type="checkbox" checked={f.isDefault} onChange={set('isDefault')} style={{ width: 22, height: 22 }} /> Make this my default address</label>
             <div className="obtns"><button className="btn">Save address</button><button type="button" className="btn line2" onClick={() => setEditing(null)}>Cancel</button></div>
@@ -175,8 +177,9 @@ function ClaimOrder({ onClaimed }: { onClaimed: () => void }) {
     <form className="box" onSubmit={claim}>
       <div className="box-h">Add an earlier guest order</div>
       <div className="box-b">
-        <div className="fld half"><label htmlFor="cl-no">Order number</label><input id="cl-no" className="field" value={no} onChange={(e) => setNo(e.target.value)} maxLength={12} required /></div>
-        <div className="fld half"><label htmlFor="cl-ph">Phone used on the order</label><input id="cl-ph" className="field" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} required /></div>
+        <ReqNote />
+        <div className="fld half"><Label htmlFor="cl-no" req>Order number</Label><input id="cl-no" className="field" value={no} onChange={(e) => setNo(e.target.value)} maxLength={12} required aria-required /></div>
+        <div className="fld half"><Label htmlFor="cl-ph" req>Phone used on the order</Label><input id="cl-ph" className="field" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))} required aria-required /></div>
         {msg ? <div className={msg.startsWith('Added') ? 'good-t' : 'bad-t'} role="status" style={{ flex: '1 1 100%' }}>{msg}</div> : null}
         <div className="obtns"><button className="btn">Add order</button><button type="button" className="btn line2" onClick={() => setOpen(false)}>Close</button></div>
       </div>

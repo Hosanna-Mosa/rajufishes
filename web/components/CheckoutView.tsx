@@ -10,6 +10,7 @@ import { INDIA_STATES } from '@/lib/states'
 import { refreshCustomer, useCustomer } from '@/lib/session'
 import { useSite } from './SiteContext'
 import { getSavedCoupon, saveCoupon, useQuote } from '@/lib/useQuote'
+import { Label, ReqNote } from './Label'
 
 type Form = { name: string; phone: string; email: string; line1: string; line2: string; city: string; state: string; pincode: string }
 const EMPTY: Form = { name: '', phone: '', email: '', line1: '', line2: '', city: '', state: '', pincode: '' }
@@ -124,10 +125,10 @@ export function CheckoutView() {
     )
   }
 
-  const fld = (k: keyof Form, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}, half = false) => (
+  const fld = (k: keyof Form, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}, half = false, opt = false) => (
     <div className={`fld${half ? ' half' : ''}`}>
-      <label htmlFor={`f-${k}`}>{label}</label>
-      <input id={`f-${k}`} className="field" value={f[k]} onChange={set(k)} aria-invalid={!!errs[k]} {...props} />
+      <Label htmlFor={`f-${k}`} req={!opt} opt={opt}>{label}</Label>
+      <input id={`f-${k}`} className="field" value={f[k]} onChange={set(k)} aria-invalid={!!errs[k]} required={!opt} aria-required={!opt} {...props} />
       {errs[k] ? <div className="err" role="alert">{errs[k]}</div> : null}
     </div>
   )
@@ -139,10 +140,11 @@ export function CheckoutView() {
         <section className="box">
           <div className="box-h">1 · Your details</div>
           <div className="box-b">
+            <ReqNote />
             {!customer && otp ? <p className="small" style={{ margin: 0, flex: '1 1 100%' }}>Ordering as a guest. <Link href="/sign-in" style={{ textDecoration: 'underline', fontWeight: 700 }}>Sign in</Link> to use saved addresses.</p> : null}
             {fld('name', 'Full name', { autoComplete: 'name' })}
             {fld('phone', 'Mobile number', { type: 'tel', inputMode: 'tel', placeholder: '+91', autoComplete: 'tel' })}
-            {fld('email', 'Email (optional)', { type: 'email', autoComplete: 'email' })}
+            {fld('email', 'Email', { type: 'email', autoComplete: 'email' }, false, true)}
           </div>
         </section>
 
@@ -159,11 +161,11 @@ export function CheckoutView() {
               </div>
             ) : null}
             {fld('line1', 'House number and street', { autoComplete: 'address-line1' })}
-            {fld('line2', 'Area and landmark', { autoComplete: 'address-line2' })}
+            {fld('line2', 'Area and landmark', { autoComplete: 'address-line2' }, false, true)}
             {fld('city', 'City', { autoComplete: 'address-level2' }, true)}
             <div className="fld half">
-              <label htmlFor="f-state">State</label>
-              <select id="f-state" className="field" value={f.state} onChange={set('state')} aria-invalid={!!errs.state} autoComplete="address-level1">
+              <Label htmlFor="f-state" req>State</Label>
+              <select id="f-state" className="field" value={f.state} onChange={set('state')} aria-invalid={!!errs.state} required aria-required autoComplete="address-level1">
                 <option value="">Choose state</option>
                 {INDIA_STATES.map((s) => <option key={s}>{s}</option>)}
               </select>
@@ -215,6 +217,7 @@ export function CheckoutView() {
           <div className="note">By placing the order you agree to our delivery terms. {pay === 'razorpay' ? 'Online orders are held for 30 minutes while you pay.' : ''}</div>
         </div>
       </aside>
+
     </div>
   )
 }

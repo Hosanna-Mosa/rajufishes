@@ -514,3 +514,8 @@ header { position: relative; z-index: 20; background: var(--white); }
 [data-rv] { animation: none !important; }
 [data-rv='p'] { opacity: 0; transform: translateY(var(--reveal)); }
 [data-rv='in'] { transition: opacity var(--reveal-dur) var(--ease-out) var(--rv-delay, 0ms), transform var(--reveal-dur) var(--ease-out) var(--rv-delay, 0ms); }
+
+/* required / optional markers */
+.req { font-size: 14px; color: var(--ink); margin-left: 2px; }
+.opt { color: var(--soft); }
+.req-note { margin: 0; font-size: 13px; color: var(--soft); flex: 1 1 100%; }

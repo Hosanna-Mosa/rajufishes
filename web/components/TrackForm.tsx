@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { useState, type FormEvent } from 'react'
 import { ApiError, call } from '@/lib/client'
+import { Label, ReqNote } from './Label'
 
 /** Find an order with its number and the phone it was placed with. Goes to the private tracking page. */
 export function TrackForm() {
@@ -25,10 +26,11 @@ export function TrackForm() {
 
   return (
     <form onSubmit={submit} className="trackform" noValidate>
-      <div className="fld"><label htmlFor="tn">Order number</label>
-        <input id="tn" className="field" inputMode="numeric" autoComplete="off" placeholder="e.g. 0421" value={orderNo} onChange={(e) => setOrderNo(e.target.value)} required /></div>
-      <div className="fld"><label htmlFor="tp">Phone number used for the order</label>
-        <input id="tp" className="field" type="tel" inputMode="tel" autoComplete="tel" placeholder="+91" value={phone} onChange={(e) => setPhone(e.target.value)} required /></div>
+      <ReqNote />
+      <div className="fld"><Label htmlFor="tn" req>Order number</Label>
+        <input id="tn" className="field" inputMode="numeric" autoComplete="off" placeholder="e.g. 0421" value={orderNo} onChange={(e) => setOrderNo(e.target.value)} required aria-required /></div>
+      <div className="fld"><Label htmlFor="tp" req>Phone number used for the order</Label>
+        <input id="tp" className="field" type="tel" inputMode="tel" autoComplete="tel" placeholder="+91" value={phone} onChange={(e) => setPhone(e.target.value)} required aria-required /></div>
       {err && <p role="alert" className="err">{err}</p>}
       <button className="btn" disabled={busy || !orderNo.trim() || !phone.trim()}>{busy ? 'Looking…' : 'Track my order'}</button>
     </form>
