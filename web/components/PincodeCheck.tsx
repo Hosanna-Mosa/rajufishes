@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { API } from '@/lib/api'
 import { rupees } from '@/lib/format'
+import { trackPincodeCheck } from '@/lib/analytics'
 
 type Result = { ok: boolean; text: string }
 
@@ -17,6 +18,7 @@ export function PincodeCheck({ fresh = false, title, compact = false }: { fresh?
     try {
       const r = await fetch(`${API}/api/delivery/check?pincode=${pin}`)
       const d = await r.json()
+      trackPincodeCheck(r.ok && !!d.deliverable)
       if (!r.ok || !d.deliverable) setRes({ ok: false, text: d.message || 'Sorry, we do not deliver to this pincode yet.' })
       else {
         const parts = [`Delivers in ${d.etaDays} days.`, d.charge === 0 ? 'Free delivery.' : `Delivery ${rupees(d.charge)}, free over ${rupees(d.freeOver)}.`]

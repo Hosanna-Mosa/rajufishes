@@ -10,6 +10,7 @@ import { Suspense } from 'react'
 import { RouteProgress } from '@/components/RouteProgress'
 import { Toaster } from '@/components/Toaster'
 import { Reveal } from '@/components/Reveal'
+import { AnalyticsProvider } from '@/components/AnalyticsProvider'
 import '../styles/theme.css'
 import './globals.css'
 
@@ -33,6 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Suspense fallback={null}><RouteProgress /></Suspense>
         <Toaster />
         <Reveal />
+        <AnalyticsProvider />
         <SiteProvider loginMode={biz.loginMode}>
           <ShopChrome><CartSync/><SiteHeader messages={messages} /></ShopChrome>
           {children}

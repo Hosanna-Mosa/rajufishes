@@ -6,6 +6,7 @@ import { CATEGORY_LABEL, priceText, weightLabel } from '@/lib/format'
 import { FreshLine } from '@/components/FreshLine'
 import { Gallery } from '@/components/Gallery'
 import { ProductBuy } from '@/components/ProductBuy'
+import { ViewItemTrack } from '@/components/ViewItemTrack'
 import { ProductImage } from '@/components/ProductImage'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -54,6 +55,7 @@ export default async function ProductPage({ params }: Props) {
           <span className="kick">{kicker}</span>
           <h1>{p.name}</h1>
           <FreshLine p={p} size="page" />
+          <ViewItemTrack product={p} />
           <ProductBuy product={p} />
         </div>
       </div>

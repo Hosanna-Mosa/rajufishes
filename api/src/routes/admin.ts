@@ -16,6 +16,8 @@ import { refundPayment } from '../services/razorpay.js'
 import { cloudinaryIsOn, storeImage } from '../services/uploads.js'
 import { matchZone } from '../services/delivery.js'
 import { INDIA_STATES } from '../data/states.js'
+import { RANGES, gaRealtime, gaReport, type Range } from '../services/ga.js'
+import { shopStats } from '../services/shopStats.js'
 
 export const adminRouter = Router()
 const id = z.object({ id: objectId })
@@ -283,6 +285,16 @@ adminRouter.patch('/settings', owner, validate({ body: z.object({
   await getSettings()
   res.json({ settings: await Settings.findOneAndUpdate({ key: 'main' }, { $set: req.valid.body }, { returnDocument: 'after' }) })
 })
+
+// ---- analytics (owner only, read only) ----
+// Visitor numbers come from Google (cached); orders and revenue are exact and come from our own database.
+const rangeQuery = z.object({ range: z.enum(RANGES as [Range, ...Range[]]).default('7d') })
+adminRouter.get('/analytics/summary', owner, validate({ query: rangeQuery }), async (req, res) => {
+  const range = req.valid.query.range as Range
+  const [shop, ga] = await Promise.all([shopStats(range), gaReport(range)])
+  res.json({ range, shop, ga })
+})
+adminRouter.get('/analytics/realtime', owner, async (_req, res) => { res.json(await gaRealtime()) })
 
 // ---- coupons (owner changes) ----
 const couponBase = z.object({

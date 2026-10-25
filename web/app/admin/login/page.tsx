@@ -1,4 +1,5 @@
 'use client'
+import { markNoTrack } from '@/lib/analytics'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { acall } from '@/lib/admin'
@@ -16,6 +17,7 @@ export default function AdminLogin() {
     setBusy(true); setErr('')
     try {
       await acall('/auth/login', { method: 'POST', body: { email: email.trim(), password } })
+      markNoTrack()
       router.replace('/admin')
     } catch (x) {
       setErr(errText(x)); setBusy(false)

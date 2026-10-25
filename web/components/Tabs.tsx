@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { reducedMotion } from '@/lib/toast'
+import { trackTabFilter } from '@/lib/analytics'
 
 export type TabItem = { label: string; href: string; on: boolean }
 type Spot = { x: number; w: number }
@@ -38,7 +39,7 @@ export function Tabs({ items, note }: { items: TabItem[]; note?: string }) {
     <div className={`tabs${js ? ' js' : ''}`}>
       <nav aria-label="Categories" ref={nav}>
         {items.map((t) => (
-          <Link key={t.label} href={t.href} className={t.on ? 'on' : undefined} aria-current={t.on ? 'page' : undefined}>{t.label}</Link>
+          <Link key={t.label} href={t.href} className={t.on ? 'on' : undefined} aria-current={t.on ? 'page' : undefined} onClick={() => trackTabFilter(t.label)}>{t.label}</Link>
         ))}
         <span className="tabbar" ref={bar} aria-hidden="true" />
       </nav>

@@ -1,4 +1,5 @@
 'use client'
+import { trackLogin } from '@/lib/analytics'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -51,6 +52,7 @@ export function SignInView() {
     setBusy(true); setMsg('')
     try {
       const r = await call<{ customer: Customer }>('/auth/otp/verify', { method: 'POST', body: { phone: phone.replace(/\D/g, '').slice(-10), code } })
+      trackLogin('phone')
       await signedIn(r.customer)
       router.replace(next)
     } catch (err) { setMsg(err instanceof ApiError ? err.message : 'That code did not work.'); setBusy(false) }

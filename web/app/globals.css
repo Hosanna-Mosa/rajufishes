@@ -774,3 +774,11 @@ header { position: relative; z-index: 20; background: var(--white); }
 .req { font-size: 14px; color: var(--ink); margin-left: 2px; }
 .opt { color: var(--soft); }
 .req-note { margin: 0; font-size: 13px; color: var(--soft); flex: 1 1 100%; }
+
+/* ---- cookie notice ---- */
+.cookie{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;max-width:560px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 16px;background:var(--ink);color:var(--white);border-radius:12px;font-size:14px;line-height:1.35;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.cookie-btns{display:flex;gap:8px;flex:none}
+.cookie button{min-height:40px;padding:0 16px;border-radius:8px;border:1px solid transparent;font:inherit;font-weight:600;cursor:pointer}
+.cookie-ok{background:var(--white);color:var(--ink)}
+.cookie-no{background:transparent;color:var(--white);border-color:rgba(255,255,255,.35)!important}
+@media (max-width:480px){.cookie{flex-direction:column;align-items:stretch;gap:8px;padding:12px}.cookie-btns button{flex:1}}

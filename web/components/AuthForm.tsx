@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ApiError, call } from '@/lib/client'
+import { trackLogin, trackSignUp } from '@/lib/analytics'
 import { signedIn, useCustomer, type Customer } from '@/lib/session'
 import { Label, ReqNote } from './Label'
 
@@ -52,10 +53,10 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
     try {
       if (mode === 'signin') {
         const r = await call<{ customer: Customer }>('/auth/login', { method: 'POST', body: { email: f.email.trim(), password: f.password } })
-        await signedIn(r.customer); router.replace(next)
+        trackLogin('email'); await signedIn(r.customer); router.replace(next)
       } else if (mode === 'signup') {
         const r = await call<{ customer: Customer }>('/auth/signup', { method: 'POST', body: { name: f.name.trim(), email: f.email.trim(), password: f.password, confirm: f.confirm } })
-        await signedIn(r.customer); router.replace(next)
+        trackSignUp('email'); await signedIn(r.customer); router.replace(next)
       } else if (mode === 'forgot') {
         const r = await call<{ message: string }>('/auth/forgot', { method: 'POST', body: { email: f.email.trim() } })
         setDone(r.message); setBusy(false)

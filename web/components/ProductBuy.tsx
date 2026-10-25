@@ -7,6 +7,8 @@ import type { Product } from '@/lib/api'
 import { addToCart } from '@/lib/cart'
 import { rupees, unitPrice, weightLabel } from '@/lib/format'
 import { PincodeCheck } from './PincodeCheck'
+import { trackAddToCart } from '@/lib/analytics'
+import { productItem } from '@/lib/analyticsItems'
 
 export function ProductBuy({ product }: { product: Product }) {
   const router = useRouter()
@@ -33,6 +35,7 @@ export function ProductBuy({ product }: { product: Product }) {
   useEffect(() => () => clearTimeout(timer.current), [])
   function add() {
     addToCart({ productId: product._id, slug: product.slug, cut, weightG, qty })
+    trackAddToCart(productItem(product, { cutDelta: delta, weightG, qty }))
   }
   function addAndShow() {
     add()

@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import { PolicyPage } from '@/components/PolicyPage'
 import { getBusiness } from '@/lib/business'
+import { privacyAnalytics } from '@/lib/analyticsCopy'
 
 export const metadata: Metadata = { title: 'Privacy policy', description: 'What personal details we collect when you order, why, and how we look after them.' }
 
 export default async function Privacy() {
   const { b, loginMode } = await getBusiness()
   const otp = loginMode === 'otp'
+  const ga = privacyAnalytics(b.name, b.email)
   return (
     <PolicyPage title="Privacy policy" intro="What we collect, why we collect it, and what we do not do.">
       <p className="draft">Draft for {b.name} to read and edit. Last updated: {b.lastUpdated}.</p>
@@ -33,6 +35,8 @@ export default async function Privacy() {
       </ul>
       <h2>Cookies</h2>
       <p>We use only the small files needed to {otp ? 'keep you signed in and to ' : ''}remember your cart. We do not use advertising cookies.</p>
+      <h2>{ga.title}</h2>
+      {ga.paragraphs.map((t) => <p key={t}>{t}</p>)}
       <h2>How long we keep it</h2>
       <p>We keep order records for {b.recordsYears} years for accounts and tax. You can ask us to delete your account and saved addresses at any time. Order records we must keep by law will stay.</p>
       <h2>Your choices</h2>

@@ -36,3 +36,14 @@ Phone, email, address, shop name, opening hours and the free-delivery amount can
 The free-delivery amount used by the checkout is the one in Admin > Delivery. Keep `freeDeliveryOver` equal to it, or leave the file blank and let the site read the Admin value.
 
 Also still the family's to do (not shown as markers): the "Draft for ..." line at the top of each policy page should be deleted once the family has read and approved the text.
+
+## Analytics values (Round 13)
+
+None of these are secrets in the shop sense, but never commit real ones. Steps and screenshots-in-words are in `docs/ANALYTICS.md`.
+
+| Value | Where it goes | What it is |
+| --- | --- | --- |
+| `NEXT_PUBLIC_FIREBASE_API_KEY`, `_AUTH_DOMAIN`, `_PROJECT_ID`, `_STORAGE_BUCKET`, `_MESSAGING_SENDER_ID`, `_APP_ID`, `_MEASUREMENT_ID` | `web/.env.local`, and the web host's settings | Copied from the Firebase web app config. All seven are needed, or the shop counts nothing. |
+| `NEXT_PUBLIC_ANALYTICS_DEV` | `web/.env.local` only | `1` makes the shop count visits on your own computer, for testing. Leave empty otherwise. |
+| `GA4_PROPERTY_ID` | `api/.env`, and the API host's settings | The number of the Google Analytics property (digits only). |
+| `GA_SERVICE_ACCOUNT_JSON_BASE64` | `api/.env`, and the API host's settings | The service-account key file, turned into one line of text. This one IS a secret. |

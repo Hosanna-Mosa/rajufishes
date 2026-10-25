@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { removeLine, setQty, useCart, useCartCount } from '@/lib/cart'
 import { optionsText, rupees } from '@/lib/format'
@@ -9,6 +9,8 @@ import { FreshLine } from './FreshLine'
 import { LineThumb } from './LineThumb'
 import { Roll, Ticker } from './Motion'
 import { reducedMotion } from '@/lib/toast'
+import { trackRemoveFromCart, trackViewCart } from '@/lib/analytics'
+import { quoteItem } from '@/lib/analyticsItems'
 
 export function CartCount() {
   const n = useCartCount()
@@ -25,7 +27,10 @@ export function CartView() {
   const [leaving, setLeaving] = useState<string | null>(null)
   const [lift, setLift] = useState<{ keys: string[]; h: number } | null>(null)
   const lineKey = (l: { productId: string; cut: string | null; weightG: number | null }) => `${l.productId}-${l.cut}-${l.weightG}`
+  const viewed = useRef(false)
   function drop(cl: Parameters<typeof removeLine>[0], key: string, row: HTMLElement | null) {
+    const ql = quote?.lines.find((x) => lineKey(x) === key)
+    if (ql) trackRemoveFromCart(quoteItem(ql))
     if (reducedMotion()) { removeLine(cl); return }
     const all = quote?.lines.map(lineKey) ?? []
     const below = all.slice(all.indexOf(key) + 1)
@@ -40,6 +45,10 @@ export function CartView() {
 
   useEffect(() => { const c = getSavedCoupon(); setCoupon(c); setTyped(c); setReady(true) }, [])
   const { quote, error, loading } = useQuote(ready ? lines : [], { coupon })
+
+  useEffect(() => {
+    if (quote && quote.lines.length && !viewed.current) { viewed.current = true; trackViewCart(quote.lines.map(quoteItem)) }
+  }, [quote])
 
   useEffect(() => {
     if (!quote) return

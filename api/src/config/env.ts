@@ -36,6 +36,8 @@ const schema = z.object({
   SMTP_PORT: z.coerce.number().default(587),
   SMTP_USER: z.string().default(''),
   SMTP_PASS: z.string().default(''),
+  GA4_PROPERTY_ID: z.string().default(''),
+  GA_SERVICE_ACCOUNT_JSON_BASE64: z.string().default(''),
   SEED_ADMIN_EMAIL: z.string().default(''),
   SEED_ADMIN_PASSWORD: z.string().default(''),
   SEED_STAFF_EMAIL: z.string().default(''),

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Ticker } from './Motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { clearCart, useCart } from '@/lib/cart'
 import { ApiError, call, type AddressT, type OrderT, type Slot } from '@/lib/client'
@@ -11,6 +11,8 @@ import { refreshCustomer, useCustomer } from '@/lib/session'
 import { useSite } from './SiteContext'
 import { getSavedCoupon, saveCoupon, useQuote } from '@/lib/useQuote'
 import { Label, ReqNote } from './Label'
+import { trackAddPaymentInfo, trackAddShippingInfo, trackBeginCheckout, trackPincodeCheck } from '@/lib/analytics'
+import { quoteItem } from '@/lib/analyticsItems'
 
 type Form = { name: string; phone: string; email: string; line1: string; line2: string; city: string; state: string; pincode: string }
 const EMPTY: Form = { name: '', phone: '', email: '', line1: '', line2: '', city: '', state: '', pincode: '' }
@@ -60,12 +62,14 @@ export function CheckoutView() {
   }
 
   // pincode check against the delivery zones
+  const lastPin = useRef('')
   useEffect(() => {
     if (!/^\d{6}$/.test(f.pincode)) { setPinMsg(null); setCodOk(true); return }
     let stale = false
     call<{ deliverable: boolean; message?: string; etaDays: number; charge: number; freeOver: number; codAllowed: boolean }>(`/delivery/check?pincode=${f.pincode}${f.state ? `&state=${encodeURIComponent(f.state)}` : ''}`)
       .then((d) => {
         if (stale) return
+        if (lastPin.current !== f.pincode) { lastPin.current = f.pincode; trackPincodeCheck(d.deliverable) }
         setCodOk(d.deliverable ? d.codAllowed : true)
         setPinMsg(d.deliverable ? { ok: true, text: `We deliver here in ${d.etaDays} days.` } : { ok: false, text: d.message || 'Sorry, we do not deliver to this pincode yet.' })
       })
@@ -75,6 +79,10 @@ export function CheckoutView() {
   useEffect(() => { if (!codOk && pay === 'cod') setPay('razorpay') }, [codOk, pay])
 
   const { quote, error } = useQuote(ready ? lines : [], { coupon, pincode: f.pincode, state: f.state, paymentMethod: pay })
+  const began = useRef(false)
+  useEffect(() => {
+    if (quote && quote.lines.length && !began.current) { began.current = true; trackBeginCheckout(quote.lines.map(quoteItem)) }
+  }, [quote])
 
   function validate() {
     const e: Partial<Record<keyof Form, string>> = {}
@@ -93,6 +101,7 @@ export function CheckoutView() {
     setFail('')
     if (!validate()) { setFail('Please check the highlighted boxes.'); return }
     if (pinMsg && !pinMsg.ok) { setFail(pinMsg.text); return }
+    if (quote) { const its = quote.lines.map(quoteItem); trackAddShippingInfo(its, slot); trackAddPaymentInfo(its, pay === 'cod' ? 'cod' : 'online') }
     setBusy(true)
     try {
       const phone = f.phone.replace(/[\s-]/g, '')

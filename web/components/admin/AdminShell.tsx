@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { acall, type AdminUser } from '@/lib/admin'
 import { ApiError } from '@/lib/client'
+import { markNoTrack } from '@/lib/analytics'
 import { AlertsProvider, SoundBar, useAlerts } from './Alerts'
 
 const Ctx = createContext<AdminUser | null>(null)
@@ -15,6 +16,7 @@ const NAV: { href: string; label: string; owner?: boolean }[] = [
   { href: '/admin/orders', label: 'Orders' },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/customers', label: 'Customers' },
+  { href: '/admin/analytics', label: 'Analytics', owner: true },
   { href: '/admin/delivery', label: 'Delivery', owner: true },
   { href: '/admin/coupons', label: 'Coupons', owner: true },
   { href: '/admin/staff', label: 'Staff', owner: true },
@@ -52,7 +54,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (bare) return
     acall<{ admin: AdminUser & { _id?: string } }>('/auth/me')
-      .then((r) => setMe({ id: r.admin.id ?? r.admin._id ?? '', email: r.admin.email, name: r.admin.name, role: r.admin.role }))
+      .then((r) => { markNoTrack(); setMe({ id: r.admin.id ?? r.admin._id ?? '', email: r.admin.email, name: r.admin.name, role: r.admin.role }) })
       .catch((e) => { if (e instanceof ApiError && e.status === 401) router.replace('/admin/login') })
   }, [bare, router])
 

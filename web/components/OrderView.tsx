@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ApiError, call, type OrderT, type RazorpayInfo } from '@/lib/client'
+import { trackPurchase } from '@/lib/analytics'
+import { orderItem } from '@/lib/analyticsItems'
 import { FreshLine } from './FreshLine'
 import { optionsText, rupees } from '@/lib/format'
 import { useSite } from './SiteContext'
@@ -65,6 +67,15 @@ export function OrderView({ orderNo }: { orderNo: string }) {
     } catch (e) { setMsg(e instanceof ApiError ? e.message : 'Could not start the payment.') }
     finally { setBusy(false) }
   }, [orderNo, token, verify])
+
+  // purchase is reported once per order, and only for an order that is confirmed (paid online, or cash on delivery)
+  useEffect(() => {
+    if (!order || !justPlaced || order.status === 'cancelled') return
+    if (!(order.payment.method === 'cod' || order.payment.status === 'paid')) return
+    const key = `rf_purchase_${order.orderNo}`
+    try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1') } catch { /* blocked storage: send anyway */ }
+    trackPurchase({ orderNo: order.orderNo, totalPaise: order.total, shippingPaise: order.deliveryCharge, items: order.items.map(orderItem) })
+  }, [order, justPlaced])
 
   const pending = !!order && order.payment.method === 'razorpay' && order.payment.status === 'pending' && order.status === 'placed'
   useEffect(() => {

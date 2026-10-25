@@ -7,6 +7,7 @@ import { call } from '@/lib/client'
 import { FreshLine } from './FreshLine'
 import { CATEGORY_LABEL, priceText } from '@/lib/format'
 import { LineThumb } from './LineThumb'
+import { trackSearch } from '@/lib/analytics'
 
 const SHOWN = 6
 
@@ -26,7 +27,7 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
     let stale = false
     const t = setTimeout(() => {
       call<{ items: Product[]; total: number }>(`/products?q=${encodeURIComponent(q)}&limit=${SHOWN}`)
-        .then((r) => { if (!stale) { setFound({ q, items: r.items, total: r.total }); setFailed(false) } })
+        .then((r) => { if (!stale) { trackSearch(q); setFound({ q, items: r.items, total: r.total }); setFailed(false) } })
         .catch(() => { if (!stale) setFailed(true) })
     }, 250)
     return () => { stale = true; clearTimeout(t) }
