@@ -80,3 +80,18 @@ Options (do not sign up yet):
 - **Status changes** call the notify stubs in `api/src/services/notify.ts`.
 - **Admin never returns secrets** (no password hashes, keys or tokens in any response).
 - **Printing:** packing slip per order and one pick list that adds up all new orders by product.
+
+## 9. Choices made in Round 5
+- **Policy pages** (Contact, Shipping, Cancellation and refunds, Privacy, Terms) are plain-English drafts with `[BRACKET]` placeholders. Business name, phone, email, address and hours are editable in Admin > Delivery > Shop details and fill the pages and footer (`GET /api/meta/contact`). The family must read and edit them (see `docs/LAUNCH.md`).
+- **Startup checks:** in production the API collects every wrong or missing setting into one plain message and refuses to start. It refuses the fixed test OTP code, short or equal JWT secrets, a CORS origin that is localhost or ends with a slash, half-filled Razorpay or Cloudinary groups, and sample login values. This means production cannot start until MSG91 is approved.
+- **Same domain for web and API.** Cookies are host-only and SameSite=lax, so the site and API must share a registrable domain (`www.` and `api.`). On the free `vercel.app` and `onrender.com` addresses sign in would not stick.
+- **Owner setup in production** uses `npm run create-owner:prod` (owner login, "All India" zone, settings, no sample products), not the sample seed.
+- **Health:** `/health` returns 503 when the database is down, so an uptime monitor catches it. Graceful shutdown on SIGTERM; indexes are synced at boot on a real database.
+- **Indexes** added for catalogue queries (active/category/landedAt, group, market order) and orders (createdAt, status, customer, razorpay order id, phone). Admin product list is paginated.
+- **Rate limit:** the global limit is 6000 per 15 minutes per IP because the website's server renders pages from one IP; a low cap blocked normal use. Login, OTP and checkout keep strict limits.
+- **`/api/session`** returns 200 with `customer: null` when signed out, so the browser console has no 401 error on every page.
+- **SEO:** titles, descriptions, canonical links, Open Graph image, favicon, sitemap (all products), robots (blocks admin, account, cart, checkout), Product structured data. `htmlLimitedBots: /.*/` keeps title and description in the page head for every visitor.
+- **Images:** Cloudinary URLs get automatic format and quality, responsive `srcset`, lazy loading and a blurred tiny preview; the first image on a page loads eagerly.
+- **Security headers** (nosniff, frame, referrer, permissions, HSTS in production). A strict Content-Security-Policy is left out on purpose: Razorpay's payment window and Cloudinary images make a wrong policy likely to break payments. Revisit with testing.
+- **Layout shift:** `loading.tsx` is tall so the footer is never visible while the page loads; the display font uses `display: optional` to avoid a font swap jump.
+- **Not built:** automatic order alerts to the family (email or WhatsApp). The notify stubs are still empty. The family must watch Admin > Orders until this is added.

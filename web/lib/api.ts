@@ -50,4 +50,6 @@ export const getProducts = (query: Record<string, string | number | undefined>) 
   return get<ProductList>(`/products?${q}`)
 }
 export const getProduct = (slug: string) => get<{ product: Product; related: Product[] }>(`/products/${encodeURIComponent(slug)}`)
+export type Contact = { businessName: string; phone: string; whatsapp: string; email: string; address: string; hours: string }
+export const getContact = async () => (await get<{ contact: Contact }>('/meta/contact'))?.contact ?? null
 export const getMarket = () => get<{ items: Product[]; updatedAt: string | null }>('/market')

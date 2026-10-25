@@ -95,12 +95,19 @@ const checkUnit = (p: { unit?: string; packWeightG?: number | null; weights?: nu
   if (p.unit === 'kg' && !p.weights?.length) throw new HttpError(400, 'A per-kg product needs at least one weight.')
 }
 
-adminRouter.get('/products', validate({ query: z.object({ q: z.string().max(60).optional(), active: z.enum(['true', 'false']).optional() }) }), async (req, res) => {
-  const { q, active } = req.valid.query
+adminRouter.get('/products', validate({ query: z.object({
+  q: z.string().max(60).optional(), active: z.enum(['true', 'false']).optional(),
+  page: z.coerce.number().int().min(1).default(1), limit: z.coerce.number().int().min(1).max(200).default(50),
+}) }), async (req, res) => {
+  const { q, active, page, limit } = req.valid.query
   const f: Record<string, unknown> = {}
   if (q) f.name = { $regex: esc(q), $options: 'i' }
   if (active) f.active = active === 'true'
-  res.json({ items: await Product.find(f).sort({ category: 1, name: 1 }).lean() })
+  const [items, total] = await Promise.all([
+    Product.find(f).sort({ category: 1, name: 1 }).skip((page - 1) * limit).limit(limit).lean(),
+    Product.countDocuments(f),
+  ])
+  res.json({ items, total, page, pages: Math.max(1, Math.ceil(total / limit)) })
 })
 adminRouter.get('/products/:id', validate({ params: id }), async (req, res) => {
   const p = await Product.findById(req.valid.params.id).lean()
@@ -243,6 +250,8 @@ adminRouter.get('/settings', owner, async (_req, res) => {
 adminRouter.patch('/settings', owner, validate({ body: z.object({
   restrictFreshToZones: z.boolean().optional(), freshOnlyMessage: z.string().max(300).optional(), codMaxTotal: rupeesPaise.optional(),
   stallPhone: z.string().max(20).optional(), whatsapp: z.string().max(20).optional(),
+  businessName: z.string().trim().max(80).optional(), stallEmail: z.union([z.literal(''), z.string().trim().email().max(120)]).optional(),
+  stallAddress: z.string().trim().max(400).optional(), openingHours: z.string().trim().max(200).optional(),
 }).strict() }), async (req, res) => {
   await getSettings()
   res.json({ settings: await Settings.findOneAndUpdate({ key: 'main' }, { $set: req.valid.body }, { returnDocument: 'after' }) })

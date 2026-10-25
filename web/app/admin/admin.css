@@ -10,7 +10,7 @@
 .a-nav a { padding: 10px 20px; border-left: 8px solid transparent; min-height: 46px; display: flex; align-items: center; }
 .a-nav a:hover { background: #eef5fa; opacity: 1; }
 .a-nav a.on { background: var(--sun); border-left-color: var(--ink); }
-.a-me { margin-top: auto; padding: 0 20px; display: flex; flex-direction: column; gap: 4px; }
+.a-me { margin-top: auto; padding: 0 20px 72px; display: flex; flex-direction: column; gap: 4px; }
 .a-me span { color: var(--sea); font-weight: 700; }
 .a-lnk { background: none; border: 0; padding: 4px 0; text-align: left; font-weight: 700; text-decoration: underline; font-size: 14px; }
 .a-main { flex: 1 1 0; min-width: 0; padding: 28px 36px 64px; max-width: 1360px; }

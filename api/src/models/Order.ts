@@ -60,4 +60,10 @@ const orderSchema = new Schema(
   },
   { timestamps: true },
 )
+// admin lists (newest first, by status), a customer's orders, payment lookups and phone search
+orderSchema.index({ createdAt: -1 })
+orderSchema.index({ status: 1, createdAt: -1 })
+orderSchema.index({ customerId: 1, createdAt: -1 })
+orderSchema.index({ 'payment.razorpayOrderId': 1 })
+orderSchema.index({ 'contact.phone': 1 })
 export const Order = model('Order', orderSchema)

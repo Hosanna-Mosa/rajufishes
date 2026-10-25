@@ -26,5 +26,10 @@ const productSchema = new Schema(
   { timestamps: true },
 )
 
+// common shop queries: category lists sorted by landed time, and the market board
+productSchema.index({ active: 1, category: 1, landedAt: -1 })
+productSchema.index({ active: 1, group: 1 })
+productSchema.index({ active: 1, marketListed: 1, marketOrder: 1 })
+
 export type ProductDoc = InferSchemaType<typeof productSchema>
 export const Product = model('Product', productSchema)

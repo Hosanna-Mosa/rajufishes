@@ -38,6 +38,10 @@ const settingsSchema = new Schema(
     orderCounter: { type: Number, default: 0 },
     stallPhone: { type: String, default: '' },
     whatsapp: { type: String, default: '' },
+    businessName: { type: String, default: '' },
+    stallEmail: { type: String, default: '' },
+    stallAddress: { type: String, default: '', maxlength: 400 },
+    openingHours: { type: String, default: '', maxlength: 200 },
   },
   { timestamps: true },
 )

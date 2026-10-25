@@ -96,7 +96,7 @@ Then build:
 
 ---
 
-## Round 5: Images, polish, performance, SEO, deploy plan, launch checklist
+## Round 5 (DONE, nothing deployed): Images, polish, performance, SEO, deploy plan, launch checklist
 - Real photos in Cloudinary following `docs/PHOTOS.md`: automatic sizing and format, lazy loading, blur placeholder.
 - Polish: empty states, error messages, loading states, 404 page, keyboard and screen reader basics, tap size on phones, readable contrast.
 - Performance: page speed check on a mid-range phone and slow network, caching of catalogue pages, small JavaScript.
@@ -123,10 +123,10 @@ Then build:
 - [ ] Admin owner password changed from the seed; staff accounts added
 - [ ] Real products, prices, stock and photos entered
 - [ ] Delivery zones and charges confirmed by the family; fresh-fish rule decided
-- [ ] Terms, delivery terms, refund and contact details written
+- [~] Terms, delivery terms, refund and contact details: drafts written, family must edit (see docs/LAUNCH.md)
 - [ ] FSSAI and any other food licence details shown if required (family to confirm)
 - [ ] Test orders: COD, online, cancel, refund, guest track
-- [ ] Order alert to family (email or WhatsApp) tested
+- [ ] Order alert to family (email or WhatsApp) tested: NOT BUILT yet
 - [ ] `npm audit` clean of serious issues; no secrets in git history
 - [ ] Error monitoring and uptime check on
-- [ ] Phone, tablet and slow-network checks done
+- [~] Phone and tablet widths checked in a browser; slow-network checked with throttling for layout shift

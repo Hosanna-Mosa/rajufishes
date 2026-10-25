@@ -95,7 +95,7 @@ img.ph { background: #fff; }
 
 /* page banner (products, about) */
 .banner { background: var(--sea); color: var(--white); }
-.banner .crumb { font-size: 14px; font-weight: 500; color: var(--sun); padding-top: 36px; }
+.banner .crumb { font-size: 14px; font-weight: 500; color: #FFD54A; padding-top: 36px; }
 .banner h1 { margin: 8px 0 0; font-size: 112px; line-height: 0.9; font-weight: 900; }
 .banner .sub { font-size: 16px; margin: 12px 0 28px; }
 .banner .b1 { height: 14px; background: var(--white); }
@@ -416,3 +416,23 @@ img.ph { background: #fff; }
   .obtns .btn { flex: 1 1 140px; padding: 6px 12px; }
   .addr.add { font-size: 26px; }
 }
+
+/* policy and contact pages */
+.policy { padding-top: 40px; padding-bottom: 24px; max-width: 820px; }
+.policy h2 { margin: 28px 0 8px; font-size: 40px; font-weight: 900; line-height: 1; }
+.policy p, .policy li { font-size: 17px; line-height: 1.65; max-width: 68ch; }
+.policy ul { padding-left: 22px; margin: 0 0 12px; }
+.policy a { color: var(--sea); text-decoration: underline; font-weight: 700; }
+.policy .draft { background: #FFF3C4; border: 3px solid var(--ink); padding: 10px 14px; font-weight: 700; font-size: 15px; }
+.contact { display: grid; gap: 14px; margin: 16px 0 24px; }
+.contact > div { display: flex; flex-wrap: wrap; gap: 4px 20px; border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 14px 18px; background: var(--white); }
+.contact dt { width: 150px; font-size: 22px; font-weight: 800; }
+.contact dd { margin: 0; font-size: 18px; flex: 1 1 240px; overflow-wrap: anywhere; }
+.ftr nav.legal { font-size: 15px; font-weight: 600; letter-spacing: 0.02em; opacity: 0.9; }
+.ftr .reach { width: 100%; font-size: 15px; }
+
+/* loading placeholders */
+.skel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin-top: 24px; }
+.skel { height: 220px; border: 3px solid var(--ink); background: linear-gradient(90deg, #e3eef5 25%, #f3f8fb 50%, #e3eef5 75%); background-size: 200% 100%; animation: skel 1.4s linear infinite; }
+@keyframes skel { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skel { animation: none; } }

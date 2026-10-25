@@ -17,6 +17,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: p.name,
     description: p.description?.slice(0, 160) || `${p.name} from Raju Fishes. ${priceText(p)}, delivered all over India.`,
+    alternates: { canonical: `/products/${p.slug}` },
+    openGraph: { title: p.name, images: p.images?.[0]?.url ? [{ url: p.images[0].url }] : undefined },
   }
 }
 
@@ -31,8 +33,18 @@ export default async function ProductPage({ params }: Props) {
       ? `Fresh${landedIsToday(p.landedAt) && time ? ` · landed today ${time}` : ''}`
       : `${CATEGORY_LABEL[p.category]}${p.packWeightG ? ` · ${weightLabel(p.packWeightG)} pack` : ''}`
 
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.name,
+    description: p.description || `${p.name} from Raju Fishes`,
+    image: p.images?.map((i) => i.url),
+    brand: { '@type': 'Brand', name: 'Raju Fishes' },
+    offers: { '@type': 'Offer', priceCurrency: 'INR', price: (p.price / 100).toFixed(2), availability: p.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/products/${p.slug}` },
+  }
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, '\\u003c') }} />
       <div className="wrap crumbs">
         <Link href="/">Home</Link> / <Link href="/products">All products</Link> / {p.name}
       </div>

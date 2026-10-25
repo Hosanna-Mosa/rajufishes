@@ -6,7 +6,7 @@ import { INDIA_STATES } from '@/lib/states'
 import { rupees } from '@/lib/format'
 
 type Zone = { _id: string; name: string; isDefault: boolean; charge: number; freeOver: number; minOrder: number; etaDays: number; codAllowed: boolean; freshAllowed: boolean; active: boolean; match: { pincodes: string[]; pincodePrefixes: string[]; states: string[] } }
-type Settings = { restrictFreshToZones: boolean; freshOnlyMessage: string; codMaxTotal: number; stallPhone: string; whatsapp: string }
+type Settings = { restrictFreshToZones: boolean; freshOnlyMessage: string; codMaxTotal: number; stallPhone: string; whatsapp: string; businessName: string; stallEmail: string; stallAddress: string; openingHours: string }
 type F = { _id?: string; name: string; isDefault: boolean; charge: string; freeOver: string; minOrder: string; etaDays: string; codAllowed: boolean; freshAllowed: boolean; active: boolean; pincodes: string; prefixes: string; states: string[] }
 const blankZone: F = { name: '', isDefault: false, charge: '60', freeOver: '999', minOrder: '0', etaDays: '3', codAllowed: true, freshAllowed: true, active: true, pincodes: '', prefixes: '', states: [] }
 const toF = (z: Zone): F => ({ _id: z._id, name: z.name, isDefault: z.isDefault, charge: fromPaise(z.charge), freeOver: fromPaise(z.freeOver), minOrder: fromPaise(z.minOrder), etaDays: String(z.etaDays), codAllowed: z.codAllowed, freshAllowed: z.freshAllowed, active: z.active, pincodes: z.match.pincodes.join(', '), prefixes: z.match.pincodePrefixes.join(', '), states: z.match.states })
@@ -136,16 +136,24 @@ function SettingsCard({ s, busy, save }: { s: Settings; busy: boolean; save: (p:
   const [phone, setPhone] = useState(s.stallPhone)
   const [wa, setWa] = useState(s.whatsapp)
   const [msgTxt, setMsgTxt] = useState(s.freshOnlyMessage)
+  const [bn, setBn] = useState(s.businessName ?? '')
+  const [em, setEm] = useState(s.stallEmail ?? '')
+  const [addr, setAddr] = useState(s.stallAddress ?? '')
+  const [hrs, setHrs] = useState(s.openingHours ?? '')
   const codP = toPaise(cod)
   return (
     <div className="a-card">
-      <h2 className="st">Other settings</h2>
+      <h2 className="st">Shop details and other settings</h2>
       <div className="in fgrid">
         <div className="fld"><label htmlFor="cm">Biggest cash on delivery order ₹ (0 = no limit)</label><input id="cm" className="field" inputMode="decimal" value={cod} onChange={(e) => setCod(e.target.value)} /></div>
         <div className="fld"><label htmlFor="fm">Message when fresh fish cannot go to a pincode</label><textarea id="fm" className="field" value={msgTxt} maxLength={300} onChange={(e) => setMsgTxt(e.target.value)} /></div>
         <div className="fld h2"><label htmlFor="sp">Stall phone</label><input id="sp" className="field" value={phone} maxLength={20} onChange={(e) => setPhone(e.target.value)} /></div>
         <div className="fld h2"><label htmlFor="wa">WhatsApp</label><input id="wa" className="field" value={wa} maxLength={20} onChange={(e) => setWa(e.target.value)} /></div>
-        <button className="btn" disabled={busy || codP === null} onClick={() => save({ codMaxTotal: codP!, freshOnlyMessage: msgTxt, stallPhone: phone, whatsapp: wa }, 'Settings saved.')}>Save settings</button>
+        <div className="fld h2"><label htmlFor="bn">Business name (shown on the Contact page and policies)</label><input id="bn" className="field" value={bn} maxLength={80} onChange={(e) => setBn(e.target.value)} /></div>
+        <div className="fld h2"><label htmlFor="se">Email for customers</label><input id="se" className="field" type="email" value={em} maxLength={120} onChange={(e) => setEm(e.target.value)} /></div>
+        <div className="fld"><label htmlFor="sa">Stall address</label><textarea id="sa" className="field" value={addr} maxLength={400} onChange={(e) => setAddr(e.target.value)} /></div>
+        <div className="fld"><label htmlFor="oh">Opening hours</label><input id="oh" className="field" value={hrs} maxLength={200} placeholder="Every day, 5 am to 1 pm" onChange={(e) => setHrs(e.target.value)} /></div>
+        <button className="btn" disabled={busy || codP === null} onClick={() => save({ codMaxTotal: codP!, freshOnlyMessage: msgTxt, stallPhone: phone, whatsapp: wa, businessName: bn, stallEmail: em, stallAddress: addr, openingHours: hrs }, 'Settings saved.')}>Save settings</button>
       </div>
     </div>
   )

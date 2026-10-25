@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { Address } from '../models/Address.js'
 import { Customer } from '../models/Customer.js'
-import { CUSTOMER_COOKIE, cookieOpts, limiter, requireCustomer, validate } from '../middleware/common.js'
+import { CUSTOMER_COOKIE, cookieOpts, limiter, optionalCustomer, requireCustomer, validate } from '../middleware/common.js'
 import { addressBody, objectId, phoneField } from '../lib/schemas.js'
 import { sendOtp, verifyOtp } from '../services/otp.js'
 import { signCustomer } from '../services/tokens.js'
@@ -28,6 +28,12 @@ authRouter.post('/auth/logout', (_req, res) => {
 })
 
 const pub = (c: { _id: unknown; phone: string; name: string; email: string }) => ({ id: String(c._id), phone: c.phone, name: c.name, email: c.email })
+
+// asked by every page load: answers 200 with customer null when signed out, so no red error shows in the browser console
+authRouter.get('/session', optionalCustomer, async (req, res) => {
+  const c = req.customerId ? await Customer.findById(req.customerId).lean() : null
+  res.json({ customer: c ? pub(c) : null })
+})
 
 authRouter.get('/me', requireCustomer, async (req, res) => {
   const c = await Customer.findById(req.customerId).lean()

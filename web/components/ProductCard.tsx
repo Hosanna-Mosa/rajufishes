@@ -7,7 +7,7 @@ import { ProductImage } from './ProductImage'
 export function ProductCard({ product, imgHeight }: { product: Product; imgHeight?: number }) {
   return (
     <article className="card">
-      <Link href={`/products/${product.slug}`} className={`card-top ${product.category}`} aria-label={product.name}>
+      <Link href={`/products/${product.slug}`} className={`card-top ${product.category}`} aria-label={`${CATEGORY_LABEL[product.category]}: ${product.name}`}>
         <span className="kind st">{CATEGORY_LABEL[product.category]}</span>
         <ProductImage product={product} height={imgHeight} />
       </Link>

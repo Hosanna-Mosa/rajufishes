@@ -67,3 +67,9 @@ Open http://localhost:3000/admin after `npm run dev`. Test logins come from `.en
 - Staff: `staff@rajufishes.test` / `dev-staff-pass-123`
 
 Restart the API to reset the test data. Photos are saved to `api/uploads/` (labelled test mode) until the three `CLOUDINARY_*` keys are set. Refunds are simulated until the Razorpay keys are set. Never commit real keys.
+
+## Round 5: polish, SEO, launch preparation
+- New pages: Contact, Shipping and delivery, Cancellation and refunds, Privacy, Terms (drafts with `[BRACKET]` placeholders; the family must edit them).
+- API: `npm run build` then `npm start` (production), `/health` for uptime checks, `npm run create-owner:prod` to make the owner login on a live server. Production refuses to start with wrong settings and prints plain-language reasons.
+- Web: sitemap, robots, Open Graph image, favicon, product structured data, security headers, responsive images, loading and error pages.
+- Nothing is deployed. Read `docs/LAUNCH.md` for the step-by-step hosting setup, every environment variable, and the launch and business checklists.

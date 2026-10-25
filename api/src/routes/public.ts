@@ -52,6 +52,10 @@ publicRouter.get('/market', async (_req, res) => {
 })
 
 publicRouter.get('/meta/slots', async (_req, res) => res.json({ slots: (await getSettings()).deliverySlots }))
+publicRouter.get('/meta/contact', async (_req, res) => {
+  const s = await getSettings()
+  res.json({ contact: { businessName: s.businessName, phone: s.stallPhone, whatsapp: s.whatsapp, email: s.stallEmail, address: s.stallAddress, hours: s.openingHours } })
+})
 publicRouter.get('/meta/states', (_req, res) => res.json({ states: INDIA_STATES }))
 
 publicRouter.get('/delivery/check', limiter(60_000, 60), validate({ query: z.object({ pincode, state: z.string().max(60).optional() }) }), async (req, res) => {

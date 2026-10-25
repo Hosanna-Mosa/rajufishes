@@ -61,8 +61,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <div className="a-me small">
               <b>{me.email}</b>
               <span>{me.role === 'owner' ? 'Owner' : 'Staff'} login</span>
-              <Link href="/" target="_blank" className="a-lnk">Open the shop ↗</Link>
               <button type="button" className="a-lnk" onClick={signOut}>Sign out</button>
+              <Link href="/" target="_blank" className="a-lnk">Open the shop ↗</Link>
             </div>
           </aside>
           <main className="a-main">{children}</main>

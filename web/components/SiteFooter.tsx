@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import type { Contact } from '@/lib/api'
 
-export function SiteFooter() {
+export function SiteFooter({ c }: { c: Contact | null }) {
   return (
     <footer>
       <div className="strip st">
@@ -14,7 +15,16 @@ export function SiteFooter() {
             <Link href="/products">All products</Link>
             <Link href="/about">About</Link>
             <Link href="/cart">Cart</Link>
+            <Link href="/track">Track order</Link>
           </nav>
+          <nav className="legal" aria-label="Policies">
+            <Link href="/contact">Contact us</Link>
+            <Link href="/shipping">Shipping and delivery</Link>
+            <Link href="/refunds">Cancellation and refunds</Link>
+            <Link href="/privacy">Privacy policy</Link>
+            <Link href="/terms">Terms and conditions</Link>
+          </nav>
+          {(c?.phone || c?.email) && <span className="reach">{[c.phone, c.email].filter(Boolean).join(' · ')}</span>}
         </div>
       </div>
     </footer>

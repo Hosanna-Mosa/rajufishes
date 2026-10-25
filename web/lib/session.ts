@@ -13,7 +13,7 @@ const set = (c: Customer | null) => { state = c; listeners.forEach((l) => l()) }
 
 export async function refreshCustomer() {
   try {
-    set((await call<{ customer: Customer }>('/me')).customer)
+    set((await call<{ customer: Customer | null }>('/session')).customer)
   } catch (e) {
     if (e instanceof ApiError && e.status === 401) set(null)
     else if (state === undefined) set(null)
